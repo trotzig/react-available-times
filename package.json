@@ -7,9 +7,11 @@
   "author": "Henric Trotzig <henric.trotzig@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "rollup src/main.js --format cjs --output dist/main.js"
+    "clean": "rimraf dist",
+    "build": "npm run clean && rollup src/main.js --format cjs --output dist/main.js"
   },
   "devDependencies": {
+    "rimraf": "^2.6.1",
     "rollup": "^0.41.6"
   }
 }
