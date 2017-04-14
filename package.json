@@ -8,7 +8,8 @@
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist",
-    "build": "npm run clean && rollup src/main.js --format cjs --output dist/main.js"
+    "build": "npm run clean && rollup src/main.js --format cjs --output dist/main.js",
+    "build-test": "rollup src/test.js --format iife --output dist/test.js"
   },
   "devDependencies": {
     "rimraf": "^2.6.1",
