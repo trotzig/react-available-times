@@ -2,12 +2,12 @@
   "name": "react-available-times",
   "version": "1.0.0",
   "description": "A calendar to pick available time slots",
-  "main": "index.js",
+  "main": "dist/main.js",
   "repository": "git@github.com:trotzig/react-available-times.git",
   "author": "Henric Trotzig <henric.trotzig@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "rollup src/main.js"
+    "build": "rollup src/main.js --format cjs --output dist/main.js"
   },
   "devDependencies": {
     "rollup": "^0.41.6"
