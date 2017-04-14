@@ -8,11 +8,21 @@
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist",
-    "build": "npm run clean && rollup src/main.js --format cjs --output dist/main.js",
-    "build-test": "rollup src/test.js --format iife --output dist/test.js"
+    "build": "npm run clean && rollup src/main.js -c rollup.config.js --format cjs --output dist/main.js",
+    "build-test": "rollup src/test.js -c rollup.config.js --format iife --output dist/test.js"
+  },
+  "dependencies": {
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4"
   },
   "devDependencies": {
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-es2015-rollup": "^3.0.0",
+    "babel-preset-react": "^6.24.1",
     "rimraf": "^2.6.1",
-    "rollup": "^0.41.6"
+    "rollup": "^0.41.6",
+    "rollup-plugin-babel": "^2.7.1",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-watch": "^3.2.2"
   }
 }

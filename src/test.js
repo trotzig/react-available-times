@@ -1,3 +1,3 @@
-import AvailableTimes from './AvailableTimes';
+import AvailableTimes from './AvailableTimes.jsx';
 
-document.getElementById('root').innerHTML = AvailableTimes;
+ReactDOM.render(React.createElement(AvailableTimes), document.getElementById('root'));
