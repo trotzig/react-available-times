@@ -24,7 +24,7 @@ class DayHeader extends Component {
 }
 
 DayHeader.propTypes = {
-  day: PropTypes.instanceOf(Date),
+  day: PropTypes.object,
   availableWidth: PropTypes.number,
 };
 
