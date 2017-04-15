@@ -9,7 +9,7 @@ module.exports = {
     filename: 'test.js'
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.json']
+    extensions: ['.js', '.jsx', '.json', '.css']
   },
   devtool: 'source-map',
   module: {
@@ -18,6 +18,10 @@ module.exports = {
         test: /\.jsx?/,
         exclude: /node_modules/,
         loader: 'babel-loader',
+      },
+      {
+        test: /\.css$/,
+        use: [ 'style-loader', 'css-loader' ]
       },
     ],
   },

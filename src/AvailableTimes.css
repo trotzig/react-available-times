@@ -1,0 +1,5 @@
+:local(.component) {
+  display: flex;
+  align-items: flex-start;
+  border-top: 1px solid #ccc;
+}

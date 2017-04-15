@@ -1,0 +1,14 @@
+:local(.component) {
+  width: 100%;
+  border-left: 1px solid #ccc;
+}
+
+:local(.hour) {
+  height: 50px;
+  border-bottom: 1px solid #ccc;
+}
+
+:local(.halfHour) {
+  height: 50%;
+  border-bottom: 1px solid #f0f0f0;
+}

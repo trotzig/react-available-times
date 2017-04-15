@@ -1,6 +1,16 @@
-import React from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
 import AvailableTimes from './AvailableTimes.jsx';
+import styles from './reset.css';
 
-ReactDOM.render(<AvailableTimes/>, document.getElementById('root'));
+class Test extends Component {
+  render() {
+    return (
+      <div className={styles.component}>
+        <AvailableTimes />
+      </div>
+    );
+  }
+}
+ReactDOM.render(<Test/>, document.getElementById('root'));
