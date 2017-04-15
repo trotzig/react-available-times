@@ -16,8 +16,8 @@ class DayHeader extends Component {
       <div
         className={styles.component}
       >
-        {availableWidth > 40 && day.name}
-        {availableWidth < 40 && day.abbreviated}
+        {availableWidth >= 80 && day.name}
+        {availableWidth < 80 && day.abbreviated}
       </div>
     )
   }
