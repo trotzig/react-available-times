@@ -1,3 +1,7 @@
+:local(.component) {
+  width: 100%;
+}
+
 :local(.days),
 :local(.header) {
   display: flex;

@@ -1,0 +1,8 @@
+:local(.component) {
+  display: flex;
+  align-items: flex-start;
+}
+:local(.intro) {
+  width: 220px;
+  padding: 20px;
+}
