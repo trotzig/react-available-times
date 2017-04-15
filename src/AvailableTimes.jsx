@@ -15,6 +15,11 @@ export default class AvailableTimes extends PureComponent {
     };
   }
 
+  componentDidMount() {
+    // Place scroll at 06:30 in the morning
+    this._daysRef.scrollTop = 325;
+  }
+
   render() {
     const week = weekAt(this.props.around);
 
@@ -34,6 +39,7 @@ export default class AvailableTimes extends PureComponent {
         <div
           className={styles.days}
           style={{ height: `calc(100vh - ${this.state.headerHeight}px)` }}
+          ref={(element) => this._daysRef = element}
         >
           <Ruler />
           {week.map((day) => (
