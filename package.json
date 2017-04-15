@@ -9,20 +9,29 @@
   "scripts": {
     "clean": "rimraf dist",
     "build": "babel src -d dist",
-    "build-test": "webpack"
+    "build-test": "webpack",
+    "test": "jest"
+  },
+  "jest": {
+    "testRegex": "test.*-test\\.jsx?$"
   },
   "dependencies": {
+    "prop-types": "^15.5.8",
     "react": "^15.5.4",
-    "react-dom": "^15.5.4"
+    "react-dom": "^15.5.4",
+    "react-with-available-width": "^1.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
+    "babel-jest": "^19.0.0",
     "babel-loader": "^6.4.1",
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "css-loader": "^0.28.0",
+    "jest": "^19.0.2",
+    "regenerator-runtime": "^0.10.3",
     "rimraf": "^2.6.1",
     "style-loader": "^0.16.1",
     "webpack": "^2.4.1"

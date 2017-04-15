@@ -3,4 +3,6 @@ module.exports = {
   aliases: {
     'styles': './{filename}.css',
   },
+  ignorePackagePrefixes: ['react-'],
+  logLevel: 'debug',
 };

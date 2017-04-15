@@ -1,0 +1,7 @@
+:local(.component) {
+  width: 100%;
+  flex-shrink: 1;
+  overflow: hidden;
+  padding: 5px;
+  text-align: center;
+}
