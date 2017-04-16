@@ -1,14 +1,32 @@
 :local(.component) {
   width: 100%;
   border-left: 1px solid #ccc;
+  position: relative;
 }
 
 :local(.hour) {
   height: 50px;
   border-bottom: 1px solid #ccc;
+  pointer-events: none;
 }
 
 :local(.halfHour) {
   height: 50%;
   border-bottom: 1px solid #f0f0f0;
+  pointer-events: none;
+}
+
+:local(.mouseTarget) {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+}
+
+:local(.currentSelection) {
+  background-color: red;
+  border: 1px solid #ccc;
+  position: absolute;
+  width: 100%;
 }
