@@ -14,7 +14,9 @@ function relativeY(e) {
 export default class Day extends Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      selections: [],
+    };
     this.handleMouseUp = this.handleMouseUp.bind(this);
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
@@ -22,11 +24,15 @@ export default class Day extends Component {
 
   handleMouseDown(e) {
     const start = relativeY(e);
-    this.setState({
-      start,
-      recording: true,
-      end: start + ROUND_TO_NEAREST * 6,
-    })
+    this.setState(({ selections }) => {
+      return {
+        recording: true,
+        selections: selections.concat([{
+          start,
+          end: start + ROUND_TO_NEAREST * 6,
+        }]),
+      }
+    });
   }
 
   handleMouseMove(e) {
@@ -34,9 +40,13 @@ export default class Day extends Component {
       return;
     }
     const end = relativeY(e);
-    this.setState({
-      end: Math.max(this.state.start + ROUND_TO_NEAREST * 6, end),
-    });
+    this.setState(({ selections }) => {
+      const last = selections[selections.length - 1];
+      last.end = Math.max(last.start + ROUND_TO_NEAREST * 6, end);
+      return {
+        selections,
+      };
+    })
   }
 
   handleMouseUp(e) {
@@ -47,8 +57,7 @@ export default class Day extends Component {
 
   render() {
     const {
-      start,
-      end,
+      selections,
     } = this.state;
 
     return (
@@ -61,9 +70,9 @@ export default class Day extends Component {
             <div className={styles.halfHour}/>
           </div>
         ))}
-
-        {start > 0 && end > 0 && (
+        {selections.map(({ start, end }, i) => (
           <div
+            key={i}
             className={styles.currentSelection}
             style={{
               top: start,
@@ -71,7 +80,7 @@ export default class Day extends Component {
             }}
           >
           </div>
-        )}
+        ))}
         <div
           onMouseDown={this.handleMouseDown}
           onMouseUp={this.handleMouseUp}
