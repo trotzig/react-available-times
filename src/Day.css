@@ -5,7 +5,7 @@
 }
 
 :local(.hour) {
-  height: 50px;
+  height: 60px;
   border-bottom: 1px solid #ccc;
   pointer-events: none;
 }

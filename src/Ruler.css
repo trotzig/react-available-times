@@ -2,7 +2,7 @@
 }
 
 :local(.hour) {
-  height: 50px;
+  height: 60px;
   width: 30px;
   text-align: right;
   border-bottom: 1px solid #ccc;

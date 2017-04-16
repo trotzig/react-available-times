@@ -3,9 +3,12 @@ import React, { Component } from 'react';
 import hours from './hours';
 import styles from './Day.css';
 
+const ROUND_TO_NEAREST = 5;
+
 function relativeY(e) {
-  const scrollableAncestor = e.target.parentNode.parentNode;
-  return e.pageY - scrollableAncestor.offsetTop + scrollableAncestor.scrollTop;
+  const { offsetTop, scrollTop } = e.target.parentNode.parentNode;
+  const realY = e.pageY - offsetTop + scrollTop;
+  return Math.floor(realY / ROUND_TO_NEAREST) * ROUND_TO_NEAREST;
 }
 
 export default class Day extends Component {
@@ -22,7 +25,7 @@ export default class Day extends Component {
     this.setState({
       start,
       recording: true,
-      end: start + 25,
+      end: start + ROUND_TO_NEAREST * 6,
     })
   }
 
@@ -32,7 +35,7 @@ export default class Day extends Component {
     }
     const end = relativeY(e);
     this.setState({
-      end: Math.max(this.state.start + 25, end),
+      end: Math.max(this.state.start + ROUND_TO_NEAREST * 6, end),
     });
   }
 
