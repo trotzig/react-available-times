@@ -54,18 +54,18 @@ export default class Day extends Component {
       const selection = this.state.selections[i];
       if (selection.start > start && selection.start < end) {
         // overlapping start
-        return true;
+        return selection.start;
       }
       if (selection.end > start && selection.end < end) {
         // overlapping end
-        return true;
+        return selection.end;
       }
       if (selection.start <= start && selection.end >= end) {
         // inside
-        return true;
+        return selection.start;
       }
     }
-    return false;
+    return undefined;
   }
 
   handleMouseDown(e) {
@@ -82,6 +82,12 @@ export default class Day extends Component {
       return;
     }
 
+    let end = toDate(this.props.date, position + HOUR_IN_PIXELS);
+    end = this.hasOverlap(dateAtPosition, end) || end;
+    if (end - dateAtPosition < 1800000) {
+      // slot is less than 30 mins
+      return;
+    }
     this.setState(({ selections }) => {
       return {
         edge: 'end',
@@ -89,7 +95,7 @@ export default class Day extends Component {
         lastKnownPosition: position,
         selections: selections.concat([{
           start: dateAtPosition,
-          end: toDate(this.props.date, position + HOUR_IN_PIXELS),
+          end,
         }]),
       };
     });
