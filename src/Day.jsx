@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+import { HOUR_IN_PIXELS } from './Constants';
 import hours from './hours';
 import styles from './Day.css';
 
@@ -66,6 +67,7 @@ export default class Day extends Component {
           <div
             key={hour}
             className={styles.hour}
+            style={{ height: HOUR_IN_PIXELS }}
           >
             <div className={styles.halfHour}/>
           </div>
