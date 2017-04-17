@@ -16,6 +16,7 @@
 :local(.flip) {
   transform: rotate(-90deg) translateX(-50%);
   overflow: hidden;
+  white-space: nobreak;
   text-overflow: ellipsis;
   text-align: right;
 }

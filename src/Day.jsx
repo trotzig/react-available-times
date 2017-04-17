@@ -21,34 +21,79 @@ export default class Day extends Component {
   constructor() {
     super();
     this.state = {
+      index: null,
       selections: [],
     };
+    this.currentSelectionId = 0;
     this.handleMouseUp = this.handleMouseUp.bind(this);
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
   }
 
+  findSelectionAt(date) {
+    for (let i = 0; i < this.state.selections.length; i++) {
+      const selection = this.state.selections[i];
+      if (selection.end.getTime() === date.getTime()) {
+        return { edge: 'end', index: i };
+      }
+      if (
+        selection.start.getTime() <= date.getTime() &&
+        selection.end.getTime() >= date.getTime()
+      ) {
+        return { edge: 'both', index: i };
+      }
+    }
+    return {};
+  }
+
   handleMouseDown(e) {
-    const start = relativeY(e);
-    this.setState(({ selections }) => ({
-      recording: true,
-      selections: selections.concat([{
-        start: toDate(this.props.date, start),
-        end: toDate(this.props.date, start + HOUR_IN_PIXELS / 2),
-      }]),
-    }));
+    const position = relativeY(e);
+    const dateAtPosition = toDate(this.props.date, position);
+    const { edge, index } = this.findSelectionAt(dateAtPosition);
+    if (edge) {
+      // We found an existing one at this position
+      this.setState({
+        edge,
+        index,
+        lastKnownPosition: position,
+      });
+      return;
+    }
+
+    this.setState(({ selections }) => {
+      return {
+        edge: 'end',
+        index: selections.length,
+        lastKnownPosition: position,
+        selections: selections.concat([{
+          id: this.currentSelectionId =+ 1,
+          start: dateAtPosition,
+          end: toDate(this.props.date, position + HOUR_IN_PIXELS / 2),
+        }]),
+      };
+    });
   }
 
   handleMouseMove(e) {
-    if (!this.state.recording) {
+    if (this.state.index === null) {
       return;
     }
-    const end = relativeY(e);
-    this.setState(({ selections }) => {
-      const last = selections[selections.length - 1];
-      last.end = toDate(this.props.date,
-        Math.max(positionInDay(last.start) + HOUR_IN_PIXELS / 2, end));
+    const position = relativeY(e);
+    this.setState(({ selections, edge, index, lastKnownPosition }) => {
+      const selection = selections[index];
+      if (edge === 'both') {
+        // move element
+        const diff = toDate(this.props.date, position).getTime() -
+          toDate(this.props.date, lastKnownPosition).getTime();
+        selection.start = new Date(selection.start.getTime() + diff);
+        selection.end = new Date(selection.end.getTime() + diff);
+      } else {
+        // stretch element
+        selection.end = toDate(this.props.date,
+          Math.max(positionInDay(selection.start) + HOUR_IN_PIXELS / 2, position));
+      }
       return {
+        lastKnownPosition: position,
         selections,
       };
     })
@@ -56,7 +101,9 @@ export default class Day extends Component {
 
   handleMouseUp(e) {
     this.setState({
-      recording: false,
+      edge: null,
+      index: null,
+      lastKnownPosition: null,
     });
   }
 
@@ -76,11 +123,14 @@ export default class Day extends Component {
             <div className={styles.halfHour}/>
           </div>
         ))}
-        {selections.map(({ start, end }, i) => (
+        {selections.map(({ start, end, id }, i) => (
           <TimeSlot
             key={i}
+            id={id}
             start={start}
             end={end}
+            onAdjustStart={this.handleAdjustStart}
+            onAdjustEnd={this.handleAdjustEnd}
           />
         ))}
         <div
