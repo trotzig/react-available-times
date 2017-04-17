@@ -65,7 +65,6 @@ export default class Day extends Component {
         return selection.start;
       }
     }
-    return undefined;
   }
 
   handleMouseDown(e) {

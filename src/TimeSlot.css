@@ -4,6 +4,7 @@
   position: absolute;
   width: 100%;
   color: #fff;
+  overflow: hidden;
 }
 
 :local(.handle) {
@@ -19,11 +20,12 @@
   text-align: center;
   font-size: 10px;
   font-weight: 100;
+  overflow: hidden;
+  max-height: 100%;
 }
 
 :local(.flip) {
   transform: rotate(-90deg) translateX(-50%);
-  overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   text-align: right;
