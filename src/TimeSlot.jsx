@@ -49,6 +49,9 @@ class TimeSlot extends PureComponent {
         >
           {this.label()}
         </div>
+        <div className={styles.handle}>
+          ...
+        </div>
       </div>
     );
   }
