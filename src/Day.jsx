@@ -32,7 +32,7 @@ export default class Day extends Component {
   findSelectionAt(date) {
     for (let i = 0; i < this.state.selections.length; i++) {
       const selection = this.state.selections[i];
-      if (Math.abs(selection.end.getTime() - date.getTime()) <= 300000) {
+      if (Math.abs(selection.end.getTime() - date.getTime()) <= 900000) {
         // Close enough to drag the trailing edge
         return { edge: 'end', index: i };
       }
