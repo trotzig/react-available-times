@@ -43,7 +43,10 @@ export default class AvailableTimes extends PureComponent {
         >
           <Ruler />
           {week.map((day) => (
-            <Day key={day.date} />
+            <Day
+              date={day.date}
+              key={day.date}
+            />
           ))}
         </div>
       </div>

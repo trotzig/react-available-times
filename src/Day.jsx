@@ -1,8 +1,10 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 import { HOUR_IN_PIXELS } from './Constants';
 import hours from './hours';
 import styles from './Day.css';
+import toDate from './toDate';
 
 const ROUND_TO_NEAREST_MINS = 5;
 
@@ -27,11 +29,14 @@ export default class Day extends Component {
   handleMouseDown(e) {
     const start = relativeY(e);
     this.setState(({ selections }) => {
+      const end = start + HOUR_IN_PIXELS / 2;
       return {
         recording: true,
         selections: selections.concat([{
           start,
-          end: start + HOUR_IN_PIXELS / 2,
+          end,
+          startDate: toDate(this.props.date, start),
+          endDate: toDate(this.props.date, end),
         }]),
       }
     });
@@ -45,6 +50,7 @@ export default class Day extends Component {
     this.setState(({ selections }) => {
       const last = selections[selections.length - 1];
       last.end = Math.max(last.start + HOUR_IN_PIXELS / 2, end);
+      last.endDate = toDate(this.props.date, last.end);
       return {
         selections,
       };
@@ -73,15 +79,18 @@ export default class Day extends Component {
             <div className={styles.halfHour}/>
           </div>
         ))}
-        {selections.map(({ start, end }, i) => (
+        {selections.map(({ start, end, startDate, endDate }, i) => (
           <div
             key={i}
-            className={styles.currentSelection}
+            className={styles.selection}
             style={{
               top: start,
               height: end - start,
             }}
           >
+            {startDate.getHours()}:{startDate.getMinutes()}
+            {' - '}
+            {endDate.getHours()}:{endDate.getMinutes()}
           </div>
         ))}
         <div
@@ -94,3 +103,7 @@ export default class Day extends Component {
     );
   }
 }
+
+Day.propTypes = {
+  date: PropTypes.instanceOf(Date).isRequired,
+};

@@ -23,7 +23,7 @@
   position: absolute;
 }
 
-:local(.currentSelection) {
+:local(.selection) {
   background-color: #4477BD;
   border-radius: 3px;
   position: absolute;
