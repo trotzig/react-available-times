@@ -3,9 +3,19 @@
   border-radius: 3px;
   position: absolute;
   width: 100%;
+}
+
+:local(.label) {
   padding: 5px;
   text-align: center;
   font-size: 10px;
   font-weight: 100;
   color: #fff;
+}
+
+:local(.flip) {
+  transform: rotate(-90deg) translateX(-50%);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: right;
 }
