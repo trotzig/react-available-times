@@ -10,10 +10,10 @@ import toDate from './toDate';
 
 const ROUND_TO_NEAREST_MINS = 5;
 
-function relativeY(e) {
+function relativeY(e, rounding = ROUND_TO_NEAREST_MINS) {
   const { offsetTop, scrollTop } = e.target.parentNode.parentNode;
   const realY = e.pageY - offsetTop + scrollTop;
-  const snapTo = ROUND_TO_NEAREST_MINS / 60 * HOUR_IN_PIXELS;
+  const snapTo = rounding / 60 * HOUR_IN_PIXELS;
   return Math.floor(realY / snapTo) * snapTo;
 }
 
@@ -69,8 +69,8 @@ export default class Day extends Component {
   }
 
   handleMouseDown(e) {
-    const position = relativeY(e);
-    const dateAtPosition = toDate(this.props.date, position);
+    let position = relativeY(e);
+    let dateAtPosition = toDate(this.props.date, position);
     const { edge, index } = this.findSelectionAt(dateAtPosition);
     if (edge) {
       // We found an existing one at this position
@@ -82,6 +82,8 @@ export default class Day extends Component {
       return;
     }
 
+    position = relativeY(e, 60); // round to closest hour
+    dateAtPosition = toDate(this.props.date, position);
     let end = toDate(this.props.date, position + HOUR_IN_PIXELS);
     end = this.hasOverlap(dateAtPosition, end) || end;
     if (end - dateAtPosition < 1800000) {
