@@ -89,7 +89,7 @@ export default class Day extends Component {
         lastKnownPosition: position,
         selections: selections.concat([{
           start: dateAtPosition,
-          end: toDate(this.props.date, position + HOUR_IN_PIXELS / 2),
+          end: toDate(this.props.date, position + HOUR_IN_PIXELS),
         }]),
       };
     });
