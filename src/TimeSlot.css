@@ -1,0 +1,6 @@
+:local(.component) {
+  background-color: #4477BD;
+  border-radius: 3px;
+  position: absolute;
+  width: 100%;
+}

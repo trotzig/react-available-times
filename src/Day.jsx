@@ -2,7 +2,9 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 import { HOUR_IN_PIXELS } from './Constants';
+import TimeSlot from './TimeSlot';
 import hours from './hours';
+import positionInDay from './positionInDay';
 import styles from './Day.css';
 import toDate from './toDate';
 
@@ -28,18 +30,13 @@ export default class Day extends Component {
 
   handleMouseDown(e) {
     const start = relativeY(e);
-    this.setState(({ selections }) => {
-      const end = start + HOUR_IN_PIXELS / 2;
-      return {
-        recording: true,
-        selections: selections.concat([{
-          start,
-          end,
-          startDate: toDate(this.props.date, start),
-          endDate: toDate(this.props.date, end),
-        }]),
-      }
-    });
+    this.setState(({ selections }) => ({
+      recording: true,
+      selections: selections.concat([{
+        start: toDate(this.props.date, start),
+        end: toDate(this.props.date, start + HOUR_IN_PIXELS / 2),
+      }]),
+    }));
   }
 
   handleMouseMove(e) {
@@ -49,8 +46,8 @@ export default class Day extends Component {
     const end = relativeY(e);
     this.setState(({ selections }) => {
       const last = selections[selections.length - 1];
-      last.end = Math.max(last.start + HOUR_IN_PIXELS / 2, end);
-      last.endDate = toDate(this.props.date, last.end);
+      last.end = toDate(this.props.date,
+        Math.max(positionInDay(last.start) + HOUR_IN_PIXELS / 2, end));
       return {
         selections,
       };
@@ -79,19 +76,12 @@ export default class Day extends Component {
             <div className={styles.halfHour}/>
           </div>
         ))}
-        {selections.map(({ start, end, startDate, endDate }, i) => (
-          <div
+        {selections.map(({ start, end }, i) => (
+          <TimeSlot
             key={i}
-            className={styles.selection}
-            style={{
-              top: start,
-              height: end - start,
-            }}
-          >
-            {startDate.getHours()}:{startDate.getMinutes()}
-            {' - '}
-            {endDate.getHours()}:{endDate.getMinutes()}
-          </div>
+            start={start}
+            end={end}
+          />
         ))}
         <div
           onMouseDown={this.handleMouseDown}
