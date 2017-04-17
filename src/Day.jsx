@@ -4,12 +4,13 @@ import { HOUR_IN_PIXELS } from './Constants';
 import hours from './hours';
 import styles from './Day.css';
 
-const ROUND_TO_NEAREST = 5;
+const ROUND_TO_NEAREST_MINS = 5;
 
 function relativeY(e) {
   const { offsetTop, scrollTop } = e.target.parentNode.parentNode;
   const realY = e.pageY - offsetTop + scrollTop;
-  return Math.floor(realY / ROUND_TO_NEAREST) * ROUND_TO_NEAREST;
+  const snapTo = ROUND_TO_NEAREST_MINS / 60 * HOUR_IN_PIXELS;
+  return Math.floor(realY / snapTo) * snapTo;
 }
 
 export default class Day extends Component {
@@ -30,7 +31,7 @@ export default class Day extends Component {
         recording: true,
         selections: selections.concat([{
           start,
-          end: start + ROUND_TO_NEAREST * 6,
+          end: start + HOUR_IN_PIXELS / 2,
         }]),
       }
     });
@@ -43,7 +44,7 @@ export default class Day extends Component {
     const end = relativeY(e);
     this.setState(({ selections }) => {
       const last = selections[selections.length - 1];
-      last.end = Math.max(last.start + ROUND_TO_NEAREST * 6, end);
+      last.end = Math.max(last.start + HOUR_IN_PIXELS / 2, end);
       return {
         selections,
       };

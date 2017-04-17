@@ -1,1 +1,1 @@
-export const HOUR_IN_PIXELS = 60;
+export const HOUR_IN_PIXELS = 40;
