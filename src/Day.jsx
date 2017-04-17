@@ -24,7 +24,6 @@ export default class Day extends Component {
       index: null,
       selections: [],
     };
-    this.currentSelectionId = 0;
     this.handleMouseUp = this.handleMouseUp.bind(this);
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
@@ -44,6 +43,28 @@ export default class Day extends Component {
       }
     }
     return {};
+  }
+
+  hasOverlap(start, end, ignoreIndex) {
+    for (let i = 0; i < this.state.selections.length; i++) {
+      if (i === ignoreIndex) {
+        continue;
+      }
+      const selection = this.state.selections[i];
+      if (selection.start > start && selection.start < end) {
+        // overlapping start
+        return true;
+      }
+      if (selection.end > start && selection.end < end) {
+        // overlapping end
+        return true;
+      }
+      if (selection.start <= start && selection.end >= end) {
+        // inside
+        return true;
+      }
+    }
+    return false;
   }
 
   handleMouseDown(e) {
@@ -66,7 +87,6 @@ export default class Day extends Component {
         index: selections.length,
         lastKnownPosition: position,
         selections: selections.concat([{
-          id: this.currentSelectionId =+ 1,
           start: dateAtPosition,
           end: toDate(this.props.date, position + HOUR_IN_PIXELS / 2),
         }]),
@@ -85,12 +105,22 @@ export default class Day extends Component {
         // move element
         const diff = toDate(this.props.date, position).getTime() -
           toDate(this.props.date, lastKnownPosition).getTime();
-        selection.start = new Date(selection.start.getTime() + diff);
-        selection.end = new Date(selection.end.getTime() + diff);
+        const newStart = new Date(selection.start.getTime() + diff);
+        const newEnd = new Date(selection.end.getTime() + diff);
+        if (this.hasOverlap(newStart, newEnd, index)) {
+          return {};
+        }
+        selection.start = newStart;
+        selection.end = newEnd;
       } else {
         // stretch element
-        selection.end = toDate(this.props.date,
+        const newEnd = toDate(this.props.date,
           Math.max(positionInDay(selection.start) + HOUR_IN_PIXELS / 2, position));
+        if (this.hasOverlap(selection.start, newEnd, index)) {
+          // Collision! Let
+          return {};
+        }
+        selection.end = newEnd;
       }
       return {
         lastKnownPosition: position,
@@ -123,14 +153,11 @@ export default class Day extends Component {
             <div className={styles.halfHour}/>
           </div>
         ))}
-        {selections.map(({ start, end, id }, i) => (
+        {selections.map(({ start, end }, i) => (
           <TimeSlot
             key={i}
-            id={id}
             start={start}
             end={end}
-            onAdjustStart={this.handleAdjustStart}
-            onAdjustEnd={this.handleAdjustEnd}
           />
         ))}
         <div
