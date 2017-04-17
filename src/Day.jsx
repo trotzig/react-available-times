@@ -137,6 +137,7 @@ export default class Day extends Component {
           onMouseDown={this.handleMouseDown}
           onMouseUp={this.handleMouseUp}
           onMouseMove={this.handleMouseMove}
+          onMouseOut={this.handleMouseUp}
           className={styles.mouseTarget}
         />
       </div>
