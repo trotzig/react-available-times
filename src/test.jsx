@@ -54,7 +54,19 @@ const events = [
 
 
 class Test extends Component {
+  constructor() {
+    super();
+    this.state = { selections: [] };
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(selections) {
+    this.setState({ selections });
+  }
+
   render() {
+    const { selections } = this.state;
+
     return (
       <div>
         <div className={styles.example}>
@@ -63,10 +75,23 @@ class Test extends Component {
             <p>
               Uses the current date as the starting point.
             </p>
+            {selections.length > 0 && (
+              <div>
+                <h2>Selected ({selections.length})</h2>
+                <ul className={styles.selected}>
+                  {selections.map(({ start, end }) => (
+                    <li key={start}>
+                      {start.toString()} - {end.toString()}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
           <AvailableTimes
             events={events}
             around={new Date()}
+            onChange={this.handleChange}
           />
         </div>
       </div>

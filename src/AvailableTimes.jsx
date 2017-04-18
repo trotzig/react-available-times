@@ -7,11 +7,27 @@ import Ruler from './Ruler';
 import styles from './AvailableTimes.css';
 import weekAt from './weekAt';
 
+function flatten(selections) {
+  const result = [];
+  Object.keys(selections).forEach((dayOfWeek) => {
+    result.push(...selections[dayOfWeek]);
+  });
+  return result;
+}
 export default class AvailableTimes extends PureComponent {
   constructor() {
     super();
     this.state = {
       headerHeight: 50,
+    };
+    this.selections = {
+      0: [],
+      1: [],
+      2: [],
+      3: [],
+      4: [],
+      5: [],
+      6: [],
     };
   }
 
@@ -20,11 +36,14 @@ export default class AvailableTimes extends PureComponent {
     this._daysRef.scrollTop = 325;
   }
 
+  handleDayChange(day, selections) {
+    this.selections[day.getDay()] = selections;
+    this.props.onChange(flatten(this.selections));
+  }
+
   getDayEvents(date) {
     const dateString = date.toDateString();
-    console.log('dateString', dateString);
     return this.props.events.filter(({ start }) => {
-      console.log(start.toDateString());
       return dateString === start.toDateString();
     });
   }
@@ -53,9 +72,10 @@ export default class AvailableTimes extends PureComponent {
           <Ruler />
           {week.map((day) => (
             <Day
+              key={day.date}
               date={day.date}
               events={this.getDayEvents(day.date)}
-              key={day.date}
+              onChange={this.handleDayChange.bind(this, day.date)}
             />
           ))}
         </div>
@@ -71,6 +91,7 @@ AvailableTimes.propTypes = {
     end: PropTypes.instanceOf(Date),
     label: PropTypes.string,
   })),
+  onChange: PropTypes.func.isRequired,
 };
 
 AvailableTimes.defaultProps = {

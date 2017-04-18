@@ -143,6 +143,7 @@ export default class Day extends Component {
       index: null,
       lastKnownPosition: null,
     });
+    this.props.onChange(this.state.selections);
   }
 
   render() {
@@ -195,4 +196,5 @@ Day.propTypes = {
     end: PropTypes.instanceOf(Date),
     label: PropTypes.string,
   })),
+  onChange: PropTypes.func.isRequired,
 };

@@ -7,3 +7,9 @@
   width: 220px;
   padding: 20px;
 }
+
+:local(.selected) {
+  max-height: 200px;
+  overflow: auto;
+  font-size: 10px;
+}
