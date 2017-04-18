@@ -146,9 +146,8 @@ export default class Day extends Component {
   }
 
   render() {
-    const {
-      selections,
-    } = this.state;
+    const { events } = this.props;
+    const { selections } = this.state;
 
     return (
       <div className={styles.component}>
@@ -160,6 +159,15 @@ export default class Day extends Component {
           >
             <div className={styles.halfHour}/>
           </div>
+        ))}
+        {events.map(({ start, end, label }, i) => (
+          <TimeSlot
+            key={i + label}
+            start={start}
+            end={end}
+            label={label}
+            frozen
+          />
         ))}
         {selections.map(({ start, end }, i) => (
           <TimeSlot
@@ -182,4 +190,9 @@ export default class Day extends Component {
 
 Day.propTypes = {
   date: PropTypes.instanceOf(Date).isRequired,
+  events: PropTypes.arrayOf(PropTypes.shape({
+    start: PropTypes.instanceOf(Date),
+    end: PropTypes.instanceOf(Date),
+    label: PropTypes.string,
+  })),
 };

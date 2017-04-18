@@ -6,17 +6,69 @@ import styles from './test.css';
 
 import './reset.css';
 
+function dateAt(dayInWeek, hours, minutes) {
+  const date = new Date();
+  while (date.getDay() > 0) {
+    // reset to sunday
+    date.setDate(date.getDate() - 1);
+  }
+  for (let i = 0; i < dayInWeek; i++) {
+    date.setDate(date.getDate() + 1);
+  }
+  date.setHours(hours, minutes, 0, 0);
+  return date;
+}
+
+const events = [
+  {
+    start: dateAt(0, 12, 30),
+    end: dateAt(0, 14, 0),
+    label: 'Lunch with Lo',
+  },
+  {
+    start: dateAt(1, 8, 5),
+    end: dateAt(1, 10, 0),
+    label: 'Breakfast club',
+  },
+  {
+    start: dateAt(1, 10, 0),
+    end: dateAt(1, 12, 0),
+    label: 'Busy-time',
+  },
+  {
+    start: dateAt(3, 8, 0),
+    end: dateAt(3, 17, 0),
+    label: 'Conference',
+  },
+  {
+    start: dateAt(4, 17, 0),
+    end: dateAt(4, 19, 0),
+    label: 'Pick up groceries',
+  },
+  {
+    start: dateAt(5, 13, 30),
+    end: dateAt(5, 19, 25),
+    label: 'Flight to Chicago',
+  },
+];
+
+
 class Test extends Component {
   render() {
     return (
-      <div className={styles.component}>
-        <div className={styles.intro}>
-          <h1>Example #1</h1>
-          <p>
-            Uses the current date as the starting point.
-          </p>
+      <div>
+        <div className={styles.example}>
+          <div className={styles.intro}>
+            <h1>Example #1</h1>
+            <p>
+              Uses the current date as the starting point.
+            </p>
+          </div>
+          <AvailableTimes
+            events={events}
+            around={new Date()}
+          />
         </div>
-        <AvailableTimes />
       </div>
     );
   }

@@ -5,6 +5,15 @@
   width: 100%;
   color: #fff;
   overflow: hidden;
+  opacity: 0.8;
+}
+
+:local(.frozen) {
+  background-color: #fff;
+  color: #333;
+  width: 90%;
+  border: 1px solid #ccc;
+  opacity: 1;
 }
 
 :local(.handle) {

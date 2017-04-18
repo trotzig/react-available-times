@@ -8,10 +8,15 @@ import zeroPad from './zeroPad';
 
 class TimeSlot extends PureComponent {
   label() {
-    const { start, end } = this.props;
+    const { start, end, label } = this.props;
     const from = `${zeroPad(start.getHours())}:${zeroPad(start.getMinutes())}`;
     const to = `${zeroPad(end.getHours())}:${zeroPad(end.getMinutes())}`;
-    return `${from} - ${to}`;
+    const result = [from, '-', to];
+    if (label) {
+      result.push(' ');
+      result.push(label);
+    }
+    return result.join('');
   }
 
   render() {
@@ -19,6 +24,7 @@ class TimeSlot extends PureComponent {
       start,
       end,
       availableWidth,
+      frozen,
     } = this.props;
 
     const top = positionInDay(start);
@@ -35,9 +41,14 @@ class TimeSlot extends PureComponent {
       labelStyle.marginTop = -10;
     }
 
+    const classes = [styles.component];
+    if (frozen) {
+      classes.push(styles.frozen);
+    }
+
     return (
       <div
-        className={styles.component}
+        className={classes.join(' ')}
         style={{
           top,
           height: bottom - top,
@@ -49,9 +60,11 @@ class TimeSlot extends PureComponent {
         >
           {this.label()}
         </div>
-        <div className={styles.handle}>
-          ...
-        </div>
+        {!frozen && (
+          <div className={styles.handle}>
+            ...
+          </div>
+        )}
       </div>
     );
   }
@@ -61,6 +74,8 @@ TimeSlot.propTypes = {
   start: PropTypes.instanceOf(Date).isRequired,
   end: PropTypes.instanceOf(Date).isRequired,
   availableWidth: PropTypes.number.isRequired,
+  label: PropTypes.string,
+  frozen: PropTypes.bool,
 }
 
 export default withAvailableWidth(TimeSlot);

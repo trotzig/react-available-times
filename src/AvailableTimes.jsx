@@ -20,6 +20,15 @@ export default class AvailableTimes extends PureComponent {
     this._daysRef.scrollTop = 325;
   }
 
+  getDayEvents(date) {
+    const dateString = date.toDateString();
+    console.log('dateString', dateString);
+    return this.props.events.filter(({ start }) => {
+      console.log(start.toDateString());
+      return dateString === start.toDateString();
+    });
+  }
+
   render() {
     const week = weekAt(this.props.around);
 
@@ -45,6 +54,7 @@ export default class AvailableTimes extends PureComponent {
           {week.map((day) => (
             <Day
               date={day.date}
+              events={this.getDayEvents(day.date)}
               key={day.date}
             />
           ))}
@@ -56,6 +66,11 @@ export default class AvailableTimes extends PureComponent {
 
 AvailableTimes.propTypes = {
   around: PropTypes.instanceOf(Date),
+  events: PropTypes.arrayOf(PropTypes.shape({
+    start: PropTypes.instanceOf(Date),
+    end: PropTypes.instanceOf(Date),
+    label: PropTypes.string,
+  })),
 };
 
 AvailableTimes.defaultProps = {
