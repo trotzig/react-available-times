@@ -1,3 +1,1 @@
-import AvailableTimes from './AvailableTimes';
-
-export default AvailableTimes;
+module.exports = require('./AvailableTimes');

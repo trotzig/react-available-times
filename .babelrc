@@ -1,4 +1,4 @@
 {
   "presets": ["es2015" , "react"],
-  "plugins": ["transform-react-jsx"]
+  "plugins": ["transform-react-jsx", "add-module-exports"]
 }
