@@ -41,8 +41,12 @@ export default class AvailableTimes extends PureComponent {
   }
 
   handleDayChange(day, selections) {
+    const { onChange } = this.props;
     this.selections[day.getDay()] = selections;
-    this.props.onChange(flatten(this.selections));
+    if (!onChange) {
+      return;
+    }
+    onChange(flatten(this.selections));
   }
 
   render() {
@@ -104,7 +108,7 @@ AvailableTimes.propTypes = {
     width: PropTypes.number,
     offset: PropTypes.number,
   })),
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
 };
 
 AvailableTimes.defaultProps = {

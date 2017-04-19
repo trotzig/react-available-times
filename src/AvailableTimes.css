@@ -1,5 +1,12 @@
+:local(.component) * {
+  box-sizing: border-box;
+}
+
 :local(.component) {
   width: 100%;
+  font-size: 12px;
+  line-height: 1.2;
+  font-family: helvetica, arial, sans-serif;
 }
 
 :local(.days),
