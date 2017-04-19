@@ -1,6 +1,9 @@
 :local(.example) {
   display: flex;
   align-items: flex-start;
+  font-family: helvetica, arial, sans-serif;
+  font-size: 12px;
+  line-height: 1.2;
 }
 
 :local(.intro) {

@@ -6,6 +6,16 @@ import day from './Day';
 import styles from './DayHeader.css';
 
 class DayHeader extends Component {
+  text() {
+    const { day, availableWidth } = this.props;
+    const dateStr = `${day.date.getDate()}/${day.date.getMonth() + 1}`;
+
+    if (availableWidth < 90) {
+      return `${day.abbreviated} ${dateStr}`;
+    }
+    return `${day.name} ${dateStr}`;
+  }
+
   render() {
     const {
       day,
@@ -16,8 +26,7 @@ class DayHeader extends Component {
       <div
         className={styles.component}
       >
-        {availableWidth >= 80 && day.name}
-        {availableWidth < 80 && day.abbreviated}
+        {this.text()}
       </div>
     )
   }
