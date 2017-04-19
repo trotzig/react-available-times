@@ -31,7 +31,7 @@ export default class AvailableTimes extends PureComponent {
     };
     this.selections = {};
     weekAt(around).forEach(({ date }) => {
-      this.selections[date.getDay()] = getDayEvents(initialSelections, date);
+      this.selections[date.getDay()] = getDayEvents(initialSelections || [], date);
     });
   }
 
@@ -46,7 +46,15 @@ export default class AvailableTimes extends PureComponent {
   }
 
   render() {
-    const week = weekAt(this.props.around);
+    const {
+      around,
+      events,
+      initialSelections,
+    } = this.props;
+
+    const { headerHeight } = this.state;
+
+    const week = weekAt(around);
 
     return (
       <div className={styles.component}>
@@ -63,7 +71,7 @@ export default class AvailableTimes extends PureComponent {
         </div>
         <div
           className={styles.days}
-          style={{ height: `calc(100vh - ${this.state.headerHeight}px)` }}
+          style={{ height: `calc(100vh - ${headerHeight}px)` }}
           ref={(element) => this._daysRef = element}
         >
           <Ruler />
@@ -71,8 +79,8 @@ export default class AvailableTimes extends PureComponent {
             <Day
               key={day.date}
               date={day.date}
-              events={addOverlapHints(getDayEvents(this.props.events, day.date))}
-              initialSelections={getDayEvents(this.props.initialSelections, day.date)}
+              events={addOverlapHints(getDayEvents(events || [], day.date))}
+              initialSelections={getDayEvents(initialSelections || [], day.date)}
               onChange={this.handleDayChange.bind(this, day.date)}
             />
           ))}
