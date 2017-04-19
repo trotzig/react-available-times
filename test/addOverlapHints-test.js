@@ -75,7 +75,7 @@ it('adds overlap hints when overlaps exist', () => {
   expect(overlapped[3]).toEqual({
     start: new Date(250),
     end: new Date(350),
-    width: 1/3, // TODO: make this 2/3
+    width: 2/3,
     offset: 1/3,
   });
   expect(overlapped[4]).toEqual({

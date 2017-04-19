@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 
 import { HOUR_IN_PIXELS } from './Constants';
 import TimeSlot from './TimeSlot';
+import hasOverlap from './hasOverlap';
 import hours from './hours';
 import positionInDay from './positionInDay';
 import styles from './Day.css';
@@ -46,27 +47,6 @@ export default class Day extends Component {
     return {};
   }
 
-  hasOverlap(start, end, ignoreIndex) {
-    for (let i = 0; i < this.state.selections.length; i++) {
-      if (i === ignoreIndex) {
-        continue;
-      }
-      const selection = this.state.selections[i];
-      if (selection.start > start && selection.start < end) {
-        // overlapping start
-        return selection.start;
-      }
-      if (selection.end > start && selection.end < end) {
-        // overlapping end
-        return selection.end;
-      }
-      if (selection.start <= start && selection.end >= end) {
-        // inside
-        return selection.start;
-      }
-    }
-  }
-
   handleMouseDown(e) {
     let position = relativeY(e);
     let dateAtPosition = toDate(this.props.date, position);
@@ -84,7 +64,7 @@ export default class Day extends Component {
     position = relativeY(e, 60); // round to closest hour
     dateAtPosition = toDate(this.props.date, position);
     let end = toDate(this.props.date, position + HOUR_IN_PIXELS);
-    end = this.hasOverlap(dateAtPosition, end) || end;
+    end = hasOverlap(this.state.selections, dateAtPosition, end) || end;
     if (end - dateAtPosition < 1800000) {
       // slot is less than 30 mins
       return;
@@ -115,7 +95,7 @@ export default class Day extends Component {
           toDate(this.props.date, lastKnownPosition).getTime();
         const newStart = new Date(selection.start.getTime() + diff);
         const newEnd = new Date(selection.end.getTime() + diff);
-        if (this.hasOverlap(newStart, newEnd, index)) {
+        if (hasOverlap(selections, newStart, newEnd, index)) {
           return {};
         }
         selection.start = newStart;
@@ -124,7 +104,7 @@ export default class Day extends Component {
         // stretch element
         const newEnd = toDate(this.props.date,
           Math.max(positionInDay(selection.start) + HOUR_IN_PIXELS / 2, position));
-        if (this.hasOverlap(selection.start, newEnd, index)) {
+        if (hasOverlap(selections, selection.start, newEnd, index)) {
           // Collision! Let
           return {};
         }

@@ -1,3 +1,5 @@
+import hasOverlap from './hasOverlap';
+
 function compareDates(a, b) {
  return a.start < b.start ? -1 : 1;
 }
@@ -37,10 +39,20 @@ function flattenGroups(groups) {
   const result = [];
   groups.forEach((group) => {
     const columnsLength = group.columns.length;
-    group.columns.forEach((column, columnIndex) => {
-      column.forEach((event) => {
+    group.columns.forEach((events, columnIndex) => {
+      events.forEach((event) => {
+        let colspan = 1;
+        // Peek ahead to see if the event fits in another column
+        let j = columnIndex + 1;
+        while (
+          j < group.columns.length &&
+          !hasOverlap(group.columns[j], event.start, event.end)
+        ) {
+          colspan++;
+          j++;
+        }
         result.push(Object.assign({
-          width: 1 / columnsLength,
+          width: colspan / columnsLength,
           offset: columnIndex / columnsLength,
         }, event));
       })
