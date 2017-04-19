@@ -11,7 +11,6 @@
 :local(.frozen) {
   background-color: #fff;
   color: #333;
-  width: 90%;
   border: 1px solid #ccc;
   opacity: 1;
 }

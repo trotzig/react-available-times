@@ -25,6 +25,8 @@ class TimeSlot extends PureComponent {
       end,
       availableWidth,
       frozen,
+      width,
+      offset,
     } = this.props;
 
     const top = positionInDay(start);
@@ -34,7 +36,8 @@ class TimeSlot extends PureComponent {
 
     const labelClasses = [styles.label];
     const labelStyle = {};
-    if (height > availableWidth && availableWidth < 60) {
+    const realAvailableWidth = availableWidth * (width || 1);
+    if (height > realAvailableWidth && realAvailableWidth < 60) {
       labelClasses.push(styles.flip);
       labelStyle.width = height;
       labelStyle.marginLeft = -((height / 2) - 10);
@@ -46,13 +49,20 @@ class TimeSlot extends PureComponent {
       classes.push(styles.frozen);
     }
 
+    const style = {
+      top,
+      height: bottom - top,
+    };
+
+    if (typeof width !== 'undefined' && typeof offset !== 'undefined') {
+      style.width = `${width * 100}%`;
+      style.left = `${offset * 100}%`;
+    }
+
     return (
       <div
         className={classes.join(' ')}
-        style={{
-          top,
-          height: bottom - top,
-        }}
+        style={style}
       >
         <div
           className={labelClasses.join(' ')}
@@ -76,6 +86,10 @@ TimeSlot.propTypes = {
   availableWidth: PropTypes.number.isRequired,
   label: PropTypes.string,
   frozen: PropTypes.bool,
+
+  // Props used to signal overlap
+  width: PropTypes.number,
+  offset: PropTypes.number,
 }
 
 export default withAvailableWidth(TimeSlot);

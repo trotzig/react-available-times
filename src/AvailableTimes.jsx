@@ -4,6 +4,7 @@ import React, { PureComponent } from 'react';
 import Day from './Day';
 import DayHeader from './DayHeader';
 import Ruler from './Ruler';
+import addOverlapHints from './addOverlapHints';
 import styles from './AvailableTimes.css';
 import weekAt from './weekAt';
 
@@ -74,7 +75,7 @@ export default class AvailableTimes extends PureComponent {
             <Day
               key={day.date}
               date={day.date}
-              events={this.getDayEvents(day.date)}
+              events={addOverlapHints(this.getDayEvents(day.date))}
               onChange={this.handleDayChange.bind(this, day.date)}
             />
           ))}

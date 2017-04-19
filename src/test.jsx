@@ -31,6 +31,11 @@ const events = [
     label: 'Breakfast club',
   },
   {
+    start: dateAt(1, 8, 20),
+    end: dateAt(1, 10, 30),
+    label: 'Morning meeting',
+  },
+  {
     start: dateAt(1, 10, 0),
     end: dateAt(1, 12, 0),
     label: 'Busy-time',
@@ -44,6 +49,21 @@ const events = [
     start: dateAt(4, 17, 0),
     end: dateAt(4, 19, 0),
     label: 'Pick up groceries',
+  },
+  {
+    start: dateAt(5, 10, 0),
+    end: dateAt(5, 13, 20),
+    label: 'Prepare presentation',
+  },
+  {
+    start: dateAt(5, 11, 0),
+    end: dateAt(5, 12, 20),
+    label: 'Remember to sign papers',
+  },
+  {
+    start: dateAt(5, 12, 0),
+    end: dateAt(5, 14, 0),
+    label: 'Taxi to airport',
   },
   {
     start: dateAt(5, 13, 30),

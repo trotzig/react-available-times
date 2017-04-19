@@ -15,9 +15,15 @@ it('does not add overlap hints when no overlap exists', () => {
   expect(overlapped[0]).toEqual({
     start: new Date(0),
     end: new Date(100),
-    overlaps: 0,
+    offset: 0,
+    width: 1,
   });
-  expect(overlapped[1].overlaps).toEqual(0);
+  expect(overlapped[1]).toEqual({
+    start: new Date(101),
+    end: new Date(200),
+    offset: 0,
+    width: 1,
+  });
 });
 
 it('adds overlap hints when overlaps exist', () => {
@@ -42,31 +48,46 @@ it('adds overlap hints when overlaps exist', () => {
       start: new Date(400),
       end: new Date(500),
     },
+    {
+      start: new Date(500),
+      end: new Date(600),
+    },
   ]);
-  expect(overlapped.length).toEqual(5);
+  expect(overlapped.length).toEqual(6);
   expect(overlapped[0]).toEqual({
     start: new Date(0),
     end: new Date(300),
-    overlaps: 3,
+    width: 1/3,
+    offset: 0,
   });
   expect(overlapped[1]).toEqual({
     start: new Date(101),
     end: new Date(240),
-    overlaps: 1,
+    width: 1/3,
+    offset: 1/3,
   });
   expect(overlapped[2]).toEqual({
     start: new Date(150),
     end: new Date(220),
-    overlaps: 2,
+    width: 1/3,
+    offset: 2/3,
   });
   expect(overlapped[3]).toEqual({
     start: new Date(250),
     end: new Date(350),
-    overlaps: 0,
+    width: 1/3, // TODO: make this 2/3
+    offset: 1/3,
   });
   expect(overlapped[4]).toEqual({
     start: new Date(400),
     end: new Date(500),
-    overlaps: 0,
+    width: 1,
+    offset: 0,
+  });
+  expect(overlapped[5]).toEqual({
+    start: new Date(500),
+    end: new Date(600),
+    width: 1,
+    offset: 0,
   });
 });
