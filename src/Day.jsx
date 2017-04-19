@@ -9,7 +9,7 @@ import positionInDay from './positionInDay';
 import styles from './Day.css';
 import toDate from './toDate';
 
-const ROUND_TO_NEAREST_MINS = 5;
+const ROUND_TO_NEAREST_MINS = 15;
 
 function relativeY(e, rounding = ROUND_TO_NEAREST_MINS) {
   const { offsetTop, scrollTop } = e.target.parentNode.parentNode;
