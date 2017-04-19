@@ -182,6 +182,9 @@ Day.propTypes = {
     start: PropTypes.instanceOf(Date),
     end: PropTypes.instanceOf(Date),
     label: PropTypes.string,
+    color: PropTypes.string,
+    width: PropTypes.number,
+    offset: PropTypes.number,
   })),
   onChange: PropTypes.func.isRequired,
 };

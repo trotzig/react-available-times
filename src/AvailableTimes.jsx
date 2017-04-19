@@ -111,8 +111,6 @@ AvailableTimes.propTypes = {
     end: PropTypes.instanceOf(Date),
     label: PropTypes.string,
     color: PropTypes.string,
-    width: PropTypes.number,
-    offset: PropTypes.number,
   })),
   onChange: PropTypes.func,
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
