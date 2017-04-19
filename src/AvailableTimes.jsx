@@ -54,6 +54,7 @@ export default class AvailableTimes extends PureComponent {
       around,
       events,
       initialSelections,
+      height,
     } = this.props;
 
     const { headerHeight } = this.state;
@@ -61,7 +62,12 @@ export default class AvailableTimes extends PureComponent {
     const week = weekAt(around);
 
     return (
-      <div className={styles.component}>
+      <div
+        className={styles.component}
+        style={{
+          height: height || '100vh',
+        }}
+      >
         <div
           className={styles.header}
           ref={(el) => el && this.setState({ headerHeight: el.offsetHeight })}
@@ -75,7 +81,7 @@ export default class AvailableTimes extends PureComponent {
         </div>
         <div
           className={styles.days}
-          style={{ height: `calc(100vh - ${headerHeight}px)` }}
+          style={{ height: `calc(100% - ${headerHeight}px)` }}
           ref={(element) => this._daysRef = element}
         >
           <Ruler />
@@ -109,6 +115,7 @@ AvailableTimes.propTypes = {
     offset: PropTypes.number,
   })),
   onChange: PropTypes.func,
+  height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 AvailableTimes.defaultProps = {

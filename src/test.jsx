@@ -139,6 +139,7 @@ class Test extends Component {
             )}
           </div>
           <AvailableTimes
+            height={400}
             events={this.state.filteredEvents}
             around={new Date()}
             onChange={this.handleChange}

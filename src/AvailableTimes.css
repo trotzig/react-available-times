@@ -1,3 +1,4 @@
+:local(.component),
 :local(.component) * {
   box-sizing: border-box;
 }
@@ -7,6 +8,7 @@
   font-size: 12px;
   line-height: 1.2;
   font-family: helvetica, arial, sans-serif;
+  border-bottom: 1px solid #ccc;
 }
 
 :local(.days),
