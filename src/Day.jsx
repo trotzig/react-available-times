@@ -141,11 +141,12 @@ export default class Day extends Component {
             <div className={styles.halfHour}/>
           </div>
         ))}
-        {events.map(({ start, end, label, width, offset }, i) => (
+        {events.map(({ color, start, end, label, width, offset }, i) => (
           <TimeSlot
             key={i + label}
             start={start}
             end={end}
+            color={color}
             label={label}
             width={width}
             offset={offset}

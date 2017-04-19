@@ -25,6 +25,7 @@ class TimeSlot extends PureComponent {
       end,
       availableWidth,
       frozen,
+      color,
       width,
       offset,
     } = this.props;
@@ -52,6 +53,7 @@ class TimeSlot extends PureComponent {
     const style = {
       top,
       height: bottom - top,
+      backgroundColor: color,
     };
 
     if (typeof width !== 'undefined' && typeof offset !== 'undefined') {
@@ -86,6 +88,7 @@ TimeSlot.propTypes = {
   availableWidth: PropTypes.number.isRequired,
   label: PropTypes.string,
   frozen: PropTypes.bool,
+  color: PropTypes.string,
 
   // Props used to signal overlap
   width: PropTypes.number,

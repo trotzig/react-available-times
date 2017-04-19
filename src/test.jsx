@@ -29,6 +29,7 @@ const events = [
     start: dateAt(1, 8, 5),
     end: dateAt(1, 10, 0),
     label: 'Breakfast club',
+    color: '#f0f5f5',
   },
   {
     start: dateAt(1, 8, 20),
@@ -54,6 +55,7 @@ const events = [
     start: dateAt(5, 10, 0),
     end: dateAt(5, 13, 20),
     label: 'Prepare presentation',
+    color: '#f0f0f0',
   },
   {
     start: dateAt(5, 11, 0),
@@ -64,6 +66,7 @@ const events = [
     start: dateAt(5, 12, 0),
     end: dateAt(5, 14, 0),
     label: 'Taxi to airport',
+    color: '#f5f0f0',
   },
   {
     start: dateAt(5, 13, 30),
@@ -76,7 +79,10 @@ const events = [
 class Test extends Component {
   constructor() {
     super();
-    this.state = { selections: [] };
+    this.state = {
+      selections: [],
+      filteredEvents: events,
+    };
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -95,6 +101,20 @@ class Test extends Component {
             <p>
               Uses the current date as the starting point.
             </p>
+            <label>
+              <input
+                type="checkbox"
+                initialChecked
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    this.setState({ filteredEvents: events.filter((e) => e.color) })
+                  } else {
+                    this.setState({ filteredEvents: events })
+                  }
+                }}
+              />
+              Hide some events
+            </label>
             {selections.length > 0 && (
               <div>
                 <h2>Selected ({selections.length})</h2>
@@ -109,7 +129,7 @@ class Test extends Component {
             )}
           </div>
           <AvailableTimes
-            events={events}
+            events={this.state.filteredEvents}
             around={new Date()}
             onChange={this.handleChange}
           />
