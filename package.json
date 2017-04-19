@@ -8,8 +8,7 @@
   "license": "MIT",
   "scripts": {
     "clean": "rimraf dist",
-    "build": "babel src -d dist",
-    "build-test": "webpack",
+    "build-test": "webpack --config webpack.config.test.js",
     "test": "jest"
   },
   "jest": {
