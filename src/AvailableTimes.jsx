@@ -15,21 +15,24 @@ function flatten(selections) {
   });
   return result;
 }
+
+function getDayEvents(events, date) {
+  const dateString = date.toDateString();
+  return events.filter(({ start }) => {
+    return dateString === start.toDateString();
+  });
+}
+
 export default class AvailableTimes extends PureComponent {
-  constructor() {
+  constructor({ around, initialSelections }) {
     super();
     this.state = {
       headerHeight: 50,
     };
-    this.selections = {
-      0: [],
-      1: [],
-      2: [],
-      3: [],
-      4: [],
-      5: [],
-      6: [],
-    };
+    this.selections = {};
+    weekAt(around).forEach(({ date }) => {
+      this.selections[date.getDay()] = getDayEvents(initialSelections, date);
+    });
   }
 
   componentDidMount() {
@@ -40,13 +43,6 @@ export default class AvailableTimes extends PureComponent {
   handleDayChange(day, selections) {
     this.selections[day.getDay()] = selections;
     this.props.onChange(flatten(this.selections));
-  }
-
-  getDayEvents(date) {
-    const dateString = date.toDateString();
-    return this.props.events.filter(({ start }) => {
-      return dateString === start.toDateString();
-    });
   }
 
   render() {
@@ -75,7 +71,8 @@ export default class AvailableTimes extends PureComponent {
             <Day
               key={day.date}
               date={day.date}
-              events={addOverlapHints(this.getDayEvents(day.date))}
+              events={addOverlapHints(getDayEvents(this.props.events, day.date))}
+              initialSelections={getDayEvents(this.props.initialSelections, day.date)}
               onChange={this.handleDayChange.bind(this, day.date)}
             />
           ))}
@@ -87,10 +84,17 @@ export default class AvailableTimes extends PureComponent {
 
 AvailableTimes.propTypes = {
   around: PropTypes.instanceOf(Date),
+  initialSelections: PropTypes.arrayOf(PropTypes.shape({
+    start: PropTypes.instanceOf(Date),
+    end: PropTypes.instanceOf(Date),
+  })),
   events: PropTypes.arrayOf(PropTypes.shape({
     start: PropTypes.instanceOf(Date),
     end: PropTypes.instanceOf(Date),
     label: PropTypes.string,
+    color: PropTypes.string,
+    width: PropTypes.number,
+    offset: PropTypes.number,
   })),
   onChange: PropTypes.func.isRequired,
 };

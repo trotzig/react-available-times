@@ -19,11 +19,11 @@ function relativeY(e, rounding = ROUND_TO_NEAREST_MINS) {
 }
 
 export default class Day extends Component {
-  constructor() {
+  constructor({ initialSelections }) {
     super();
     this.state = {
       index: null,
-      selections: [],
+      selections: initialSelections,
     };
     this.handleMouseUp = this.handleMouseUp.bind(this);
     this.handleMouseDown = this.handleMouseDown.bind(this);
@@ -174,6 +174,10 @@ export default class Day extends Component {
 
 Day.propTypes = {
   date: PropTypes.instanceOf(Date).isRequired,
+  initialSelections: PropTypes.arrayOf(PropTypes.shape({
+    start: PropTypes.instanceOf(Date),
+    end: PropTypes.instanceOf(Date),
+  })),
   events: PropTypes.arrayOf(PropTypes.shape({
     start: PropTypes.instanceOf(Date),
     end: PropTypes.instanceOf(Date),

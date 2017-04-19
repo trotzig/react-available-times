@@ -75,12 +75,23 @@ const events = [
   },
 ];
 
+const initialSelections = [
+  {
+    start: dateAt(1, 12, 5),
+    end: dateAt(1, 14, 0),
+  },
+  {
+    start: dateAt(4, 11, 0),
+    end: dateAt(4, 12, 30),
+  },
+];
+
 
 class Test extends Component {
   constructor() {
     super();
     this.state = {
-      selections: [],
+      selections: initialSelections,
       filteredEvents: events,
     };
     this.handleChange = this.handleChange.bind(this);
@@ -104,7 +115,6 @@ class Test extends Component {
             <label>
               <input
                 type="checkbox"
-                initialChecked
                 onChange={(e) => {
                   if (e.target.checked) {
                     this.setState({ filteredEvents: events.filter((e) => e.color) })
@@ -132,6 +142,7 @@ class Test extends Component {
             events={this.state.filteredEvents}
             around={new Date()}
             onChange={this.handleChange}
+            initialSelections={initialSelections}
           />
         </div>
       </div>
