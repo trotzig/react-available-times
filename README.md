@@ -2,6 +2,8 @@
 
 A React component that allows a user to select time-slots in a calendar-like UI.
 
+![Demo](/available-times-demo.gif)
+
 ## Installation
 ```
 npm install --save react-available-times
