@@ -1,3 +1,5 @@
+import dateIntervalString from './dateIntervalString';
+
 const names = [
   'Sunday',
   'Monday',
@@ -31,14 +33,17 @@ export default function weekAt(atDate) {
     date.setDate(date.getDate() - 1);
   }
 
-  const result = [];
+  const days = [];
   for (let i = 0; i < names.length; i++) {
-    result.push({
+    days.push({
       date: new Date(date.getTime()),
       name: names[date.getDay()],
       abbreviated: abbreviatedNames[date.getDay()],
     });
     date.setDate(date.getDate() + 1);
   }
-  return result;
+  return {
+    interval: dateIntervalString(days[0].date, days[days.length - 1].date),
+    days,
+  };
 }

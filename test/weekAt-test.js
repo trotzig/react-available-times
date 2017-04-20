@@ -1,7 +1,9 @@
 import weekAt from '../src/weekAt';
 
 it('returns a week', () => {
-  expect(weekAt(new Date('Sun Mar 26 2017 01:22:53 GMT+0200'))).toEqual([
+  const week = weekAt(new Date('Sun Mar 26 2017 01:22:53 GMT+0200'));
+  expect(week.interval).toEqual('March 26 – April 1')
+  expect(week.days).toEqual([
     {
       abbreviated: 'Sun',
       name: 'Sunday',

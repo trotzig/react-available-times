@@ -30,7 +30,7 @@ export default class AvailableTimes extends PureComponent {
       headerHeight: 50,
     };
     this.selections = {};
-    weekAt(around).forEach(({ date }) => {
+    weekAt(around).days.forEach(({ date }) => {
       this.selections[date.getDay()] = getDayEvents(initialSelections || [], date);
     });
   }
@@ -72,12 +72,17 @@ export default class AvailableTimes extends PureComponent {
           className={styles.header}
           ref={(el) => el && this.setState({ headerHeight: el.offsetHeight })}
         >
-          {week.map((day) => (
-            <DayHeader
-              day={day}
-              key={day.date}
-            />
-          ))}
+          <div className={styles.toolbar}>
+            {week.interval}
+          </div>
+          <div className={styles.headerDays}>
+            {week.days.map((day) => (
+              <DayHeader
+                day={day}
+                key={day.date}
+              />
+            ))}
+          </div>
         </div>
         <div
           className={styles.days}
@@ -85,7 +90,7 @@ export default class AvailableTimes extends PureComponent {
           ref={(element) => this._daysRef = element}
         >
           <Ruler />
-          {week.map((day) => (
+          {week.days.map((day) => (
             <Day
               key={day.date}
               date={day.date}
