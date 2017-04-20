@@ -17,7 +17,7 @@ export default class AvailableTimes extends Component {
     this.state = {
       weeks: [
         weekAt(start),
-        //weekAt(oneWeekAhead(start)),
+        weekAt(oneWeekAhead(start)),
       ],
       currentWeekIndex: 0,
     };
@@ -27,12 +27,37 @@ export default class AvailableTimes extends Component {
 
   }
 
+  handleNavClick(increment) {
+    this.setState(({ currentWeekIndex, weeks }) => {
+      const nextIndex = currentWeekIndex + increment;
+      if (nextIndex < 0) {
+        return;
+      }
+      let nextWeeks;
+      if (weeks[nextIndex]) {
+        nextWeeks = weeks;
+      } else {
+        nextWeeks = weeks.concat(weekAt(
+          oneWeekAhead(weeks[weeks.length - 1].days[3].date)));
+      }
+      return {
+        weeks: nextWeeks,
+        currentWeekIndex: nextIndex,
+      };
+    });
+  }
+
   render() {
     const {
       events,
       height,
       initialSelections,
     } = this.props;
+
+    const {
+      currentWeekIndex,
+      weeks,
+    } = this.state;
 
     return (
       <div
@@ -42,11 +67,20 @@ export default class AvailableTimes extends Component {
         }}
       >
         <div className={styles.toolbar}>
-          {this.state.weeks[this.state.currentWeekIndex].interval}
+          <button onClick={this.handleNavClick.bind(this, -1)}>
+            &lt;
+          </button>
+          {' '}
+          <button onClick={this.handleNavClick.bind(this, 1)}>
+            &gt;
+          </button>
+          {' '}
+          {weeks[currentWeekIndex].interval}
         </div>
         <div className={styles.main}>
-          {this.state.weeks.map((week) => (
+          {weeks.map((week, i) => (
             <Week
+              active={currentWeekIndex === i}
               key={week.days[0].date}
               week={week}
               initialSelections={initialSelections}

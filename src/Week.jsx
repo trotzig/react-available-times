@@ -47,11 +47,16 @@ export default class Week extends PureComponent {
 
   render() {
     const {
+      active,
       events,
       initialSelections,
       start,
       week,
     } = this.props;
+
+    if (!active) {
+      return null;
+    }
 
     return (
       <div className={styles.component}>
@@ -63,22 +68,20 @@ export default class Week extends PureComponent {
             />
           ))}
         </div>
-        <div className={styles.daysWrapper}>
-          <div
-            className={styles.days}
-            ref={(element) => this._daysRef = element}
-          >
-            <Ruler />
-            {week.days.map((day) => (
-              <Day
-                key={day.date}
-                date={day.date}
-                events={addOverlapHints(getDayEvents(events || [], day.date))}
-                initialSelections={getDayEvents(initialSelections || [], day.date)}
-                onChange={this.handleDayChange.bind(this, day.date)}
-              />
-            ))}
-          </div>
+        <div
+          className={styles.days}
+          ref={(element) => this._daysRef = element}
+        >
+          <Ruler />
+          {week.days.map((day) => (
+            <Day
+              key={day.date}
+              date={day.date}
+              events={addOverlapHints(getDayEvents(events || [], day.date))}
+              initialSelections={getDayEvents(initialSelections || [], day.date)}
+              onChange={this.handleDayChange.bind(this, day.date)}
+            />
+          ))}
         </div>
       </div>
     );
@@ -86,16 +89,17 @@ export default class Week extends PureComponent {
 }
 
 Week.propTypes = {
-  week: PropTypes.object.isRequired,
-  initialSelections: PropTypes.arrayOf(PropTypes.shape({
-    start: PropTypes.instanceOf(Date),
-    end: PropTypes.instanceOf(Date),
-  })),
+  active: PropTypes.bool,
   events: PropTypes.arrayOf(PropTypes.shape({
     start: PropTypes.instanceOf(Date),
     end: PropTypes.instanceOf(Date),
     label: PropTypes.string,
     color: PropTypes.string,
   })),
+  initialSelections: PropTypes.arrayOf(PropTypes.shape({
+    start: PropTypes.instanceOf(Date),
+    end: PropTypes.instanceOf(Date),
+  })),
   onChange: PropTypes.func,
+  week: PropTypes.object.isRequired,
 };
