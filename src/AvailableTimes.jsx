@@ -67,15 +67,18 @@ export default class AvailableTimes extends Component {
         }}
       >
         <div className={styles.toolbar}>
-          <button onClick={this.handleNavClick.bind(this, -1)}>
-            &lt;
-          </button>
-          {' '}
-          <button onClick={this.handleNavClick.bind(this, 1)}>
-            &gt;
-          </button>
-          {' '}
-          {weeks[currentWeekIndex].interval}
+          <div className={styles.buttons}>
+            <button onClick={this.handleNavClick.bind(this, -1)}>
+              &lt;
+            </button>
+            {' '}
+            <button onClick={this.handleNavClick.bind(this, 1)}>
+              &gt;
+            </button>
+          </div>
+          <div className={styles.interval}>
+            {weeks[currentWeekIndex].interval}
+          </div>
         </div>
         <div className={styles.main}>
           {weeks.map((week, i) => (
