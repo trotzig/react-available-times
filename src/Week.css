@@ -1,0 +1,21 @@
+:local(.component) {
+  display: flex;
+  flex-direction: column;
+}
+
+:local(.days),
+:local(.header) {
+  display: flex;
+  align-items: flex-start;
+}
+
+:local(.daysWrapper) {
+  border-top: 1px solid #ccc;
+  flex-grow: 1;
+  overflow: auto;
+}
+
+:local(.header) {
+  padding-left: 30px;
+  flex-shrink: 0;
+}
