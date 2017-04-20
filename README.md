@@ -24,10 +24,10 @@ import AvailableTimes from 'react-available-times';
     { start: aDateObject, end: anotherDateObject }
   ]}
   events={[
-    { start: aDateObject, end: anotherDateObject },
-    { start: aDateObject, end: anotherDateObject }
+    { start: aDateObject, end: anotherDateObject, label: 'Some label' },
+    { start: aDateObject, end: anotherDateObject, label: 'Some other label' }
   ]}
-  around={new Date()}
+  start={new Date()}
   height={400}
 />
 ```
@@ -43,8 +43,8 @@ None of the props are required.
 - `events`: calendar events, usually pulled from a different source (e.g. a
   Google Calendar). Each object needs a `start` and an `end` date, plus a
   `label` property. Optionally, they can also have a `color`.
-- `around`: a date signalling the week you want to display. Can be any day
-  within the week.
+- `start`: a date signalling the week you want to display to begin with. Can be
+  any day within the week.
 - `height`: a string or a number controlling the `height` of the component.
   E.g. `'100%'`, `350`, `'100vh'`. If left out, the full height of the screen
   will be used.

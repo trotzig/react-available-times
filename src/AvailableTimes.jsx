@@ -24,13 +24,13 @@ function getDayEvents(events, date) {
 }
 
 export default class AvailableTimes extends PureComponent {
-  constructor({ around, initialSelections }) {
+  constructor({ start, initialSelections }) {
     super();
     this.state = {
       headerHeight: 50,
     };
     this.selections = {};
-    weekAt(around).days.forEach(({ date }) => {
+    weekAt(start).days.forEach(({ date }) => {
       this.selections[date.getDay()] = getDayEvents(initialSelections || [], date);
     });
   }
@@ -51,7 +51,7 @@ export default class AvailableTimes extends PureComponent {
 
   render() {
     const {
-      around,
+      start,
       events,
       initialSelections,
       height,
@@ -59,7 +59,7 @@ export default class AvailableTimes extends PureComponent {
 
     const { headerHeight } = this.state;
 
-    const week = weekAt(around);
+    const week = weekAt(start);
 
     return (
       <div
@@ -106,7 +106,7 @@ export default class AvailableTimes extends PureComponent {
 }
 
 AvailableTimes.propTypes = {
-  around: PropTypes.instanceOf(Date),
+  start: PropTypes.instanceOf(Date),
   initialSelections: PropTypes.arrayOf(PropTypes.shape({
     start: PropTypes.instanceOf(Date),
     end: PropTypes.instanceOf(Date),
@@ -122,5 +122,5 @@ AvailableTimes.propTypes = {
 };
 
 AvailableTimes.defaultProps = {
-  around: new Date(),
+  start: new Date(),
 };

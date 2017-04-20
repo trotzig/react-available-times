@@ -140,7 +140,7 @@ class Test extends Component {
           </div>
           <AvailableTimes
             events={this.state.filteredEvents}
-            around={new Date()}
+            start={new Date()}
             onChange={this.handleChange}
             initialSelections={initialSelections}
           />
