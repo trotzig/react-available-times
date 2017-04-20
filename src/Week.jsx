@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 
+import { HOUR_IN_PIXELS } from './Constants';
 import Day from './Day';
 import DayHeader from './DayHeader';
 import Ruler from './Ruler';
@@ -31,11 +32,6 @@ export default class Week extends PureComponent {
     });
   }
 
-  componentDidMount() {
-    // Place scroll at 06:30 in the morning
-    this._daysRef.scrollTop = 325;
-  }
-
   handleDayChange(day, selections) {
     const { onChange } = this.props;
     this.selections[day.getDay()] = selections;
@@ -54,12 +50,13 @@ export default class Week extends PureComponent {
       week,
     } = this.props;
 
-    if (!active) {
-      return null;
-    }
-
     return (
-      <div className={styles.component}>
+      <div
+        className={styles.component}
+        style={{
+          display: active ? undefined : 'none',
+        }}
+      >
         <div className={styles.header}>
           {week.days.map((day) => (
             <DayHeader
@@ -70,7 +67,12 @@ export default class Week extends PureComponent {
         </div>
         <div
           className={styles.days}
-          ref={(element) => this._daysRef = element}
+          ref={(element) => {
+            if (!element) {
+              return;
+            }
+            element.scrollTop = HOUR_IN_PIXELS * 6.5;
+          }}
         >
           <Ruler />
           {week.days.map((day) => (
