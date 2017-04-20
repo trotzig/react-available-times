@@ -68,9 +68,10 @@ export default class Week extends PureComponent {
         <div
           className={styles.days}
           ref={(element) => {
-            if (!element) {
+            if (!element || this.alreadyScrolled) {
               return;
             }
+            this.alreadyScrolled = true;
             element.scrollTop = HOUR_IN_PIXELS * 6.5;
           }}
         >

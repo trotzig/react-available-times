@@ -83,6 +83,7 @@ export default class AvailableTimes extends Component {
               active={currentWeekIndex === i}
               key={week.days[0].date}
               week={week}
+              events={events}
               initialSelections={initialSelections}
               onChange={this.handleChange.bind(this, week)}
               height={height}
