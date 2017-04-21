@@ -80,13 +80,13 @@ export default class AvailableTimes extends Component {
       if (nextIndex < 0) {
         return;
       }
-      let nextWeeks;
-      if (weeks[nextIndex]) {
-        nextWeeks = weeks;
-      } else {
+
+      let nextWeeks = weeks;
+      if (increment > 0) {
         nextWeeks = weeks.concat(weekAt(
           oneWeekAhead(weeks[weeks.length - 1].days[3].date)));
       }
+
       return {
         weeks: nextWeeks,
         currentWeekIndex: nextIndex,
@@ -135,7 +135,7 @@ export default class AvailableTimes extends Component {
         <div className={styles.main}>
           {weeks.map((week, i) => (
             <Week
-              active={currentWeekIndex === i}
+              offset={i - currentWeekIndex}
               key={week.days[0].date}
               week={week}
               events={this.state.overlappedEvents}

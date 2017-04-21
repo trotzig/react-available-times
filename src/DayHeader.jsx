@@ -8,12 +8,23 @@ import styles from './DayHeader.css';
 class DayHeader extends Component {
   text() {
     const { day, availableWidth } = this.props;
-    const dateStr = `${day.date.getDate()}/${day.date.getMonth() + 1}`;
+    const dateNumber = day.date.getDate();
+
+    if (availableWidth < 55) {
+      return (
+        <span>
+          {day.abbreviated}
+          <br/>
+          {dateNumber}
+        </span>
+      );
+    }
 
     if (availableWidth < 90) {
-      return `${day.abbreviated} ${dateStr}`;
+      return `${day.abbreviated} ${dateNumber}`;
     }
-    return `${day.name} ${dateStr}`;
+
+    return `${day.name} ${dateNumber}`;
   }
 
   render() {
