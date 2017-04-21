@@ -1,6 +1,7 @@
 :local(.component) {
   display: flex;
   flex-direction: column;
+  max-height: 100%;
 }
 
 :local(.days),
@@ -11,7 +12,6 @@
 
 :local(.days) {
   border-top: 1px solid #ccc;
-  flex-grow: 1;
   overflow: auto;
 }
 
