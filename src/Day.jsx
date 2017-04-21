@@ -12,8 +12,8 @@ import toDate from './toDate';
 const ROUND_TO_NEAREST_MINS = 15;
 
 function relativeY(e, rounding = ROUND_TO_NEAREST_MINS) {
-  const { offsetTop, scrollTop } = e.target.parentNode.parentNode;
-  const realY = e.pageY - offsetTop + scrollTop;
+  const { top } = e.target.getBoundingClientRect();
+  const realY = e.pageY - top;
   const snapTo = rounding / 60 * HOUR_IN_PIXELS;
   return Math.floor(realY / snapTo) * snapTo;
 }
