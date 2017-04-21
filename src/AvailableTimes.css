@@ -31,6 +31,29 @@
 :local(.buttons) {
   flex-shrink: 0;
   margin-right: 20px;
+  margin-left: 25px;
+  display: flex;
+  align-items: center;
+}
+
+:local(.button) {
+  border-radius: 3px;
+  background-color: transparent;
+  border: 0;
+  padding: 0 6px;
+  cursor: pointer;
+}
+
+:local(.button):focus {
+  outline: none;
+}
+
+:local(.button):hover {
+  background-color: #F6FAFE;
+}
+
+:local(.button):active {
+  fill: #4477BD;
 }
 
 :local(.interval) {
