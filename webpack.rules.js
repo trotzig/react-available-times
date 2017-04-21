@@ -1,3 +1,5 @@
+const autoprefixer = require('autoprefixer');
+
 module.exports = [
   {
     test: /\.jsx?/,
@@ -16,7 +18,12 @@ module.exports = [
           localIdentName: 'rat-[name]_[local]',
         },
       },
-    ]
+      {
+        loader: 'postcss-loader',
+        options: {
+          plugins: () => [autoprefixer],
+        },
+      },
+    ],
   },
 ];
-
