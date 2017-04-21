@@ -35,7 +35,7 @@ function flatten(selections) {
 }
 
 export default class AvailableTimes extends Component {
-  constructor({ start = new Date(), events = [] }) {
+  constructor({ initialSelections = [], start = new Date(), events = [] }) {
     super();
     this.state = {
       weeks: [
@@ -46,6 +46,12 @@ export default class AvailableTimes extends Component {
       overlappedEvents: addOverlapHints(events),
     };
     this.selections = {};
+    initialSelections.forEach((selection) => {
+      const week = weekAt(selection.start);
+      const existing = this.selections[week.days[0].date] || [];
+      existing.push(selection);
+      this.selections[week.days[0].date] = existing;
+    });
     this.handleWeekChange = this.handleWeekChange.bind(this);
   }
 
