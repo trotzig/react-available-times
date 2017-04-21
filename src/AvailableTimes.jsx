@@ -21,7 +21,7 @@ function flatten(selections) {
 }
 
 export default class AvailableTimes extends Component {
-  constructor({ start, events }) {
+  constructor({ start = new Date(), events = [] }) {
     super();
     this.state = {
       weeks: [
