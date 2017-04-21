@@ -65,25 +65,14 @@ export default class Week extends PureComponent {
 
   render() {
     const {
-      offset,
-      past,
       start,
       week,
     } = this.props;
 
     const { dayEvents, daySelections } = this.state;
 
-    const classes = [styles.component];
-    if (offset > 0) {
-      classes.push(styles.future);
-    } else if (offset < 0){
-      classes.push(styles.past);
-    }
-
     return (
-      <div
-        className={classes.join(' ')}
-      >
+      <div className={styles.component}>
         <div className={styles.header}>
           {week.days.map((day) => (
             <DayHeader
@@ -119,7 +108,6 @@ export default class Week extends PureComponent {
 }
 
 Week.propTypes = {
-  offset: PropTypes.number,
   events: PropTypes.arrayOf(PropTypes.shape({
     start: PropTypes.instanceOf(Date),
     end: PropTypes.instanceOf(Date),

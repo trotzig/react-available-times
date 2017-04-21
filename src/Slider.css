@@ -1,0 +1,15 @@
+:local(.component) {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+:local(.item) {
+  transition: transform .2s;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}

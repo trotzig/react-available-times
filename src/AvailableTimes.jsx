@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
+import Slider from './Slider';
 import Week from './Week';
 import addOverlapHints from './addOverlapHints';
 import styles from './AvailableTimes.css';
@@ -133,17 +134,18 @@ export default class AvailableTimes extends Component {
           </div>
         </div>
         <div className={styles.main}>
-          {weeks.map((week, i) => (
-            <Week
-              offset={i - currentWeekIndex}
-              key={week.days[0].date}
-              week={week}
-              events={this.state.overlappedEvents}
-              initialSelections={initialSelections}
-              onChange={this.handleWeekChange}
-              height={height}
-            />
-          ))}
+          <Slider index={currentWeekIndex}>
+            {weeks.map((week, i) => (
+              <Week
+                key={week.days[0].date}
+                week={week}
+                events={this.state.overlappedEvents}
+                initialSelections={initialSelections}
+                onChange={this.handleWeekChange}
+                height={height}
+              />
+            ))}
+          </Slider>
         </div>
       </div>
     );
