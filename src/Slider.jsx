@@ -3,29 +3,96 @@ import React, { Children, PureComponent } from 'react';
 
 import styles from './Slider.css';
 
+const THRESHOLD_PERCENT = 15;
+
 export default class Slider extends PureComponent {
+  constructor() {
+    super();
+    this.state = {
+      offsetX: 0,
+    };
+    this.handleTouchStart = this.handleTouchStart.bind(this);
+    this.handleTouchMove = this.handleTouchMove.bind(this);
+    this.handleTouchEnd = this.handleTouchEnd.bind(this);
+    this.handleRef = this.handleRef.bind(this);
+  }
+
+  handleRef(element) {
+    this.width = element.offsetWidth;
+  }
+
+  handleTouchStart(event) {
+    this.setState({
+      startX: event.touches[0].pageX,
+    });
+  }
+
+  handleTouchMove(event) {
+    const x = event.touches[0].pageX;
+    this.setState(({ startX }) => ({
+      offsetX: x - startX,
+    }));
+  }
+
+  handleTouchEnd() {
+    const percentage = this.percentage();
+    if (Math.abs(percentage) > THRESHOLD_PERCENT) {
+      this.props.onSlide(percentage < 0 ? 1 : -1);
+    }
+    this.setState({
+      offsetX: 0,
+      startX: undefined,
+    });
+  }
+
+  percentage() {
+    const { offsetX } = this.state;
+    return offsetX != 0 ? offsetX / this.width * 100 : 0;
+  }
+
+  getTranslateValue(i) {
+    const { index } = this.props;
+    const percentage = this.percentage();
+    if (i === index) {
+      return percentage;
+    }
+    if (i - index === 1) {
+      // next week
+      return 100 + percentage;
+    }
+    if (index - i === 1) {
+      // previous week
+      return -100 + percentage;
+    }
+    if (i - index > 0) {
+      return 100;
+    }
+    if (i - index < 0) {
+      return -100;
+    }
+  }
+
   render() {
     const {
       children,
-      index,
-      onSlide,
     } = this.props;
 
     return (
-      <div className={styles.component}>
+      <div
+        className={styles.component}
+        ref={this.handleRef}
+      >
         {Children.toArray(children).map((child, i) => {
-          let translate = '0';
-          if (i - index > 0) {
-            translate = '100%';
-          } else if (i - index < 0) {
-            translate = '-100%';
-          }
+          const translate = this.getTranslateValue(i);
           return (
             <div
               key={i}
               className={styles.item}
+              onTouchStart={this.handleTouchStart}
+              onTouchMove={this.handleTouchMove}
+              onTouchEnd={this.handleTouchEnd}
               style={{
-                transform: `translateX(${translate})`,
+                transform: `translateX(${translate}%)`,
               }}
             >
               {child}

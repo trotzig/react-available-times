@@ -54,6 +54,7 @@ export default class AvailableTimes extends Component {
       this.selections[week.days[0].date] = existing;
     });
     this.handleWeekChange = this.handleWeekChange.bind(this);
+    this.move = this.move.bind(this);
   }
 
   componentWillReceiveProps({ events }) {
@@ -75,7 +76,7 @@ export default class AvailableTimes extends Component {
     onChange(flatten(this.selections));
   }
 
-  handleNavClick(increment) {
+  move(increment) {
     this.setState(({ currentWeekIndex, weeks }) => {
       const nextIndex = currentWeekIndex + increment;
       if (nextIndex < 0) {
@@ -117,14 +118,14 @@ export default class AvailableTimes extends Component {
           <div className={styles.buttons}>
             <button
               className={styles.button}
-              onClick={this.handleNavClick.bind(this, -1)}
+              onClick={this.move.bind(this, -1)}
             >
               {leftArrowSvg}
             </button>
             {' '}
             <button
               className={styles.button}
-              onClick={this.handleNavClick.bind(this, 1)}
+              onClick={this.move.bind(this, 1)}
             >
               {rightArrowSvg}
             </button>
@@ -134,7 +135,10 @@ export default class AvailableTimes extends Component {
           </div>
         </div>
         <div className={styles.main}>
-          <Slider index={currentWeekIndex}>
+          <Slider
+            index={currentWeekIndex}
+            onSlide={this.move}
+          >
             {weeks.map((week, i) => (
               <Week
                 key={week.days[0].date}
