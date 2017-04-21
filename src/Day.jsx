@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import { HOUR_IN_PIXELS } from './Constants';
 import TimeSlot from './TimeSlot';
@@ -18,7 +18,7 @@ function relativeY(e, rounding = ROUND_TO_NEAREST_MINS) {
   return Math.floor(realY / snapTo) * snapTo;
 }
 
-export default class Day extends Component {
+export default class Day extends PureComponent {
   constructor({ initialSelections }) {
     super();
     this.state = {
@@ -118,12 +118,15 @@ export default class Day extends Component {
   }
 
   handleMouseUp(e) {
+    if (this.state.index === null) {
+      return;
+    }
     this.setState({
       edge: null,
       index: null,
       lastKnownPosition: null,
     });
-    this.props.onChange(this.state.selections);
+    this.props.onChange(this.props.date, this.state.selections);
   }
 
   render() {

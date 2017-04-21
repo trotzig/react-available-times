@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 import Week from './Week';
+import addOverlapHints from './addOverlapHints';
 import styles from './AvailableTimes.css';
 import weekAt from './weekAt';
 
@@ -11,8 +12,16 @@ function oneWeekAhead(date) {
   return result;
 }
 
+function flatten(selections) {
+  const result = [];
+  Object.keys(selections).forEach((date) => {
+    result.push(...selections[date]);
+  });
+  return result;
+}
+
 export default class AvailableTimes extends Component {
-  constructor({ start }) {
+  constructor({ start, events }) {
     super();
     this.state = {
       weeks: [
@@ -20,11 +29,29 @@ export default class AvailableTimes extends Component {
         weekAt(oneWeekAhead(start)),
       ],
       currentWeekIndex: 0,
+      overlappedEvents: addOverlapHints(events),
     };
+    this.selections = {};
+    this.handleWeekChange = this.handleWeekChange.bind(this);
   }
 
-  handleChange(week, selections) {
+  componentWillReceiveProps({ events }) {
+    if (events === this.props.events) {
+      // nothing to do
+      return;
+    }
+    this.setState({
+      overlappedEvents: addOverlapHints(events),
+    });
+  }
 
+  handleWeekChange(week, selections) {
+    const { onChange } = this.props;
+    this.selections[week.days[0].date] = selections;
+    if (!onChange) {
+      return;
+    }
+    onChange(flatten(this.selections));
   }
 
   handleNavClick(increment) {
@@ -49,7 +76,6 @@ export default class AvailableTimes extends Component {
 
   render() {
     const {
-      events,
       height,
       initialSelections,
     } = this.props;
@@ -86,9 +112,9 @@ export default class AvailableTimes extends Component {
               active={currentWeekIndex === i}
               key={week.days[0].date}
               week={week}
-              events={events}
+              events={this.state.overlappedEvents}
               initialSelections={initialSelections}
-              onChange={this.handleChange.bind(this, week)}
+              onChange={this.handleWeekChange}
               height={height}
             />
           ))}

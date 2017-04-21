@@ -10,8 +10,8 @@ import styles from './Week.css';
 
 function flatten(selections) {
   const result = [];
-  Object.keys(selections).forEach((dayOfWeek) => {
-    result.push(...selections[dayOfWeek]);
+  selections.forEach((selectionsInDay) => {
+    result.push(...selectionsInDay);
   });
   return result;
 }
@@ -23,32 +23,54 @@ function getDayEvents(events, date) {
   });
 }
 
+function constructStateFromProps({ week, initialSelections, events }) {
+  const daySelections = [];
+  const dayEvents = [];
+  week.days.forEach(({ date }) => {
+    daySelections.push(getDayEvents(initialSelections || [], date));
+    dayEvents.push(getDayEvents(events || [], date));
+  });
+  return {
+    dayEvents,
+    daySelections,
+  };
+}
+
 export default class Week extends PureComponent {
-  constructor({ week, initialSelections }) {
+  constructor(props) {
     super();
-    this.selections = {};
-    week.days.forEach(({ date }) => {
-      this.selections[date.getDay()] = getDayEvents(initialSelections || [], date);
-    });
+    this.state = constructStateFromProps(props);
+    this.handleDayChange = this.handleDayChange.bind(this);
+  }
+
+  componentWillReceiveProps(newProps) {
+    if (newProps.events === this.props.events) {
+      // nothing changed
+      return;
+    }
+    this.setState(constructStateFromProps(newProps));
   }
 
   handleDayChange(day, selections) {
-    const { onChange } = this.props;
-    this.selections[day.getDay()] = selections;
-    if (!onChange) {
-      return;
-    }
-    onChange(flatten(this.selections));
+    this.setState(({ daySelections }) => {
+      const { onChange } = this.props;
+      if (!onChange) {
+        return;
+      }
+      daySelections[day.getDay()] = selections;
+      onChange(this.props.week, flatten(daySelections));
+      return { daySelections };
+    });
   }
 
   render() {
     const {
       active,
-      events,
-      initialSelections,
       start,
       week,
     } = this.props;
+
+    const { dayEvents, daySelections } = this.state;
 
     return (
       <div
@@ -76,13 +98,13 @@ export default class Week extends PureComponent {
           }}
         >
           <Ruler />
-          {week.days.map((day) => (
+          {week.days.map((day, i) => (
             <Day
               key={day.date}
               date={day.date}
-              events={addOverlapHints(getDayEvents(events || [], day.date))}
-              initialSelections={getDayEvents(initialSelections || [], day.date)}
-              onChange={this.handleDayChange.bind(this, day.date)}
+              events={dayEvents[i]}
+              initialSelections={daySelections[i]}
+              onChange={this.handleDayChange}
             />
           ))}
         </div>
@@ -98,6 +120,8 @@ Week.propTypes = {
     end: PropTypes.instanceOf(Date),
     label: PropTypes.string,
     color: PropTypes.string,
+    offset: PropTypes.number,
+    width: PropTypes.number,
   })),
   initialSelections: PropTypes.arrayOf(PropTypes.shape({
     start: PropTypes.instanceOf(Date),
