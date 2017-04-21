@@ -4,6 +4,10 @@
   position: relative;
 }
 
+:local(.today) {
+  background-color: #F6FAFE;
+}
+
 :local(.hour) {
   border-bottom: 1px solid #ccc;
   pointer-events: none;

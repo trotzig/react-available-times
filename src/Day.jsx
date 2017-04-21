@@ -130,11 +130,16 @@ export default class Day extends PureComponent {
   }
 
   render() {
-    const { events } = this.props;
+    const { date, events } = this.props;
     const { selections } = this.state;
 
+    const classes = [styles.component];
+    if (date.toDateString() === new Date().toDateString()) {
+      classes.push(styles.today);
+    }
+
     return (
-      <div className={styles.component}>
+      <div className={classes.join(' ')}>
         {hours.map((hour) => (
           <div
             key={hour}
