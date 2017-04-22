@@ -104,42 +104,48 @@ class Test extends Component {
   render() {
     const { selections } = this.state;
 
+    const fullscreen = window.location.search === '?fullscreen';
     return (
       <div>
         <div className={styles.example}>
-          <div className={styles.intro}>
-            <h1>Example #1</h1>
-            <p>
-              Uses the current date as the starting point.
-            </p>
-            <label>
-              <input
-                type="checkbox"
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    this.setState({ filteredEvents: events.filter((e) => e.color) })
-                  } else {
-                    this.setState({ filteredEvents: events })
-                  }
-                }}
-              />
-              Hide some events
-            </label>
-            {selections.length > 0 && (
-              <div>
-                <h2>Selected ({selections.length})</h2>
-                <ul className={styles.selected}>
-                  {selections.map(({ start, end }) => (
-                    <li key={start}>
-                      {start.toString()} - {end.toString()}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
+          {!fullscreen &&
+            <div className={styles.intro}>
+              <h1>Example #1</h1>
+              <p>
+                Uses the current date as the starting point.
+              </p>
+              <label>
+                <input
+                  type="checkbox"
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      this.setState({ filteredEvents: events.filter((e) => e.color) })
+                    } else {
+                      this.setState({ filteredEvents: events })
+                    }
+                  }}
+                />
+                Hide some events
+              </label>
+              {selections.length > 0 && (
+                <div>
+                  <h2>Selected ({selections.length})</h2>
+                  <ul className={styles.selected}>
+                    {selections.map(({ start, end }) => (
+                      <li key={start}>
+                        {start.toString()} - {end.toString()}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              <a href="test.html?fullscreen">
+                Go full screen
+              </a>
+            </div>
+          }
           <AvailableTimes
-            height={600}
+            height={fullscreen ? undefined : 600}
             events={this.state.filteredEvents}
             start={new Date()}
             onChange={this.handleChange}
