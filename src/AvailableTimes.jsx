@@ -90,6 +90,8 @@ export default class AvailableTimes extends Component {
       this.selections[week.days[0].date] = existing;
     });
     this.handleWeekChange = this.handleWeekChange.bind(this);
+    this.moveBack = this.move.bind(this, -1);
+    this.moveForward = this.move.bind(this, 1);
     this.move = this.move.bind(this);
     this.handleCalendarChange = this.handleCalendarChange.bind(this);
   }
@@ -183,14 +185,14 @@ export default class AvailableTimes extends Component {
           <div className={styles.buttons}>
             <button
               className={styles.button}
-              onClick={this.move.bind(this, -1)}
+              onClick={this.moveBack}
             >
               {leftArrowSvg}
             </button>
             {' '}
             <button
               className={styles.button}
-              onClick={this.move.bind(this, 1)}
+              onClick={this.moveForward}
             >
               {rightArrowSvg}
             </button>
