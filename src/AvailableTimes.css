@@ -14,14 +14,6 @@
   flex-direction: column;
 }
 
-:local(.toolbar) {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px;
-  font-size: 18px;
-}
-
 :local(.main) {
   display: flex;
   flex-direction: column;
@@ -30,21 +22,26 @@
   overflow: hidden;
 }
 
-:local(.buttons) {
-  flex-shrink: 0;
-  margin-right: 20px;
-  margin-left: 25px;
+:local(.toolbar) {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  font-size: 18px;
+}
+
+:local(.buttons) {
+  flex-shrink: 0;
 }
 
 :local(.button) {
   border-radius: 3px;
   background-color: transparent;
   border: 0;
-  padding: 0 6px;
+  padding: 2px 5px;
   cursor: pointer;
   fill: #666;
+  min-width: auto;
 }
 
 :local(.button):focus {
@@ -61,6 +58,12 @@
 
 :local(.interval) {
   overflow: hidden;
+  width: 100%;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+:local(.calendarSelector) {
+  width: 100%;
+  text-align: right;
 }

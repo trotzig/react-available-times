@@ -115,6 +115,9 @@ export default class AvailableTimes extends Component {
         }}
       >
         <div className={styles.toolbar}>
+          <div className={styles.interval}>
+            {weeks[currentWeekIndex].interval}
+          </div>
           <div className={styles.buttons}>
             <button
               className={styles.button}
@@ -130,8 +133,8 @@ export default class AvailableTimes extends Component {
               {rightArrowSvg}
             </button>
           </div>
-          <div className={styles.interval}>
-            {weeks[currentWeekIndex].interval}
+          <div className={styles.calendarSelector}>
+            TODO
           </div>
         </div>
         <div className={styles.main}>
