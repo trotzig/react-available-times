@@ -1,3 +1,6 @@
+:local(.component) {
+  flex-shrink: 0;
+}
 :local(.hour) {
   width: 30px;
   text-align: right;
