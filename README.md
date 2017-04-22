@@ -52,8 +52,8 @@ None of the props are required.
 ## Contributing
 
 First, run `npm install` to install all dependencies. Then, to manually test
-the component, run `npm run build-test -- --watch` and open `src/test.html` in
-a browser.
+the component, run `npm run start-test` and open `http://localhost:3333/` in a
+browser.
 
 Unit tests are run with [jest](https://facebook.github.io/jest/). Run `npm run
 test -- --watch` to run tests.

@@ -139,7 +139,7 @@ class Test extends Component {
                   </ul>
                 </div>
               )}
-              <a href="test.html?fullscreen">
+              <a href="/?fullscreen">
                 Go full screen
               </a>
             </div>
