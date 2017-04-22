@@ -1,0 +1,15 @@
+:local(.component) {
+  text-align: right;
+  position: relative;
+}
+
+:local(.menu) {
+  z-index: 1;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  width: 200px;
+  min-height: 300px;
+  position: absolute;
+  right: 0;
+  top: 100%;
+}

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
+import CalendarSelector from './CalendarSelector';
 import Slider from './Slider';
 import Week from './Week';
 import addOverlapHints from './addOverlapHints';
@@ -35,16 +36,51 @@ function flatten(selections) {
   return result;
 }
 
+function colorize(events, calendars) {
+  const byId = {};
+  calendars.forEach(({ id, foregroundColor, backgroundColor }) => {
+    byId[id] = { foregroundColor, backgroundColor };
+  });
+  // We're assuming that it's safe to mutate events here (they should have been
+  // duped by addOverlapHints already).
+  events.forEach((event) => {
+    Object.assign(event, byId[event.calendar]);
+  });
+  return events;
+}
+
+/**
+ * @param {Array<Object>} events
+ * @param {Set<String>} visibleCalendars
+ * @return {Array<Object>}
+ */
+function filterVisible(events, visibleCalendars) {
+  return events.filter(({ calendar }) => visibleCalendars.has(calendar));
+}
+
 export default class AvailableTimes extends Component {
-  constructor({ initialSelections = [], start = new Date(), events = [] }) {
+  constructor({
+    initialSelections = [],
+    initialVisibleCalendars = [],
+    start = new Date(),
+    events = [],
+    calendars,
+  }) {
     super();
+    const visibleCalendars = new Set(initialVisibleCalendars);
     this.state = {
       weeks: [
         weekAt(start),
         weekAt(oneWeekAhead(start)),
       ],
       currentWeekIndex: 0,
-      overlappedEvents: addOverlapHints(events),
+      visibleCalendars,
+      overlappedEvents: colorize(
+        addOverlapHints(
+          filterVisible(events, visibleCalendars)
+        ),
+        calendars,
+      ),
     };
     this.selections = {};
     initialSelections.forEach((selection) => {
@@ -55,6 +91,7 @@ export default class AvailableTimes extends Component {
     });
     this.handleWeekChange = this.handleWeekChange.bind(this);
     this.move = this.move.bind(this);
+    this.handleCalendarChange = this.handleCalendarChange.bind(this);
   }
 
   componentWillReceiveProps({ events }) {
@@ -62,9 +99,14 @@ export default class AvailableTimes extends Component {
       // nothing to do
       return;
     }
-    this.setState({
-      overlappedEvents: addOverlapHints(events),
-    });
+    this.setState(({ visibleCalendars }) => ({
+      overlappedEvents: colorize(
+        addOverlapHints(
+          filterVisible(events, visibleCalendars)
+        ),
+        this.props.calendars
+      )
+    }));
   }
 
   handleWeekChange(week, selections) {
@@ -74,6 +116,23 @@ export default class AvailableTimes extends Component {
       return;
     }
     onChange(flatten(this.selections));
+  }
+
+  handleCalendarChange(visibleCalendars) {
+    const {
+      events,
+      calendars,
+    } = this.props;
+
+    this.setState({
+      visibleCalendars,
+      overlappedEvents: colorize(
+        addOverlapHints(
+          filterVisible(events, visibleCalendars)
+        ),
+        calendars
+      ),
+    });
   }
 
   move(increment) {
@@ -98,12 +157,15 @@ export default class AvailableTimes extends Component {
 
   render() {
     const {
+      calendars,
       height,
       initialSelections,
+      initialVisibleCalendars,
     } = this.props;
 
     const {
       currentWeekIndex,
+      visibleCalendars,
       weeks,
     } = this.state;
 
@@ -134,7 +196,11 @@ export default class AvailableTimes extends Component {
             </button>
           </div>
           <div className={styles.calendarSelector}>
-            TODO
+            <CalendarSelector
+              calendars={calendars}
+              visibleCalendars={visibleCalendars}
+              onChange={this.handleCalendarChange}
+            />
           </div>
         </div>
         <div className={styles.main}>
@@ -144,6 +210,7 @@ export default class AvailableTimes extends Component {
           >
             {weeks.map((week, i) => (
               <Week
+                calendars={calendars}
                 key={week.days[0].date}
                 week={week}
                 events={this.state.overlappedEvents}
@@ -165,11 +232,17 @@ AvailableTimes.propTypes = {
     start: PropTypes.instanceOf(Date),
     end: PropTypes.instanceOf(Date),
   })),
+  calendars: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string,
+    displayName: PropTypes.string,
+    color: PropTypes.string,
+  })),
+  initialVisibleCalendars: PropTypes.arrayOf(PropTypes.string),
   events: PropTypes.arrayOf(PropTypes.shape({
     start: PropTypes.instanceOf(Date),
     end: PropTypes.instanceOf(Date),
     label: PropTypes.string,
-    color: PropTypes.string,
+    calendar: PropTypes.string,
   })),
   onChange: PropTypes.func,
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),

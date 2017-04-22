@@ -19,59 +19,81 @@ function dateAt(dayInWeek, hours, minutes) {
   return date;
 }
 
+const calendars = [
+  {
+    id: 'private',
+    displayName: 'Private',
+    backgroundColor: '#666',
+    foregroundColor: '#fff',
+  },
+  {
+    id: 'work',
+    displayName: 'Work',
+    backgroundColor: 'pink',
+    foregroundColor: 'black',
+  },
+];
+
 const events = [
   {
     start: dateAt(0, 12, 30),
     end: dateAt(0, 14, 0),
     label: 'Lunch with Lo',
+    calendar: 'private',
   },
   {
     start: dateAt(1, 8, 5),
     end: dateAt(1, 10, 0),
     label: 'Breakfast club',
-    color: '#f0f5f5',
+    calendar: 'work',
   },
   {
     start: dateAt(1, 8, 20),
     end: dateAt(1, 10, 30),
     label: 'Morning meeting',
+    calendar: 'private',
   },
   {
     start: dateAt(1, 10, 0),
     end: dateAt(1, 12, 0),
     label: 'Busy-time',
+    calendar: 'private',
   },
   {
     start: dateAt(3, 8, 0),
     end: dateAt(3, 17, 0),
     label: 'Conference',
+    calendar: 'private',
   },
   {
     start: dateAt(4, 17, 0),
     end: dateAt(4, 19, 0),
     label: 'Pick up groceries',
+    calendar: 'private',
   },
   {
     start: dateAt(5, 10, 0),
     end: dateAt(5, 13, 20),
     label: 'Prepare presentation',
-    color: '#f0f0f0',
+    calendar: 'work',
   },
   {
     start: dateAt(5, 11, 0),
     end: dateAt(5, 12, 20),
     label: 'Remember to sign papers',
+    calendar: 'private',
   },
   {
     start: dateAt(5, 12, 0),
     end: dateAt(5, 14, 0),
     label: 'Taxi to airport',
-    color: '#f5f0f0',
+    calendar: 'work',
   },
   {
     start: dateAt(5, 13, 30),
     end: dateAt(5, 19, 25),
     label: 'Flight to Chicago',
+    calendar: 'private',
   },
 ];
 
@@ -92,7 +114,6 @@ class Test extends Component {
     super();
     this.state = {
       selections: initialSelections,
-      filteredEvents: events,
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -114,19 +135,6 @@ class Test extends Component {
               <p>
                 Uses the current date as the starting point.
               </p>
-              <label>
-                <input
-                  type="checkbox"
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      this.setState({ filteredEvents: events.filter((e) => e.color) })
-                    } else {
-                      this.setState({ filteredEvents: events })
-                    }
-                  }}
-                />
-                Hide some events
-              </label>
               {selections.length > 0 && (
                 <div>
                   <h2>Selected ({selections.length})</h2>
@@ -146,7 +154,9 @@ class Test extends Component {
           }
           <AvailableTimes
             height={fullscreen ? undefined : 600}
-            events={this.state.filteredEvents}
+            events={events}
+            calendars={calendars}
+            initialVisibleCalendars={['private', 'work']}
             start={new Date()}
             onChange={this.handleChange}
             initialSelections={initialSelections}

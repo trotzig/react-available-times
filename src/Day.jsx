@@ -149,12 +149,21 @@ export default class Day extends PureComponent {
             <div className={styles.halfHour}/>
           </div>
         ))}
-        {events.map(({ color, start, end, label, width, offset }, i) => (
+        {events.map(({
+          foregroundColor,
+          backgroundColor,
+          start,
+          end,
+          label,
+          width,
+          offset,
+        }, i) => (
           <TimeSlot
             key={i + label}
             start={start}
             end={end}
-            color={color}
+            foregroundColor={foregroundColor}
+            backgroundColor={backgroundColor}
             label={label}
             width={width}
             offset={offset}
@@ -190,7 +199,8 @@ Day.propTypes = {
     start: PropTypes.instanceOf(Date),
     end: PropTypes.instanceOf(Date),
     label: PropTypes.string,
-    color: PropTypes.string,
+    foregroundColor: PropTypes.string,
+    backgroundColor: PropTypes.string,
     width: PropTypes.number,
     offset: PropTypes.number,
   })),
