@@ -15,6 +15,7 @@
 :local(.days) {
   border-top: 1px solid #ccc;
   overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 :local(.header) {
