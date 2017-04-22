@@ -44,6 +44,7 @@
   border: 0;
   padding: 0 6px;
   cursor: pointer;
+  fill: #666;
 }
 
 :local(.button):focus {
