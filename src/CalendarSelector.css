@@ -1,6 +1,20 @@
 :local(.component) {
   text-align: right;
   position: relative;
+  font-size: 14px;
+}
+
+:local(.modal) {
+  z-index: 1;
+}
+
+:local(.clickTarget) {
+  z-index: 1;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 :local(.menu) {
@@ -8,8 +22,51 @@
   background-color: #fff;
   border: 1px solid #ccc;
   width: 200px;
-  min-height: 300px;
+  min-height: 150px;
+  max-height: 100vh;
   position: absolute;
   right: 0;
   top: 100%;
+  text-align: left;
+  overflow: auto;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+:local(.calendar) {
+  cursor: pointer;
+  display: block;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+}
+
+:local(.checkbox) {
+  margin-right: 10px;
+  flex-grow: 0;
+}
+
+:local(.button) {
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background-color: transparent;
+  padding: 0;
+  padding-left: 7px;
+  line-height: 28px;
+  color: #666;
+  fill: #666;
+  cursor: pointer;
+}
+
+:local(.button) svg {
+  height: 16px;
+  vertical-align: middle;
+}
+
+:local(.button):active {
+  fill: #4477BD;
+  color: #4477BD;
+}
+
+:local(.button):focus {
+  outline: none;
 }
