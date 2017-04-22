@@ -2,6 +2,7 @@
   width: 100%;
   border-left: 1px solid #ccc;
   position: relative;
+  user-select: none;
 }
 
 :local(.today) {
