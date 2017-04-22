@@ -36,7 +36,7 @@ function flatten(selections) {
   return result;
 }
 
-function colorize(events, calendars) {
+function colorize(events, calendars = []) {
   const byId = {};
   calendars.forEach(({ id, foregroundColor, backgroundColor }) => {
     byId[id] = { foregroundColor, backgroundColor };
