@@ -48,6 +48,12 @@ const events = [
     calendar: 'work',
   },
   {
+    start: dateAt(1, 20, 0),
+    end: dateAt(2, 10, 0),
+    label: 'Night club',
+    calendar: 'private',
+  },
+  {
     start: dateAt(1, 8, 20),
     end: dateAt(1, 10, 30),
     label: 'Morning meeting',

@@ -86,13 +86,14 @@ export default class Day extends PureComponent {
     if (this.state.index === null) {
       return;
     }
+    const { date } = this.props;
     const position = relativeY(e);
     this.setState(({ selections, edge, index, lastKnownPosition }) => {
       const selection = selections[index];
       if (edge === 'both') {
         // move element
-        const diff = toDate(this.props.date, position).getTime() -
-          toDate(this.props.date, lastKnownPosition).getTime();
+        const diff = toDate(date, position).getTime() -
+          toDate(date, lastKnownPosition).getTime();
         const newStart = new Date(selection.start.getTime() + diff);
         const newEnd = new Date(selection.end.getTime() + diff);
         if (hasOverlap(selections, newStart, newEnd, index)) {
@@ -102,8 +103,8 @@ export default class Day extends PureComponent {
         selection.end = newEnd;
       } else {
         // stretch element
-        const newEnd = toDate(this.props.date,
-          Math.max(positionInDay(selection.start) + HOUR_IN_PIXELS / 2, position));
+        const newEnd = toDate(date, Math.max(positionInDay(
+          date, selection.start) + HOUR_IN_PIXELS / 2, position));
         if (hasOverlap(selections, selection.start, newEnd, index)) {
           // Collision! Let
           return {};
@@ -160,6 +161,7 @@ export default class Day extends PureComponent {
         }, i) => (
           <TimeSlot
             key={i + label}
+            date={date}
             start={start}
             end={end}
             foregroundColor={foregroundColor}
@@ -172,6 +174,7 @@ export default class Day extends PureComponent {
         ))}
         {selections.map(({ start, end }, i) => (
           <TimeSlot
+            date={date}
             key={i}
             start={start}
             end={end}

@@ -21,6 +21,7 @@ class TimeSlot extends PureComponent {
 
   render() {
     const {
+      date,
       start,
       end,
       availableWidth,
@@ -31,8 +32,8 @@ class TimeSlot extends PureComponent {
       offset,
     } = this.props;
 
-    const top = positionInDay(start);
-    const bottom = positionInDay(end);
+    const top = positionInDay(date, start);
+    const bottom = positionInDay(date, end);
 
     const height = bottom - top;
 
@@ -85,6 +86,7 @@ class TimeSlot extends PureComponent {
 }
 
 TimeSlot.propTypes = {
+  date: PropTypes.instanceOf(Date).isRequired, // The day in which the slot is displayed
   start: PropTypes.instanceOf(Date).isRequired,
   end: PropTypes.instanceOf(Date).isRequired,
   availableWidth: PropTypes.number.isRequired,

@@ -18,8 +18,9 @@ function flatten(selections) {
 
 function getDayEvents(events, date) {
   const dateString = date.toDateString();
-  return events.filter(({ start }) => {
-    return dateString === start.toDateString();
+  return events.filter(({ start, end }) => {
+    return dateString === start.toDateString() ||
+       dateString === end.toDateString();
   });
 }
 
