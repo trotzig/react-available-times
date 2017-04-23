@@ -97,6 +97,20 @@ export default class AvailableTimes extends Component {
     this.handleCalendarChange = this.handleCalendarChange.bind(this);
   }
 
+  componentWillMount() {
+    this.triggerTimespanInit(this.state.weeks);
+  }
+
+  triggerTimespanInit(weeks) {
+    const { onTimespanInit } = this.props;
+    if (onTimespanInit) {
+      onTimespanInit({
+        start: weeks[0].start,
+        end: weeks[this.state.weeks.length - 1].end,
+      });
+    }
+  }
+
   componentWillReceiveProps({ events }) {
     if (events === this.props.events) {
       // nothing to do
@@ -143,7 +157,6 @@ export default class AvailableTimes extends Component {
   }
 
   move(increment) {
-    const { onWeekInit } = this.props;
     this.setState(({ currentWeekIndex, weeks }) => {
       const nextIndex = currentWeekIndex + increment;
       if (nextIndex < 0) {
@@ -154,12 +167,7 @@ export default class AvailableTimes extends Component {
       if (increment > 0) {
         const newWeek = weekAt(oneWeekAhead(weeks[weeks.length - 1].days[3].date));
         nextWeeks = weeks.concat(newWeek);
-        if (onWeekInit) {
-          onWeekInit({
-            start: newWeek.start,
-            end: newWeek.end,
-          });
-        }
+        this.triggerTimespanInit(nextWeeks);
       }
 
       return {
@@ -259,6 +267,6 @@ AvailableTimes.propTypes = {
   })),
   onChange: PropTypes.func,
   onCalendarSelected: PropTypes.func,
-  onWeekInit: PropTypes.func,
+  onTimespanInit: PropTypes.func,
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };

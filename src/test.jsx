@@ -128,7 +128,7 @@ class Test extends Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleCalendarSelected = this.handleCalendarSelected.bind(this);
-    this.handleWeekInit = this.handleWeekInit.bind(this);
+    this.handleTimespanInit = this.handleTimespanInit.bind(this);
   }
 
   handleChange(selections) {
@@ -139,7 +139,7 @@ class Test extends Component {
     this.setState({ selectedCalendars });
   }
 
-  handleWeekInit({ start, end }) {
+  handleTimespanInit({ start, end }) {
     this.setState({
       start,
       end,
@@ -181,7 +181,7 @@ class Test extends Component {
               )}
               {this.state.start && (
                 <div>
-                  <h2>Last week init</h2>
+                  <h2>Timespan init</h2>
                   <ul className={styles.selected}>
                     <li>
                       {this.state.start.toString()} - {this.state.end.toString()}
@@ -201,7 +201,7 @@ class Test extends Component {
             start={new Date()}
             onChange={this.handleChange}
             onCalendarSelected={this.handleCalendarSelected}
-            onWeekInit={this.handleWeekInit}
+            onTimespanInit={this.handleTimespanInit}
             initialSelections={initialSelections}
           />
         </div>
