@@ -6,6 +6,31 @@
   color: #fff;
   overflow: hidden;
   opacity: 0.8;
+  cursor: grab;
+}
+
+:local(.active) {
+  pointer-events: none;
+}
+
+:local(.delete) {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0 5px;
+  border: none;
+  background-color: #fff;;
+  display: none;
+  font-size: 20px;
+  line-height: 1;
+  color: #4477BD;
+  border: 1px solid #4477BD;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+:local(.component):hover :local(.delete) {
+  display: block;
 }
 
 :local(.frozen) {
@@ -13,6 +38,7 @@
   color: #333;
   border: 1px solid #ccc;
   opacity: 1;
+  cursor: default;
 }
 
 :local(.handle) {
@@ -21,6 +47,7 @@
   bottom: 0;
   left: 0;
   text-align: center;
+  cursor: ns-resize;
 }
 
 :local(.label) {

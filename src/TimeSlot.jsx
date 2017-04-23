@@ -6,7 +6,36 @@ import positionInDay from './positionInDay';
 import styles from './TimeSlot.css';
 import zeroPad from './zeroPad';
 
+function isTouchDevice() {
+  return 'ontouchstart' in window;
+}
+
 class TimeSlot extends PureComponent {
+  constructor() {
+    super();
+    this.handleResizerMouseDown = this.handleResizerMouseDown.bind(this);
+    this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.preventMove = (e) => e.stopPropagation();
+  }
+
+  handleDelete(event) {
+    event.stopPropagation();
+    const { onDelete, end, start } = this.props;
+    onDelete({ end, start }, event);
+  }
+
+  handleResizerMouseDown(event) {
+    event.stopPropagation();
+    const { onSizeChangeStart, end, start } = this.props;
+    onSizeChangeStart({ end, start }, event);
+  }
+
+  handleMouseDown(event) {
+    const { onMoveStart, end, start } = this.props;
+    onMoveStart({ end, start }, event);
+  }
+
   label() {
     const { start, end, label } = this.props;
     const from = `${zeroPad(start.getHours())}:${zeroPad(start.getMinutes())}`;
@@ -21,6 +50,7 @@ class TimeSlot extends PureComponent {
 
   render() {
     const {
+      active,
       date,
       start,
       end,
@@ -51,6 +81,9 @@ class TimeSlot extends PureComponent {
     if (frozen) {
       classes.push(styles.frozen);
     }
+    if (active) {
+      classes.push(styles.active);
+    }
 
     const style = {
       top,
@@ -68,6 +101,8 @@ class TimeSlot extends PureComponent {
       <div
         className={classes.join(' ')}
         style={style}
+        onMouseDown={frozen || isTouchDevice() ? undefined : this.handleMouseDown}
+        onClick={frozen || !isTouchDevice() ? undefined : this.handleDelete}
       >
         <div
           className={labelClasses.join(' ')}
@@ -76,16 +111,29 @@ class TimeSlot extends PureComponent {
           {this.label()}
         </div>
         {!frozen && (
-          <div className={styles.handle}>
+          <div
+            className={styles.handle}
+            onMouseDown={this.handleResizerMouseDown}
+          >
             ...
           </div>
         )}
+        {!isTouchDevice() &&
+          <button
+            className={styles.delete}
+            onClick={this.handleDelete}
+            onMouseDown={this.preventMove}
+          >
+            ×
+          </button>
+        }
       </div>
     );
   }
 }
 
 TimeSlot.propTypes = {
+  active: PropTypes.bool, // Whether the time slot is being changed
   date: PropTypes.instanceOf(Date).isRequired, // The day in which the slot is displayed
   start: PropTypes.instanceOf(Date).isRequired,
   end: PropTypes.instanceOf(Date).isRequired,
@@ -94,6 +142,10 @@ TimeSlot.propTypes = {
   frozen: PropTypes.bool,
   foregroundColor: PropTypes.string,
   backgroundColor: PropTypes.string,
+
+  onSizeChangeStart: PropTypes.func,
+  onMoveStart: PropTypes.func,
+  onDelete: PropTypes.func,
 
   // Props used to signal overlap
   width: PropTypes.number,

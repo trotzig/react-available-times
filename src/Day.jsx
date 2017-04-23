@@ -12,7 +12,11 @@ import toDate from './toDate';
 const ROUND_TO_NEAREST_MINS = 15;
 
 function relativeY(e, rounding = ROUND_TO_NEAREST_MINS) {
-  const { top } = e.target.getBoundingClientRect();
+  return relativeYElement(e, e.target, rounding);
+}
+
+function relativeYElement(e, element, rounding = ROUND_TO_NEAREST_MINS) {
+  const { top } = element.getBoundingClientRect();
   const realY = e.pageY - top;
   const snapTo = rounding / 60 * HOUR_IN_PIXELS;
   return Math.floor(realY / snapTo) * snapTo;
@@ -22,42 +26,67 @@ export default class Day extends PureComponent {
   constructor({ initialSelections }) {
     super();
     this.state = {
-      index: null,
+      index: undefined,
       selections: initialSelections,
     };
     this.handleMouseUp = this.handleMouseUp.bind(this);
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.handleSizeChangeStart = this.handleItemModification.bind(this, 'end');
+    this.handleMoveStart = this.handleItemModification.bind(this, 'both');
+    this.handleDelete = this.handleDelete.bind(this);
+    this.handleMouseTargetRef = (element) => this.mouseTargetRef = element;
   }
 
   findSelectionAt(date) {
-    for (let i = 0; i < this.state.selections.length; i++) {
-      const selection = this.state.selections[i];
-      if (Math.abs(selection.end.getTime() - date.getTime()) <= 900000) {
-        // Close enough to drag the trailing edge
-        return { edge: 'end', index: i };
-      }
+    const { selections } = this.state;
+    for (let i = 0; i < selections.length; i++) {
+      const selection = selections[i];
       if (
         selection.start.getTime() <= date.getTime() &&
         selection.end.getTime() >= date.getTime()
       ) {
-        return { edge: 'both', index: i };
+        return true;
       }
     }
-    return {};
+  }
+
+  handleDelete({ start, end }) {
+    const { onChange } = this.props;
+
+    this.setState(({ selections }) => {
+      for (let i = 0; i < selections.length; i++) {
+        if (selections[i].start === start && selections[i].end === end) {
+          selections.splice(i, 1);
+          this.props.onChange(this.props.date, selections);
+          return { selections: selections.slice(0) };
+        }
+      }
+      return {};
+    });
+  }
+
+  handleItemModification(edge, { start, end }, event) {
+    const position = relativeYElement(event, this.mouseTargetRef);
+    this.setState(({ selections }) => {
+      for (let i = 0; i < selections.length; i++) {
+        if (selections[i].start === start && selections[i].end === end) {
+          return {
+            edge,
+            index: i,
+            lastKnownPosition: position,
+          };
+        }
+      }
+      return {};
+    });
   }
 
   handleMouseDown(e) {
     let position = relativeY(e);
     let dateAtPosition = toDate(this.props.date, position);
-    const { edge, index } = this.findSelectionAt(dateAtPosition);
-    if (edge) {
-      // We found an existing one at this position
-      this.setState({
-        edge,
-        index,
-        lastKnownPosition: position,
-      });
+
+    if (this.findSelectionAt(dateAtPosition)) {
       return;
     }
 
@@ -83,7 +112,7 @@ export default class Day extends PureComponent {
   }
 
   handleMouseMove(e) {
-    if (this.state.index === null) {
+    if (typeof this.state.index === 'undefined') {
       return;
     }
     const { date } = this.props;
@@ -119,20 +148,20 @@ export default class Day extends PureComponent {
   }
 
   handleMouseUp(e) {
-    if (this.state.index === null) {
+    if (typeof this.state.index === 'undefined') {
       return;
     }
     this.setState({
-      edge: null,
-      index: null,
-      lastKnownPosition: null,
+      edge: undefined,
+      index: undefined,
+      lastKnownPosition: undefined,
     });
     this.props.onChange(this.props.date, this.state.selections);
   }
 
   render() {
     const { date, events } = this.props;
-    const { selections } = this.state;
+    const { selections, index } = this.state;
 
     const classes = [styles.component];
     if (date.toDateString() === new Date().toDateString()) {
@@ -172,21 +201,26 @@ export default class Day extends PureComponent {
             frozen
           />
         ))}
-        {selections.map(({ start, end }, i) => (
-          <TimeSlot
-            date={date}
-            key={i}
-            start={start}
-            end={end}
-          />
-        ))}
         <div
           onMouseDown={this.handleMouseDown}
           onMouseUp={this.handleMouseUp}
           onMouseMove={this.handleMouseMove}
           onMouseOut={this.handleMouseUp}
           className={styles.mouseTarget}
+          ref={this.handleMouseTargetRef}
         />
+        {selections.map(({ start, end }, i) => (
+          <TimeSlot
+            key={i}
+            date={date}
+            start={start}
+            end={end}
+            active={typeof index !== 'undefined'}
+            onSizeChangeStart={this.handleSizeChangeStart}
+            onMoveStart={this.handleMoveStart}
+            onDelete={this.handleDelete}
+          />
+        ))}
       </div>
     );
   }
