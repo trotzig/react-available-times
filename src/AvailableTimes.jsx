@@ -106,7 +106,7 @@ export default class AvailableTimes extends Component {
     if (onTimespanInit) {
       onTimespanInit({
         start: weeks[0].start,
-        end: weeks[this.state.weeks.length - 1].end,
+        end: weeks[weeks.length - 1].end,
       });
     }
   }
