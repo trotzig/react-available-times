@@ -45,7 +45,7 @@ export default class Day extends PureComponent {
       const selection = selections[i];
       if (
         selection.start.getTime() <= date.getTime() &&
-        selection.end.getTime() >= date.getTime()
+        selection.end.getTime() > date.getTime()
       ) {
         return true;
       }
