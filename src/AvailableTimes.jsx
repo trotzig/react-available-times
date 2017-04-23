@@ -125,6 +125,7 @@ export default class AvailableTimes extends Component {
     const {
       events,
       calendars,
+      onCalendarSelected,
     } = this.props;
 
     this.setState({
@@ -136,6 +137,9 @@ export default class AvailableTimes extends Component {
         calendars
       ),
     });
+    if (onCalendarSelected) {
+      onCalendarSelected([...visibleCalendars]);
+    }
   }
 
   move(increment) {
@@ -247,5 +251,6 @@ AvailableTimes.propTypes = {
     calendarId: PropTypes.string,
   })),
   onChange: PropTypes.func,
+  onCalendarSelected: PropTypes.func,
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };

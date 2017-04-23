@@ -122,16 +122,22 @@ class Test extends Component {
     super();
     this.state = {
       selections: initialSelections,
+      selectedCalendars: ['private'],
     };
     this.handleChange = this.handleChange.bind(this);
+    this.handleCalendarSelected = this.handleCalendarSelected.bind(this);
   }
 
   handleChange(selections) {
     this.setState({ selections });
   }
 
+  handleCalendarSelected(selectedCalendars) {
+    this.setState({ selectedCalendars });
+  }
+
   render() {
-    const { selections } = this.state;
+    const { selections, selectedCalendars } = this.state;
 
     const fullscreen = window.location.search === '?fullscreen';
     return (
@@ -155,6 +161,14 @@ class Test extends Component {
                   </ul>
                 </div>
               )}
+              {selectedCalendars.length > 0 && (
+                <div>
+                  <h2>Selected calendars</h2>
+                  <ul className={styles.selected}>
+                    {selectedCalendars.map((id) => <li key={id}>{id}</li>)}
+                  </ul>
+                </div>
+              )}
               <a href="/?fullscreen">
                 Go full screen
               </a>
@@ -166,6 +180,7 @@ class Test extends Component {
             calendars={calendars}
             start={new Date()}
             onChange={this.handleChange}
+            onCalendarSelected={this.handleCalendarSelected}
             initialSelections={initialSelections}
           />
         </div>
