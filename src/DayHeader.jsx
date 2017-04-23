@@ -31,13 +31,31 @@ class DayHeader extends Component {
     const {
       day,
       availableWidth,
+      events,
     } = this.props;
 
     return (
       <div
         className={styles.component}
       >
-        {this.text()}
+        <div className={styles.day}>
+          {this.text()}
+        </div>
+        <div className={styles.events}>
+          {events.filter(({ allDay }) => allDay).map((event) => (
+            <div
+              key={event.title}
+              className={styles.event}
+              style={{
+                color: event.foregroundColor,
+                backgroundColor: event.backgroundColor,
+              }}
+              title={event.title}
+            >
+              {event.title}
+            </div>
+          ))}
+        </div>
       </div>
     )
   }
@@ -46,6 +64,7 @@ class DayHeader extends Component {
 DayHeader.propTypes = {
   day: PropTypes.object,
   availableWidth: PropTypes.number,
+  events: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default withAvailableWidth(DayHeader);

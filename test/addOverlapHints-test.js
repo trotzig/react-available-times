@@ -52,8 +52,13 @@ it('adds overlap hints when overlaps exist', () => {
       start: new Date(500),
       end: new Date(600),
     },
+    {
+      start: new Date(500),
+      end: new Date(600),
+      allDay: true, // Should not be grouped
+    },
   ]);
-  expect(overlapped.length).toEqual(6);
+  expect(overlapped.length).toEqual(7);
   expect(overlapped[0]).toEqual({
     start: new Date(0),
     end: new Date(300),

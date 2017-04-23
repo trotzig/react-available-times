@@ -6,9 +6,24 @@ function compareDates(a, b) {
 
 function groupEvents(events) {
   const groups = [];
-  let currentGroup;
-
   events.forEach((event) => {
+    // Add all allDay events in separate groups
+    if (!event.allDay) {
+      return;
+    }
+    groups.push({
+      start: event.start,
+      end: event.end,
+      columns: [[event]],
+    });
+  })
+
+  let currentGroup;
+  events.forEach((event) => {
+    if (event.allDay) {
+      // ignore
+      return;
+    }
     if (currentGroup && event.start >= currentGroup.end) {
       currentGroup = undefined;
     }

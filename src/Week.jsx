@@ -16,20 +16,26 @@ function flatten(selections) {
   return result;
 }
 
-function getDayEvents(events, date) {
-  const dateString = date.toDateString();
-  return events.filter(({ start, end }) => {
-    return dateString === start.toDateString() ||
-       dateString === end.toDateString();
+function getIncludedEvents(events, dayStart, dayEnd) {
+  return events.filter(({ start, end, allDay }) => {
+    if (allDay) {
+      return dayStart >= start && dayStart < end;
+    }
+    return dayStart <= start || dayEnd > end;
   });
 }
 
 function constructStateFromProps({ week, initialSelections, events }) {
   const daySelections = [];
   const dayEvents = [];
+
   week.days.forEach(({ date }) => {
-    daySelections.push(getDayEvents(initialSelections || [], date));
-    dayEvents.push(getDayEvents(events || [], date));
+    const start = new Date(date.getTime());
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(start.getTime());
+    end.setDate(end.getDate() + 1);
+    daySelections.push(getIncludedEvents(initialSelections || [], start, end));
+    dayEvents.push(getIncludedEvents(events || [], start, end));
   });
   return {
     dayEvents,
@@ -75,10 +81,11 @@ export default class Week extends PureComponent {
     return (
       <div className={styles.component}>
         <div className={styles.header}>
-          {week.days.map((day) => (
+          {week.days.map((day, i) => (
             <DayHeader
               day={day}
               key={day.date}
+              events={dayEvents[i]}
             />
           ))}
         </div>

@@ -184,6 +184,7 @@ export default class Day extends PureComponent {
           </div>
         ))}
         {events.map(({
+          allDay,
           foregroundColor,
           backgroundColor,
           start,
@@ -191,7 +192,7 @@ export default class Day extends PureComponent {
           title,
           width,
           offset,
-        }, i) => (
+        }, i) => !allDay && (
           <TimeSlot
             key={i + title}
             date={date}

@@ -32,7 +32,7 @@ const calendars = [
     title: 'Work',
     backgroundColor: 'pink',
     foregroundColor: 'black',
-    selected: null,
+    selected: true,
   },
 ];
 
@@ -62,10 +62,32 @@ const events = [
     calendarId: 'private',
   },
   {
-    start: dateAt(1, 10, 0),
-    end: dateAt(1, 12, 0),
+    start: dateAt(1, 0, 0),
+    end: dateAt(2, 0, 0),
     title: 'Busy-time',
     calendarId: 'private',
+    allDay: true,
+  },
+  {
+    start: dateAt(1, 0, 0),
+    end: dateAt(2, 0, 0),
+    title: 'Foo bar',
+    calendarId: 'private',
+    allDay: true,
+  },
+  {
+    start: dateAt(1, 0, 0),
+    end: dateAt(2, 0, 0),
+    title: 'what the',
+    calendarId: 'work',
+    allDay: true,
+  },
+  {
+    start: dateAt(1, 0, 0),
+    end: dateAt(2, 0, 0),
+    title: 'Conference in some remote location',
+    calendarId: 'work',
+    allDay: true,
   },
   {
     start: dateAt(3, 8, 0),
@@ -122,7 +144,7 @@ class Test extends Component {
     super();
     this.state = {
       selections: initialSelections,
-      selectedCalendars: ['private'],
+      selectedCalendars: ['private', 'work'],
       start: undefined,
       end: undefined,
     };

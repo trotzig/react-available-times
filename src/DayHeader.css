@@ -2,6 +2,28 @@
   width: 100%;
   flex-shrink: 1;
   overflow: hidden;
+}
+
+:local(.day) {
   padding: 5px;
   text-align: center;
+}
+
+:local(.events) {
+  text-align: left;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+:local(.event) {
+  flex-basis: 33.3333%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  flex-grow: 1;
+  flex-shrink: 1;
+  padding: 3px;
+  border-radius: 3px;
+  background-color: #666;
+  color: #fff;
 }
