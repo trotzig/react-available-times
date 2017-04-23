@@ -42,7 +42,7 @@ export default class CalendarSelector extends PureComponent {
 
   renderCalendar({
     id,
-    displayName,
+    title,
     foregroundColor,
     backgroundColor,
   }) {
@@ -68,7 +68,7 @@ export default class CalendarSelector extends PureComponent {
           value={id}
           onChange={checked ? this.uncheck : this.check}
         />
-        {displayName}
+        {title}
       </label>
     );
   }

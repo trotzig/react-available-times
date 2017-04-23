@@ -236,7 +236,7 @@ AvailableTimes.propTypes = {
   })),
   calendars: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string,
-    displayName: PropTypes.string,
+    title: PropTypes.string,
     color: PropTypes.string,
   })),
   initialVisibleCalendars: PropTypes.arrayOf(PropTypes.string),

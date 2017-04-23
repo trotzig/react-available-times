@@ -18,13 +18,13 @@ import AvailableTimes from 'react-available-times';
   calendars={[
     {
       id: 'work',
-      displayName: 'Work',
+      title: 'Work',
       foregroundColor: '#ff00ff',
       backgroundColor: '#f0f0f0',
     },
     {
       id: 'private',
-      displayName: 'My private cal',
+      title: 'My private cal',
       foregroundColor: '#666',
       backgroundColor: '#f3f3f3',
     },

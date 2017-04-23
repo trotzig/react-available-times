@@ -22,13 +22,13 @@ function dateAt(dayInWeek, hours, minutes) {
 const calendars = [
   {
     id: 'private',
-    displayName: 'Private',
+    title: 'Private',
     backgroundColor: '#666',
     foregroundColor: '#fff',
   },
   {
     id: 'work',
-    displayName: 'Work',
+    title: 'Work',
     backgroundColor: 'pink',
     foregroundColor: 'black',
   },

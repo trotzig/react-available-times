@@ -84,7 +84,6 @@ export default class Day extends PureComponent {
   }
 
   handleClick(e) {
-    console.log('click');
     this.handleMouseDown(e);
     this.handleMouseUp(e);
   }
