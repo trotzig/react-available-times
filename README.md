@@ -38,6 +38,9 @@ import AvailableTimes from 'react-available-times';
   onCalendarSelected={(calendarIds) => {
     // e.g. ['work', 'private']
   }}
+  onWeekInit={({ start, end }) => {
+    loadMoreEvents(start, end);
+  }}
   initialSelections={[
     { start: aDateObject, end: anotherDateObject }
   ]}
@@ -60,6 +63,9 @@ None of the props are required.
 - `onCalendarSelected`: a function called when the user is changing the
   filtering of calendars. Useful if you want to lazy-load a set of events. Gets
   called with a list of the calendar ids currently selected.
+- `onWeekInit`: a function called when a new week is initialized. Useful if you
+  want to lazy-load events. Gets called with an object containing `start` and
+  `end` dates of the week being initialized.
 - `initialSelections`: an array of pre-filled selections. Each object in the
   array needs a `start` and an `end` date.
 - `events`: calendar events, usually pulled from a different source (e.g. a

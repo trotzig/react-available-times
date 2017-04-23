@@ -123,9 +123,12 @@ class Test extends Component {
     this.state = {
       selections: initialSelections,
       selectedCalendars: ['private'],
+      start: undefined,
+      end: undefined,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleCalendarSelected = this.handleCalendarSelected.bind(this);
+    this.handleWeekInit = this.handleWeekInit.bind(this);
   }
 
   handleChange(selections) {
@@ -134,6 +137,13 @@ class Test extends Component {
 
   handleCalendarSelected(selectedCalendars) {
     this.setState({ selectedCalendars });
+  }
+
+  handleWeekInit({ start, end }) {
+    this.setState({
+      start,
+      end,
+    });
   }
 
   render() {
@@ -169,6 +179,16 @@ class Test extends Component {
                   </ul>
                 </div>
               )}
+              {this.state.start && (
+                <div>
+                  <h2>Last week init</h2>
+                  <ul className={styles.selected}>
+                    <li>
+                      {this.state.start.toString()} - {this.state.end.toString()}
+                    </li>
+                  </ul>
+                </div>
+              )}
               <a href="/?fullscreen">
                 Go full screen
               </a>
@@ -181,6 +201,7 @@ class Test extends Component {
             start={new Date()}
             onChange={this.handleChange}
             onCalendarSelected={this.handleCalendarSelected}
+            onWeekInit={this.handleWeekInit}
             initialSelections={initialSelections}
           />
         </div>

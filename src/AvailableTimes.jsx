@@ -143,6 +143,7 @@ export default class AvailableTimes extends Component {
   }
 
   move(increment) {
+    const { onWeekInit } = this.props;
     this.setState(({ currentWeekIndex, weeks }) => {
       const nextIndex = currentWeekIndex + increment;
       if (nextIndex < 0) {
@@ -151,8 +152,14 @@ export default class AvailableTimes extends Component {
 
       let nextWeeks = weeks;
       if (increment > 0) {
-        nextWeeks = weeks.concat(weekAt(
-          oneWeekAhead(weeks[weeks.length - 1].days[3].date)));
+        const newWeek = weekAt(oneWeekAhead(weeks[weeks.length - 1].days[3].date));
+        nextWeeks = weeks.concat(newWeek);
+        if (onWeekInit) {
+          onWeekInit({
+            start: newWeek.start,
+            end: newWeek.end,
+          });
+        }
       }
 
       return {
@@ -252,5 +259,6 @@ AvailableTimes.propTypes = {
   })),
   onChange: PropTypes.func,
   onCalendarSelected: PropTypes.func,
+  onWeekInit: PropTypes.func,
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };

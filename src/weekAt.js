@@ -32,6 +32,8 @@ export default function weekAt(atDate) {
   while (date.getDay() > 0) {
     date.setDate(date.getDate() - 1);
   }
+  const start = new Date(date.getTime());
+  start.setHours(0, 0, 0, 0);
 
   const days = [];
   for (let i = 0; i < names.length; i++) {
@@ -42,8 +44,12 @@ export default function weekAt(atDate) {
     });
     date.setDate(date.getDate() + 1);
   }
+  const end = new Date(date.getTime());
+  end.setHours(0, 0, 0, 0);
   return {
     interval: dateIntervalString(days[0].date, days[days.length - 1].date),
     days,
+    start,
+    end,
   };
 }
