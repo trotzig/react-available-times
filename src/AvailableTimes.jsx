@@ -44,7 +44,7 @@ function colorize(events, calendars = []) {
   // We're assuming that it's safe to mutate events here (they should have been
   // duped by addOverlapHints already).
   events.forEach((event) => {
-    Object.assign(event, byId[event.calendar]);
+    Object.assign(event, byId[event.calendarId]);
   });
   return events;
 }
@@ -55,7 +55,7 @@ function colorize(events, calendars = []) {
  * @return {Array<Object>}
  */
 function filterVisible(events, visibleCalendars) {
-  return events.filter(({ calendar }) => visibleCalendars.has(calendar));
+  return events.filter(({ calendarId }) => visibleCalendars.has(calendarId));
 }
 
 export default class AvailableTimes extends Component {
@@ -244,7 +244,7 @@ AvailableTimes.propTypes = {
     start: PropTypes.instanceOf(Date),
     end: PropTypes.instanceOf(Date),
     title: PropTypes.string,
-    calendar: PropTypes.string,
+    calendarId: PropTypes.string,
   })),
   onChange: PropTypes.func,
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
