@@ -105,7 +105,7 @@ const events = [
 
 const initialSelections = [
   {
-    start: dateAt(1, 12, 5),
+    start: dateAt(1, 12, 0),
     end: dateAt(1, 14, 0),
   },
   {
