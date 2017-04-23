@@ -21,6 +21,7 @@ import AvailableTimes from 'react-available-times';
       title: 'Work',
       foregroundColor: '#ff00ff',
       backgroundColor: '#f0f0f0',
+      selected: true,
     },
     {
       id: 'private',
@@ -29,7 +30,6 @@ import AvailableTimes from 'react-available-times';
       backgroundColor: '#f3f3f3',
     },
   ]}
-  initialVisibleCalendars={['work', 'private']}
   onChange={(selections) => {
     selections.forEach(({ start, end }) => {
       console.log('Start:', start, 'End:', end);
@@ -52,8 +52,6 @@ import AvailableTimes from 'react-available-times';
 None of the props are required.
 
 - `calendars`: a list of calendars displayed in the dropdown at the top right.
-- `initialVisibleCalendars`: a list of calendar ids that should be shown at
-  mount.
 - `onChange`: a function called whenever a selection is made. Receives an array
   of objects, each with a `start` and an `end` date.
 - `initialSelections`: an array of pre-filled selections. Each object in the

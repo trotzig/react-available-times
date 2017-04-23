@@ -25,12 +25,14 @@ const calendars = [
     title: 'Private',
     backgroundColor: '#666',
     foregroundColor: '#fff',
+    selected: true,
   },
   {
     id: 'work',
     title: 'Work',
     backgroundColor: 'pink',
     foregroundColor: 'black',
+    selected: null,
   },
 ];
 
@@ -162,7 +164,6 @@ class Test extends Component {
             height={fullscreen ? undefined : 600}
             events={events}
             calendars={calendars}
-            initialVisibleCalendars={['private', 'work']}
             start={new Date()}
             onChange={this.handleChange}
             initialSelections={initialSelections}

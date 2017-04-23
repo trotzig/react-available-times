@@ -61,13 +61,14 @@ function filterVisible(events, visibleCalendars) {
 export default class AvailableTimes extends Component {
   constructor({
     initialSelections = [],
-    initialVisibleCalendars = [],
     start = new Date(),
     events = [],
-    calendars,
+    calendars = [],
   }) {
     super();
-    const visibleCalendars = new Set(initialVisibleCalendars);
+    const visibleCalendars = new Set(
+      calendars.filter(({ selected }) => selected).map(({ id }) => id));
+
     this.state = {
       weeks: [
         weekAt(start),
@@ -162,7 +163,6 @@ export default class AvailableTimes extends Component {
       calendars,
       height,
       initialSelections,
-      initialVisibleCalendars,
     } = this.props;
 
     const {
@@ -238,8 +238,8 @@ AvailableTimes.propTypes = {
     id: PropTypes.string,
     title: PropTypes.string,
     color: PropTypes.string,
+    selected: PropTypes.bool,
   })),
-  initialVisibleCalendars: PropTypes.arrayOf(PropTypes.string),
   events: PropTypes.arrayOf(PropTypes.shape({
     start: PropTypes.instanceOf(Date),
     end: PropTypes.instanceOf(Date),
