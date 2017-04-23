@@ -2,13 +2,10 @@ import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import withAvailableWidth from 'react-with-available-width';
 
+import { IS_TOUCH_DEVICE } from './Constants';
 import positionInDay from './positionInDay';
 import styles from './TimeSlot.css';
 import zeroPad from './zeroPad';
-
-function isTouchDevice() {
-  return 'ontouchstart' in window;
-}
 
 class TimeSlot extends PureComponent {
   constructor() {
@@ -101,8 +98,8 @@ class TimeSlot extends PureComponent {
       <div
         className={classes.join(' ')}
         style={style}
-        onMouseDown={frozen || isTouchDevice() ? undefined : this.handleMouseDown}
-        onClick={frozen || !isTouchDevice() ? undefined : this.handleDelete}
+        onMouseDown={frozen || IS_TOUCH_DEVICE ? undefined : this.handleMouseDown}
+        onClick={frozen || !IS_TOUCH_DEVICE ? undefined : this.handleDelete}
       >
         <div
           className={labelClasses.join(' ')}
@@ -110,23 +107,23 @@ class TimeSlot extends PureComponent {
         >
           {this.label()}
         </div>
-        {!frozen && (
-          <div
-            className={styles.handle}
-            onMouseDown={this.handleResizerMouseDown}
-          >
-            ...
+        {!frozen && !IS_TOUCH_DEVICE && (
+          <div>
+            <div
+              className={styles.handle}
+              onMouseDown={this.handleResizerMouseDown}
+            >
+              ...
+            </div>
+            <button
+              className={styles.delete}
+              onClick={this.handleDelete}
+              onMouseDown={this.preventMove}
+            >
+              ×
+            </button>
           </div>
         )}
-        {!isTouchDevice() &&
-          <button
-            className={styles.delete}
-            onClick={this.handleDelete}
-            onMouseDown={this.preventMove}
-          >
-            ×
-          </button>
-        }
       </div>
     );
   }

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 
-import { HOUR_IN_PIXELS } from './Constants';
+import { HOUR_IN_PIXELS, IS_TOUCH_DEVICE } from './Constants';
 import TimeSlot from './TimeSlot';
 import hasOverlap from './hasOverlap';
 import hours from './hours';
@@ -32,6 +32,7 @@ export default class Day extends PureComponent {
     this.handleMouseUp = this.handleMouseUp.bind(this);
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.handleClick = this.handleClick.bind(this);
     this.handleSizeChangeStart = this.handleItemModification.bind(this, 'end');
     this.handleMoveStart = this.handleItemModification.bind(this, 'both');
     this.handleDelete = this.handleDelete.bind(this);
@@ -82,16 +83,20 @@ export default class Day extends PureComponent {
     });
   }
 
+  handleClick(e) {
+    console.log('click');
+    this.handleMouseDown(e);
+    this.handleMouseUp(e);
+  }
+
   handleMouseDown(e) {
-    let position = relativeY(e);
-    let dateAtPosition = toDate(this.props.date, position);
+    const position = relativeY(e, 60);
+    const dateAtPosition = toDate(this.props.date, position);
 
     if (this.findSelectionAt(dateAtPosition)) {
       return;
     }
 
-    position = relativeY(e, 60); // round to closest hour
-    dateAtPosition = toDate(this.props.date, position);
     let end = toDate(this.props.date, position + HOUR_IN_PIXELS);
     end = hasOverlap(this.state.selections, dateAtPosition, end) || end;
     if (end - dateAtPosition < 1800000) {
@@ -202,10 +207,11 @@ export default class Day extends PureComponent {
           />
         ))}
         <div
-          onMouseDown={this.handleMouseDown}
-          onMouseUp={this.handleMouseUp}
-          onMouseMove={this.handleMouseMove}
-          onMouseOut={this.handleMouseUp}
+          onMouseDown={IS_TOUCH_DEVICE ? undefined : this.handleMouseDown}
+          onMouseUp={IS_TOUCH_DEVICE ? undefined : this.handleMouseUp}
+          onMouseMove={IS_TOUCH_DEVICE ? undefined : this.handleMouseMove}
+          onMouseOut={IS_TOUCH_DEVICE ? undefined : this.handleMouseUp}
+          onClick={IS_TOUCH_DEVICE ? this.handleClick : undefined}
           className={styles.mouseTarget}
           ref={this.handleMouseTargetRef}
         />
