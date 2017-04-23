@@ -39,8 +39,8 @@ import AvailableTimes from 'react-available-times';
     { start: aDateObject, end: anotherDateObject }
   ]}
   events={[
-    { start: aDateObject, end: anotherDateObject, label: 'Some label', calendar: 'work' },
-    { start: aDateObject, end: anotherDateObject, label: 'Some other label', calendar: 'private' }
+    { start: aDateObject, end: anotherDateObject, title: 'Some title', calendar: 'work' },
+    { start: aDateObject, end: anotherDateObject, title: 'Some other title', calendar: 'private' }
   ]}
   start={new Date()}
   height={400}
@@ -60,7 +60,7 @@ None of the props are required.
   array needs a `start` and an `end` date.
 - `events`: calendar events, usually pulled from a different source (e.g. a
   Google Calendar). Each object needs a `start` and an `end` date, plus a
-  `label` property. Can have a `calendar` property tying them to a calendar,
+  `title` property. Can have a `calendar` property tying them to a calendar,
   inheriting the foreground and background color.
 - `start`: a date signalling the week you want to display to begin with. Can be
   any day within the week.

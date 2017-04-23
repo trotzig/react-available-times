@@ -188,18 +188,18 @@ export default class Day extends PureComponent {
           backgroundColor,
           start,
           end,
-          label,
+          title,
           width,
           offset,
         }, i) => (
           <TimeSlot
-            key={i + label}
+            key={i + title}
             date={date}
             start={start}
             end={end}
             foregroundColor={foregroundColor}
             backgroundColor={backgroundColor}
-            label={label}
+            title={title}
             width={width}
             offset={offset}
             frozen
@@ -240,7 +240,7 @@ Day.propTypes = {
   events: PropTypes.arrayOf(PropTypes.shape({
     start: PropTypes.instanceOf(Date),
     end: PropTypes.instanceOf(Date),
-    label: PropTypes.string,
+    title: PropTypes.string,
     foregroundColor: PropTypes.string,
     backgroundColor: PropTypes.string,
     width: PropTypes.number,

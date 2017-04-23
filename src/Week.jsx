@@ -112,7 +112,7 @@ Week.propTypes = {
   events: PropTypes.arrayOf(PropTypes.shape({
     start: PropTypes.instanceOf(Date),
     end: PropTypes.instanceOf(Date),
-    label: PropTypes.string,
+    title: PropTypes.string,
     backgroundColor: PropTypes.string,
     foregroundColor: PropTypes.string,
     offset: PropTypes.number,

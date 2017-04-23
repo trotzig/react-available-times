@@ -50,7 +50,7 @@
   cursor: ns-resize;
 }
 
-:local(.label) {
+:local(.title) {
   padding: 5px;
   text-align: center;
   font-size: 10px;

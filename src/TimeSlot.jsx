@@ -33,14 +33,14 @@ class TimeSlot extends PureComponent {
     onMoveStart({ end, start }, event);
   }
 
-  label() {
-    const { start, end, label } = this.props;
+  title() {
+    const { start, end, title } = this.props;
     const from = `${zeroPad(start.getHours())}:${zeroPad(start.getMinutes())}`;
     const to = `${zeroPad(end.getHours())}:${zeroPad(end.getMinutes())}`;
     const result = [from, '-', to];
-    if (label) {
+    if (title) {
       result.push(' ');
-      result.push(label);
+      result.push(title);
     }
     return result.join('');
   }
@@ -64,14 +64,14 @@ class TimeSlot extends PureComponent {
 
     const height = bottom - top;
 
-    const labelClasses = [styles.label];
-    const labelStyle = {};
+    const titleClasses = [styles.title];
+    const titleStyle = {};
     const realAvailableWidth = availableWidth * (width || 1);
     if (height > realAvailableWidth && realAvailableWidth < 60) {
-      labelClasses.push(styles.flip);
-      labelStyle.width = height;
-      labelStyle.marginLeft = -((height / 2) - 10);
-      labelStyle.marginTop = -10;
+      titleClasses.push(styles.flip);
+      titleStyle.width = height;
+      titleStyle.marginLeft = -((height / 2) - 10);
+      titleStyle.marginTop = -10;
     }
 
     const classes = [styles.component];
@@ -102,10 +102,10 @@ class TimeSlot extends PureComponent {
         onClick={frozen || !IS_TOUCH_DEVICE ? undefined : this.handleDelete}
       >
         <div
-          className={labelClasses.join(' ')}
-          style={labelStyle}
+          className={titleClasses.join(' ')}
+          style={titleStyle}
         >
-          {this.label()}
+          {this.title()}
         </div>
         {!frozen && !IS_TOUCH_DEVICE && (
           <div>
@@ -135,7 +135,7 @@ TimeSlot.propTypes = {
   start: PropTypes.instanceOf(Date).isRequired,
   end: PropTypes.instanceOf(Date).isRequired,
   availableWidth: PropTypes.number.isRequired,
-  label: PropTypes.string,
+  title: PropTypes.string,
   frozen: PropTypes.bool,
   foregroundColor: PropTypes.string,
   backgroundColor: PropTypes.string,

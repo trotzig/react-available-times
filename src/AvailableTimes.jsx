@@ -243,7 +243,7 @@ AvailableTimes.propTypes = {
   events: PropTypes.arrayOf(PropTypes.shape({
     start: PropTypes.instanceOf(Date),
     end: PropTypes.instanceOf(Date),
-    label: PropTypes.string,
+    title: PropTypes.string,
     calendar: PropTypes.string,
   })),
   onChange: PropTypes.func,
