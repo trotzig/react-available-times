@@ -20,8 +20,7 @@
     "testRegex": "test.*-test\\.jsx?$"
   },
   "dependencies": {
-    "prop-types": "^15.5.8",
-    "react-with-available-width": "^1.0.1"
+    "prop-types": "^15.5.8"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.7",

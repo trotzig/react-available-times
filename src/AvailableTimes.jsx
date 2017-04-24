@@ -96,10 +96,20 @@ export default class AvailableTimes extends Component {
     this.move = this.move.bind(this);
     this.handleHomeClick = () => this.setState({ currentWeekIndex: 0 });
     this.handleCalendarChange = this.handleCalendarChange.bind(this);
+    this.setAvailableWidth = this.setAvailableWidth.bind(this);
   }
 
   componentWillMount() {
     this.triggerTimespanInit(this.state.weeks);
+  }
+
+  setAvailableWidth(el) {
+    if (!el) {
+      return;
+    }
+    this.setState({
+      availableWidth: el.offsetWidth,
+    });
   }
 
   triggerTimespanInit(weeks) {
@@ -186,10 +196,18 @@ export default class AvailableTimes extends Component {
     } = this.props;
 
     const {
+      availableWidth,
       currentWeekIndex,
       visibleCalendars,
       weeks,
     } = this.state;
+
+    if (!availableWidth) {
+      // We need to measure things once first
+      return (
+        <div style={{ width: '100%' }} ref={this.setAvailableWidth} />
+      );
+    }
 
     const homeClasses = [styles.home];
     if (currentWeekIndex !== 0) {
@@ -240,6 +258,7 @@ export default class AvailableTimes extends Component {
             >
               {weeks.map((week, i) => (
                 <Week
+                  availableWidth={availableWidth}
                   calendars={calendars}
                   key={week.days[0].date}
                   week={week}

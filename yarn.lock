@@ -3311,10 +3311,6 @@ react-dom@^15.5.4:
     object-assign "^4.1.0"
     prop-types "~15.5.7"
 
-react-with-available-width@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.npmjs.org/react-with-available-width/-/react-with-available-width-1.0.1.tgz#8d2e905089a8750f546041f9844e656173365198"
-
 react@^15.5.4:
   version "15.5.4"
   resolved "https://registry.npmjs.org/react/-/react-15.5.4.tgz#fa83eb01506ab237cdc1c8c3b1cea8de012bf047"

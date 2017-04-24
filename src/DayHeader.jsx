@@ -1,11 +1,10 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import withAvailableWidth from 'react-with-available-width';
 
 import day from './Day';
 import styles from './DayHeader.css';
 
-class DayHeader extends Component {
+export default class DayHeader extends Component {
   text() {
     const { day, availableWidth } = this.props;
     const dateNumber = day.date.getDate();
@@ -66,5 +65,3 @@ DayHeader.propTypes = {
   availableWidth: PropTypes.number,
   events: PropTypes.arrayOf(PropTypes.object),
 };
-
-export default withAvailableWidth(DayHeader);

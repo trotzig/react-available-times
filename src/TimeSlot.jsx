@@ -1,13 +1,12 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-import withAvailableWidth from 'react-with-available-width';
 
 import { IS_TOUCH_DEVICE } from './Constants';
 import positionInDay from './positionInDay';
 import styles from './TimeSlot.css';
 import zeroPad from './zeroPad';
 
-class TimeSlot extends PureComponent {
+export default class TimeSlot extends PureComponent {
   constructor() {
     super();
     this.handleResizerMouseDown = this.handleResizerMouseDown.bind(this);
@@ -139,11 +138,12 @@ class TimeSlot extends PureComponent {
 }
 
 TimeSlot.propTypes = {
+  availableWidth: PropTypes.number.isRequired,
+
   active: PropTypes.bool, // Whether the time slot is being changed
   date: PropTypes.instanceOf(Date).isRequired, // The day in which the slot is displayed
   start: PropTypes.instanceOf(Date).isRequired,
   end: PropTypes.instanceOf(Date).isRequired,
-  availableWidth: PropTypes.number.isRequired,
   title: PropTypes.string,
   frozen: PropTypes.bool,
   foregroundColor: PropTypes.string,
@@ -157,5 +157,3 @@ TimeSlot.propTypes = {
   width: PropTypes.number,
   offset: PropTypes.number,
 }
-
-export default withAvailableWidth(TimeSlot);

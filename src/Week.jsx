@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 
-import { HOUR_IN_PIXELS } from './Constants';
+import { HOUR_IN_PIXELS, RULER_WIDTH_IN_PIXELS } from './Constants';
 import Day from './Day';
 import DayHeader from './DayHeader';
 import Ruler from './Ruler';
@@ -74,15 +74,22 @@ export default class Week extends PureComponent {
     const {
       start,
       week,
+      availableWidth,
     } = this.props;
 
     const { dayEvents, daySelections } = this.state;
 
     return (
       <div className={styles.component}>
-        <div className={styles.header}>
+        <div
+          className={styles.header}
+          style={{
+            paddingLeft: RULER_WIDTH_IN_PIXELS,
+          }}
+        >
           {week.days.map((day, i) => (
             <DayHeader
+              availableWidth={(availableWidth - RULER_WIDTH_IN_PIXELS) / 7}
               day={day}
               key={day.date}
               events={dayEvents[i]}
@@ -102,6 +109,7 @@ export default class Week extends PureComponent {
           <Ruler />
           {week.days.map((day, i) => (
             <Day
+              availableWidth={(availableWidth - RULER_WIDTH_IN_PIXELS) / 7}
               key={day.date}
               date={day.date}
               events={dayEvents[i]}
@@ -116,6 +124,7 @@ export default class Week extends PureComponent {
 }
 
 Week.propTypes = {
+  availableWidth: PropTypes.number.isRequired,
   events: PropTypes.arrayOf(PropTypes.shape({
     start: PropTypes.instanceOf(Date),
     end: PropTypes.instanceOf(Date),
