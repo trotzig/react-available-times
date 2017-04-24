@@ -57,6 +57,7 @@
   font-weight: 100;
   overflow: hidden;
   max-height: 100%;
+  pointer-events: none;
 }
 
 :local(.flip) {

@@ -17,7 +17,7 @@ function relativeY(e, rounding = ROUND_TO_NEAREST_MINS) {
 
 function relativeYElement(e, element, rounding = ROUND_TO_NEAREST_MINS) {
   const { top } = element.getBoundingClientRect();
-  const realY = e.pageY - top;
+  const realY = (e.pageY || e.touches[0].pageY) - top;
   const snapTo = rounding / 60 * HOUR_IN_PIXELS;
   return Math.floor(realY / snapTo) * snapTo;
 }
@@ -32,7 +32,9 @@ export default class Day extends PureComponent {
     this.handleMouseUp = this.handleMouseUp.bind(this);
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    this.handleTouchStart = this.handleTouchStart.bind(this);
+    this.handleTouchMove = this.handleTouchMove.bind(this);
+    this.handleTouchEnd = this.handleTouchEnd.bind(this);
     this.handleSizeChangeStart = this.handleItemModification.bind(this, 'end');
     this.handleMoveStart = this.handleItemModification.bind(this, 'both');
     this.handleDelete = this.handleDelete.bind(this);
@@ -83,9 +85,30 @@ export default class Day extends PureComponent {
     });
   }
 
-  handleClick(e) {
-    this.handleMouseDown(e);
-    this.handleMouseUp(e);
+  handleTouchStart(e) {
+    this.touch = {
+      startY: e.touches[0].pageY,
+      startX: e.touches[0].pageX,
+    };
+  }
+
+  handleTouchMove(e) {
+    this.touch.currentY = e.touches[0].pageY;
+    this.touch.currentX = e.touches[0].pageX;
+  }
+
+  handleTouchEnd(e) {
+    const { startY, currentY, startX, currentX } = this.touch;
+    if (
+      Math.abs(startX - (currentX || startX)) < 20 &&
+      Math.abs(startY - (currentY || startY)) < 20
+    ) {
+      e.pageY = startY;
+      e.pageX = startX;
+      this.handleMouseDown(e);
+      this.handleMouseUp(e);
+    }
+    this.touch = undefined;
   }
 
   handleMouseDown(e) {
@@ -211,7 +234,9 @@ export default class Day extends PureComponent {
           onMouseUp={IS_TOUCH_DEVICE ? undefined : this.handleMouseUp}
           onMouseMove={IS_TOUCH_DEVICE ? undefined : this.handleMouseMove}
           onMouseOut={IS_TOUCH_DEVICE ? undefined : this.handleMouseUp}
-          onClick={IS_TOUCH_DEVICE ? this.handleClick : undefined}
+          onTouchStart={this.handleTouchStart}
+          onTouchMove={this.handleTouchMove}
+          onTouchEnd={this.handleTouchEnd}
           className={styles.mouseTarget}
           ref={this.handleMouseTargetRef}
         />

@@ -16,7 +16,16 @@ class TimeSlot extends PureComponent {
     this.preventMove = (e) => e.stopPropagation();
   }
 
+  componentDidMount() {
+    this.creationTime = new Date();
+  }
+
   handleDelete(event) {
+    if (new Date().getTime() - this.creationTime < 500) {
+      // Just created. Ignore this event, as it's likely coming from the same
+      // click event that created it.
+      return;
+    }
     event.stopPropagation();
     const { onDelete, end, start } = this.props;
     onDelete({ end, start }, event);
