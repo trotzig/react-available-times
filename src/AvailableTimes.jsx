@@ -94,6 +94,7 @@ export default class AvailableTimes extends Component {
     this.moveBack = this.move.bind(this, -1);
     this.moveForward = this.move.bind(this, 1);
     this.move = this.move.bind(this);
+    this.handleHomeClick = () => this.setState({ currentWeekIndex: 0 });
     this.handleCalendarChange = this.handleCalendarChange.bind(this);
   }
 
@@ -190,6 +191,11 @@ export default class AvailableTimes extends Component {
       weeks,
     } = this.state;
 
+    const homeClasses = [styles.home];
+    if (currentWeekIndex !== 0) {
+      homeClasses.push(styles.homeActive);
+    }
+
     return (
       <div
         className={styles.component}
@@ -197,51 +203,61 @@ export default class AvailableTimes extends Component {
           height,
         }}
       >
-        <div className={styles.toolbar}>
-          <div className={styles.interval}>
-            {weeks[currentWeekIndex].interval}
-          </div>
-          <div className={styles.buttons}>
-            <button
-              className={styles.button}
-              onClick={this.moveBack}
-            >
-              {leftArrowSvg}
-            </button>
-            {' '}
-            <button
-              className={styles.button}
-              onClick={this.moveForward}
-            >
-              {rightArrowSvg}
-            </button>
-          </div>
-          <div className={styles.calendarSelector}>
-            <CalendarSelector
-              calendars={calendars}
-              visibleCalendars={visibleCalendars}
-              onChange={this.handleCalendarChange}
-            />
-          </div>
-        </div>
-        <div className={styles.main}>
-          <Slider
-            index={currentWeekIndex}
-            onSlide={this.move}
-          >
-            {weeks.map((week, i) => (
-              <Week
+        <div
+          className={styles.inner}
+        >
+          <div className={styles.toolbar}>
+            <div className={styles.interval}>
+              {weeks[currentWeekIndex].interval}
+            </div>
+            <div className={styles.buttons}>
+              <button
+                className={styles.button}
+                onClick={this.moveBack}
+              >
+                {leftArrowSvg}
+              </button>
+              {' '}
+              <button
+                className={styles.button}
+                onClick={this.moveForward}
+              >
+                {rightArrowSvg}
+              </button>
+            </div>
+            <div className={styles.calendarSelector}>
+              <CalendarSelector
                 calendars={calendars}
-                key={week.days[0].date}
-                week={week}
-                events={this.state.overlappedEvents}
-                initialSelections={initialSelections}
-                onChange={this.handleWeekChange}
-                height={height}
+                visibleCalendars={visibleCalendars}
+                onChange={this.handleCalendarChange}
               />
-            ))}
-          </Slider>
+            </div>
+          </div>
+          <div className={styles.main}>
+            <Slider
+              index={currentWeekIndex}
+              onSlide={this.move}
+            >
+              {weeks.map((week, i) => (
+                <Week
+                  calendars={calendars}
+                  key={week.days[0].date}
+                  week={week}
+                  events={this.state.overlappedEvents}
+                  initialSelections={initialSelections}
+                  onChange={this.handleWeekChange}
+                  height={height}
+                />
+              ))}
+            </Slider>
+          </div>
         </div>
+        <button
+          className={homeClasses.join(' ')}
+          onClick={this.handleHomeClick}
+        >
+          {leftArrowSvg}
+        </button>
       </div>
     );
   }
