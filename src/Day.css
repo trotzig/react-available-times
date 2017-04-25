@@ -9,17 +9,6 @@
   background-color: #F6FAFE;
 }
 
-:local(.hour) {
-  border-bottom: 1px solid #ccc;
-  pointer-events: none;
-}
-
-:local(.halfHour) {
-  height: 50%;
-  border-bottom: 1px dashed #f0f0f0;
-  pointer-events: none;
-}
-
 :local(.mouseTarget) {
   top: 0;
   left: 0;

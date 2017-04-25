@@ -61,6 +61,24 @@ export default class Week extends PureComponent {
     });
   }
 
+  renderLines() {
+    const result = [];
+    for (let i = 0; i < 24; i++) {
+      result.push(
+        <div
+          key={i}
+          className={styles.hour}
+          style={{
+            height: HOUR_IN_PIXELS,
+          }}
+        >
+          <div className={styles.halfHour} />
+        </div>
+      );
+    }
+    return result;
+  }
+
   render() {
     const {
       start,
@@ -88,7 +106,7 @@ export default class Week extends PureComponent {
           ))}
         </div>
         <div
-          className={styles.days}
+          className={styles.daysWrapper}
           ref={(element) => {
             if (!element || this.alreadyScrolled) {
               return;
@@ -97,17 +115,24 @@ export default class Week extends PureComponent {
             element.scrollTop = HOUR_IN_PIXELS * 6.5;
           }}
         >
-          <Ruler />
-          {week.days.map((day, i) => (
-            <Day
-              availableWidth={(availableWidth - RULER_WIDTH_IN_PIXELS) / 7}
-              key={day.date}
-              date={day.date}
-              events={dayEvents[i]}
-              initialSelections={daySelections[i]}
-              onChange={this.handleDayChange}
-            />
-          ))}
+          <div className={styles.lines}>
+            {this.renderLines()}
+          </div>
+          <div
+            className={styles.days}
+          >
+            <Ruler />
+            {week.days.map((day, i) => (
+              <Day
+                availableWidth={(availableWidth - RULER_WIDTH_IN_PIXELS) / 7}
+                key={day.date}
+                date={day.date}
+                events={dayEvents[i]}
+                initialSelections={daySelections[i]}
+                onChange={this.handleDayChange}
+              />
+            ))}
+          </div>
         </div>
       </div>
     );

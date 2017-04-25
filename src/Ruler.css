@@ -4,6 +4,5 @@
 :local(.hour) {
   width: 30px;
   text-align: right;
-  border-bottom: 1px solid #ccc;
   padding: 2px 5px;
 }

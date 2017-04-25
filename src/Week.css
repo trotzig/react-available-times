@@ -12,7 +12,8 @@
   align-items: flex-start;
 }
 
-:local(.days) {
+:local(.daysWrapper) {
+  position: relative;
   border-top: 1px solid #ccc;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
@@ -22,3 +23,23 @@
   padding-left: 30px;
   flex-shrink: 0;
 }
+
+:local(.lines) {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+:local(.hour) {
+  border-bottom: 1px solid #ccc;
+  pointer-events: none;
+}
+
+:local(.halfHour) {
+  height: 50%;
+  border-bottom: 1px dashed #f0f0f0;
+  pointer-events: none;
+}
+

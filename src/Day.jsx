@@ -196,16 +196,10 @@ export default class Day extends PureComponent {
     }
 
     return (
-      <div className={classes.join(' ')}>
-        {hours.map((hour) => (
-          <div
-            key={hour}
-            className={styles.hour}
-            style={{ height: HOUR_IN_PIXELS }}
-          >
-            <div className={styles.halfHour}/>
-          </div>
-        ))}
+      <div
+        className={classes.join(' ')}
+        style={{ height: HOUR_IN_PIXELS * 24 }}
+      >
         {events.map(({
           allDay,
           foregroundColor,
