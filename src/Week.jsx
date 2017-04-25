@@ -5,7 +5,7 @@ import { HOUR_IN_PIXELS, RULER_WIDTH_IN_PIXELS } from './Constants';
 import Day from './Day';
 import DayHeader from './DayHeader';
 import Ruler from './Ruler';
-import addOverlapHints from './addOverlapHints';
+import getIncludedEvents from './getIncludedEvents';
 import styles from './Week.css';
 
 function flatten(selections) {
@@ -14,15 +14,6 @@ function flatten(selections) {
     result.push(...selectionsInDay);
   });
   return result;
-}
-
-function getIncludedEvents(events, dayStart, dayEnd) {
-  return events.filter(({ start, end, allDay }) => {
-    if (allDay) {
-      return dayStart >= start && dayStart < end;
-    }
-    return dayStart <= start || dayEnd > end;
-  });
 }
 
 function constructStateFromProps({ week, initialSelections, events }) {
