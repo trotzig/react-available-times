@@ -94,6 +94,7 @@
   pointer-events: inherit;
   cursor: pointer;
   opacity: 1;
+  line-height: 0;
 }
 
 :local(.home):focus {
