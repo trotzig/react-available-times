@@ -97,10 +97,30 @@ export default class AvailableTimes extends Component {
     this.handleHomeClick = () => this.setState({ currentWeekIndex: 0 });
     this.handleCalendarChange = this.handleCalendarChange.bind(this);
     this.setAvailableWidth = this.setAvailableWidth.bind(this);
+    this.setRef = this.setRef.bind(this);
+    this.handleWindowResize = this.handleWindowResize.bind(this);
   }
 
   componentWillMount() {
     this.triggerTimespanInit(this.state.weeks);
+    window.addEventListener('resize', this.handleWindowResize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleWindowResize);
+  }
+
+  handleWindowResize() {
+    this.setState({
+      availableWidth: this.ref.offsetWidth,
+    });
+  }
+
+  setRef(element) {
+    if (!element) {
+      return;
+    }
+    this.ref = element;
   }
 
   setAvailableWidth(el) {
@@ -220,6 +240,7 @@ export default class AvailableTimes extends Component {
         style={{
           height,
         }}
+        ref={this.setRef}
       >
         <div
           className={styles.inner}
