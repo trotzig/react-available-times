@@ -36,97 +36,6 @@ const calendars = [
   },
 ];
 
-const events = [
-  {
-    start: dateAt(0, 12, 30),
-    end: dateAt(0, 14, 0),
-    title: 'Lunch with Lo',
-    calendarId: 'private',
-  },
-  {
-    start: dateAt(1, 8, 5),
-    end: dateAt(1, 10, 0),
-    title: 'Breakfast club',
-    calendarId: 'work',
-  },
-  {
-    start: dateAt(1, 20, 0),
-    end: dateAt(2, 10, 0),
-    title: 'Night club',
-    calendarId: 'private',
-  },
-  {
-    start: dateAt(1, 8, 20),
-    end: dateAt(1, 10, 30),
-    title: 'Morning meeting',
-    calendarId: 'private',
-  },
-  {
-    start: dateAt(1, 0, 0),
-    end: dateAt(2, 0, 0),
-    title: 'Busy-time',
-    calendarId: 'private',
-    allDay: true,
-  },
-  {
-    start: dateAt(1, 0, 0),
-    end: dateAt(2, 0, 0),
-    title: 'Foo bar',
-    calendarId: 'private',
-    allDay: true,
-  },
-  {
-    start: dateAt(1, 0, 0),
-    end: dateAt(2, 0, 0),
-    title: 'what the',
-    calendarId: 'work',
-    allDay: true,
-  },
-  {
-    start: dateAt(1, 0, 0),
-    end: dateAt(2, 0, 0),
-    title: 'Conference in some remote location',
-    calendarId: 'work',
-    allDay: true,
-  },
-  {
-    start: dateAt(3, 8, 0),
-    end: dateAt(3, 17, 0),
-    title: 'Conference',
-    calendarId: 'private',
-  },
-  {
-    start: dateAt(4, 17, 0),
-    end: dateAt(4, 19, 0),
-    title: 'Pick up groceries',
-    calendarId: 'private',
-  },
-  {
-    start: dateAt(5, 10, 0),
-    end: dateAt(5, 13, 20),
-    title: 'Prepare presentation',
-    calendarId: 'work',
-  },
-  {
-    start: dateAt(5, 11, 0),
-    end: dateAt(5, 12, 20),
-    title: 'Remember to sign papers',
-    calendarId: 'private',
-  },
-  {
-    start: dateAt(5, 12, 0),
-    end: dateAt(5, 14, 0),
-    title: 'Taxi to airport',
-    calendarId: 'work',
-  },
-  {
-    start: dateAt(5, 13, 30),
-    end: dateAt(5, 19, 25),
-    title: 'Flight to Chicago',
-    calendarId: 'private',
-  },
-];
-
 const initialSelections = [
   {
     start: dateAt(1, 12, 0),
@@ -144,32 +53,47 @@ class Test extends Component {
     super();
     this.state = {
       selections: initialSelections,
-      selectedCalendars: ['private', 'work'],
-      start: undefined,
-      end: undefined,
     };
     this.handleChange = this.handleChange.bind(this);
-    this.handleCalendarSelected = this.handleCalendarSelected.bind(this);
-    this.handleTimespanInit = this.handleTimespanInit.bind(this);
+    this.handleEventsRequested = this.handleEventsRequested.bind(this);
   }
 
   handleChange(selections) {
     this.setState({ selections });
   }
 
-  handleCalendarSelected(selectedCalendars) {
-    this.setState({ selectedCalendars });
-  }
-
-  handleTimespanInit({ start, end }) {
-    this.setState({
-      start,
-      end,
-    });
+  handleEventsRequested({ start, end, calendarId, callback }) {
+    console.log(calendarId, start, end);
+    callback([
+      {
+        start: new Date(start.getTime() + 12 * 60 * 60 * 1000),
+        end: new Date(start.getTime() + 14 * 60 * 60 * 1000),
+        title: 'Lunch with Lo',
+        calendarId,
+      },
+      {
+        start: new Date(start.getTime() + 36 * 60 * 60 * 1000),
+        end: new Date(start.getTime() + 38 * 60 * 60 * 1000),
+        title: 'Breakfast club',
+        calendarId,
+      },
+      {
+        start: new Date(start.getTime() + 77 * 60 * 60 * 1000),
+        end: new Date(start.getTime() + 78 * 60 * 60 * 1000),
+        title: 'Something different',
+        calendarId,
+      },
+      {
+        start: new Date(end.getTime() - 12 * 60 * 60 * 1000),
+        end: new Date(end.getTime() - 11 * 60 * 60 * 1000),
+        title: 'Weekend stuff',
+        calendarId,
+      },
+    ]);
   }
 
   render() {
-    const { selections, selectedCalendars } = this.state;
+    const { selections } = this.state;
 
     const fullscreen = window.location.search === '?fullscreen';
     return (
@@ -193,24 +117,6 @@ class Test extends Component {
                   </ul>
                 </div>
               )}
-              {selectedCalendars.length > 0 && (
-                <div>
-                  <h2>Selected calendars</h2>
-                  <ul className={styles.selected}>
-                    {selectedCalendars.map((id) => <li key={id}>{id}</li>)}
-                  </ul>
-                </div>
-              )}
-              {this.state.start && (
-                <div>
-                  <h2>Timespan init</h2>
-                  <ul className={styles.selected}>
-                    <li>
-                      {this.state.start.toString()} - {this.state.end.toString()}
-                    </li>
-                  </ul>
-                </div>
-              )}
               <a href="/?fullscreen">
                 Go full screen
               </a>
@@ -218,13 +124,11 @@ class Test extends Component {
           }
           <AvailableTimes
             height={fullscreen ? undefined : 600}
-            events={events}
             calendars={calendars}
             start={new Date()}
             onChange={this.handleChange}
-            onCalendarSelected={this.handleCalendarSelected}
-            onTimespanInit={this.handleTimespanInit}
             initialSelections={initialSelections}
+            onEventsRequested={this.handleEventsRequested}
           />
         </div>
       </div>

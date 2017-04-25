@@ -62,7 +62,6 @@ export default class AvailableTimes extends Component {
   constructor({
     initialSelections = [],
     start = new Date(),
-    events = [],
     calendars = [],
   }) {
     super();
@@ -76,12 +75,7 @@ export default class AvailableTimes extends Component {
       ],
       currentWeekIndex: 0,
       visibleCalendars,
-      overlappedEvents: colorize(
-        addOverlapHints(
-          filterVisible(events, visibleCalendars)
-        ),
-        calendars,
-      ),
+      overlappedEvents: [],
     };
     this.selections = {};
     initialSelections.forEach((selection) => {
@@ -99,15 +93,47 @@ export default class AvailableTimes extends Component {
     this.setAvailableWidth = this.setAvailableWidth.bind(this);
     this.setRef = this.setRef.bind(this);
     this.handleWindowResize = this.handleWindowResize.bind(this);
+
+    this.timespansPerCalendar = {};
+    calendars.forEach((calendar) => {
+      this.timespansPerCalendar[calendar.id] = {
+        start: this.state.weeks[0].start,
+        end: this.state.weeks[0].start,
+        events: [],
+      };
+    })
   }
 
   componentWillMount() {
-    this.triggerTimespanInit(this.state.weeks);
     window.addEventListener('resize', this.handleWindowResize);
+    this.triggerEventsRequested(this.state.weeks, this.state.visibleCalendars);
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleWindowResize);
+  }
+
+  triggerEventsRequested(weeks, visibleCalendars) {
+    const { onEventsRequested } = this.props;
+    if (!onEventsRequested) {
+      return;
+    }
+    visibleCalendars.forEach((calendarId) => {
+      const timespan = this.timespansPerCalendar[calendarId];
+      const { end } = weeks[weeks.length - 1];
+      if (timespan.end < end) {
+        onEventsRequested({
+          calendarId,
+          start: timespan.end,
+          end,
+          callback: (events) => {
+            timespan.events = timespan.events.concat(events);
+            this.updateEvents(visibleCalendars);
+          },
+        });
+        timespan.end = end;
+      }
+    });
   }
 
   handleWindowResize() {
@@ -132,31 +158,6 @@ export default class AvailableTimes extends Component {
     });
   }
 
-  triggerTimespanInit(weeks) {
-    const { onTimespanInit } = this.props;
-    if (onTimespanInit) {
-      onTimespanInit({
-        start: weeks[0].start,
-        end: weeks[weeks.length - 1].end,
-      });
-    }
-  }
-
-  componentWillReceiveProps({ events }) {
-    if (events === this.props.events) {
-      // nothing to do
-      return;
-    }
-    this.setState(({ visibleCalendars }) => ({
-      overlappedEvents: colorize(
-        addOverlapHints(
-          filterVisible(events, visibleCalendars)
-        ),
-        this.props.calendars
-      )
-    }));
-  }
-
   handleWeekChange(week, selections) {
     const { onChange } = this.props;
     this.selections[week.days[0].date] = selections;
@@ -167,14 +168,18 @@ export default class AvailableTimes extends Component {
   }
 
   handleCalendarChange(visibleCalendars) {
-    const {
-      events,
-      calendars,
-      onCalendarSelected,
-    } = this.props;
+    this.setState({ visibleCalendars });
+    this.updateEvents(visibleCalendars);
+    this.triggerEventsRequested(this.state.weeks, visibleCalendars);
+  }
 
+  updateEvents(visibleCalendars) {
+    const { calendars } = this.props;
+    const events = [];
+    Object.keys(this.timespansPerCalendar).forEach((calendarId) => {
+      events.push(...this.timespansPerCalendar[calendarId].events);
+    });
     this.setState({
-      visibleCalendars,
       overlappedEvents: colorize(
         addOverlapHints(
           filterVisible(events, visibleCalendars)
@@ -182,9 +187,6 @@ export default class AvailableTimes extends Component {
         calendars
       ),
     });
-    if (onCalendarSelected) {
-      onCalendarSelected([...visibleCalendars]);
-    }
   }
 
   move(increment) {
@@ -195,10 +197,10 @@ export default class AvailableTimes extends Component {
       }
 
       let nextWeeks = weeks;
-      if (increment > 0) {
+      if (increment > 0 && weeks.length - nextIndex < 2) {
         const newWeek = weekAt(oneWeekAhead(weeks[weeks.length - 1].days[3].date));
         nextWeeks = weeks.concat(newWeek);
-        this.triggerTimespanInit(nextWeeks);
+        this.triggerEventsRequested(nextWeeks, this.state.visibleCalendars);
       }
 
       return {
@@ -315,14 +317,7 @@ AvailableTimes.propTypes = {
     color: PropTypes.string,
     selected: PropTypes.bool,
   })),
-  events: PropTypes.arrayOf(PropTypes.shape({
-    start: PropTypes.instanceOf(Date),
-    end: PropTypes.instanceOf(Date),
-    title: PropTypes.string,
-    calendarId: PropTypes.string,
-  })),
   onChange: PropTypes.func,
-  onCalendarSelected: PropTypes.func,
-  onTimespanInit: PropTypes.func,
+  onEventsRequested: PropTypes.func,
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };

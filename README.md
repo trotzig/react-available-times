@@ -35,11 +35,8 @@ import AvailableTimes from 'react-available-times';
       console.log('Start:', start, 'End:', end);
     })
   }}
-  onCalendarSelected={(calendarIds) => {
-    // e.g. ['work', 'private']
-  }}
-  onTimespanInit={({ start, end }) => {
-    loadMoreEvents(start, end);
+  onEventsRequested={({ calendarId, start, end, callback }) => {
+    loadMoreEvents(calendarId, start, end).then(callback);
   }}
   initialSelections={[
     { start: aDateObject, end: anotherDateObject }
@@ -61,12 +58,8 @@ None of the props are required.
 - `calendars`: a list of calendars displayed in the dropdown at the top right.
 - `onChange`: a function called whenever a selection is made. Receives an array
   of objects, each with a `start` and an `end` date.
-- `onCalendarSelected`: a function called when the user is changing the
-  filtering of calendars. Useful if you want to lazy-load a set of events. Gets
-  called with a list of the calendar ids currently selected.
-- `onTimespanInit`: a function called when new weeks are initialized. Useful if
-  you want to lazy-load events. Gets called with an object containing `start`
-  and `end` dates of the whole timespan currently initialized.
+- `onEventsRequested`: a function called when new weeks are loaded. Hook in to
+  this function to continuously feed events to the calendar view.
 - `initialSelections`: an array of pre-filled selections. Each object in the
   array needs a `start` and an `end` date.
 - `events`: calendar events, usually pulled from a different source (e.g. a
