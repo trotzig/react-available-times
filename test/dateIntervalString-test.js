@@ -9,5 +9,5 @@ it('reuses the month name if in same month', () => {
 });
 
 it('shows both month names if in different months', () => {
-  expect(dateIntervalString(march28, april1)).toEqual('March 28 – April 1');
+  expect(dateIntervalString(march28, april1)).toEqual('Mar 28 – Apr 1');
 });
