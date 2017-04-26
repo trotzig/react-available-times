@@ -6,7 +6,7 @@
 }
 
 :local(.today) {
-  background-color: #F6FAFE;
+  background-color: rgba(218, 228, 242, 0.2);
 }
 
 :local(.mouseTarget) {
