@@ -1,12 +1,11 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import { WEEKS_PER_TIMESPAN } from './Constants';
 import CalendarSelector from './CalendarSelector';
 import EventsStore from './EventsStore';
 import Slider from './Slider';
 import Week from './Week';
-import addOverlapHints from './addOverlapHints';
 import styles from './AvailableTimes.css';
 import weekAt from './weekAt';
 
@@ -38,29 +37,7 @@ function flatten(selections) {
   return result;
 }
 
-function colorize(events, calendars = []) {
-  const byId = {};
-  calendars.forEach(({ id, foregroundColor, backgroundColor }) => {
-    byId[id] = { foregroundColor, backgroundColor };
-  });
-  // We're assuming that it's safe to mutate events here (they should have been
-  // duped by addOverlapHints already).
-  events.forEach((event) => {
-    Object.assign(event, byId[event.calendarId]);
-  });
-  return events;
-}
-
-/**
- * @param {Array<Object>} events
- * @param {Set<String>} selectedCalendars
- * @return {Array<Object>}
- */
-function filterVisible(events, selectedCalendars) {
-  return events.filter(({ calendarId }) => selectedCalendars.has(calendarId));
-}
-
-export default class AvailableTimes extends Component {
+export default class AvailableTimes extends PureComponent {
   constructor({
     initialSelections = [],
     start = new Date(),
@@ -74,7 +51,7 @@ export default class AvailableTimes extends Component {
       weeks: [],
       currentWeekIndex: 0,
       selectedCalendars,
-      overlappedEvents: [],
+      events: [],
     };
     this.selections = {};
     initialSelections.forEach((selection) => {
@@ -87,7 +64,10 @@ export default class AvailableTimes extends Component {
     this.moveBack = this.move.bind(this, -1);
     this.moveForward = this.move.bind(this, 1);
     this.move = this.move.bind(this);
-    this.handleHomeClick = () => this.setState({ currentWeekIndex: 0 });
+    this.handleHomeClick = () => this.setState(({ weeks }) => ({
+      currentWeekIndex: 0,
+      events: this.eventsStore.get(weeks[0].start),
+    }));
     this.handleCalendarChange = this.handleCalendarChange.bind(this);
     this.setAvailableWidth = this.setAvailableWidth.bind(this);
     this.setRef = this.setRef.bind(this);
@@ -96,24 +76,16 @@ export default class AvailableTimes extends Component {
 
   componentWillMount() {
     window.addEventListener('resize', this.handleWindowResize);
-    const { selectedCalendars } = this.state;
-    const { onEventsRequested, calendars } = this.props;
+    const { calendars, onEventsRequested } = this.props;
     this.eventsStore = new EventsStore({
-      selectedCalendars,
+      calendars,
       onEventsRequested,
-      onChange: ({ start, end, events }) => {
-        const { weeks, currentWeekIndex } = this.state;
-        if (start <= weeks[currentWeekIndex].start &&
-          end > weeks[currentWeekIndex].start) {
-          this.setState({
-            overlappedEvents: colorize(
-              addOverlapHints(
-                filterVisible(events, selectedCalendars)
-              ),
-              calendars
-            ),
-          });
-        }
+      onChange: () => {
+        this.setState(({ weeks, currentWeekIndex }) => {
+          return {
+            events: this.eventsStore.get(weeks[currentWeekIndex].start),
+          };
+        });
       }
     });
     this.setState({
@@ -187,7 +159,6 @@ export default class AvailableTimes extends Component {
 
   move(increment) {
     this.setState(({
-      overlappedEvents,
       selectedCalendars,
       currentWeekIndex,
       weeks,
@@ -196,24 +167,11 @@ export default class AvailableTimes extends Component {
       if (nextIndex < 0) {
         return;
       }
-      let newEvents = overlappedEvents;
-      if (
-        increment > 0 && nextIndex % WEEKS_PER_TIMESPAN === 0 ||
-        increment < 0 && nextIndex % WEEKS_PER_TIMESPAN === WEEKS_PER_TIMESPAN - 1
-      ) {
-        console.log('updating overlapped events');
-        newEvents = colorize(
-          addOverlapHints(
-            filterVisible(this.eventsStore.get(weeks[nextIndex].start),
-              selectedCalendars)),
-          this.props.calendars
-        );
-      }
       return {
         weeks: this.expandWeeks(weeks, nextIndex),
         currentWeekIndex: nextIndex,
-        overlappedEvents: newEvents,
-      }
+        events: this.eventsStore.get(weeks[nextIndex].start),
+      };
     });
   }
 
@@ -229,6 +187,7 @@ export default class AvailableTimes extends Component {
       currentWeekIndex,
       selectedCalendars,
       weeks,
+      events,
     } = this.state;
 
     if (!availableWidth) {
@@ -293,7 +252,7 @@ export default class AvailableTimes extends Component {
                     calendars={calendars}
                     key={week.days[0].date}
                     week={week}
-                    events={this.state.overlappedEvents}
+                    events={events}
                     initialSelections={initialSelections}
                     onChange={this.handleWeekChange}
                     height={height}
