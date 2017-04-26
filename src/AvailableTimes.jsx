@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
+import { WEEKS_PER_TIMESPAN } from './Constants';
 import CalendarSelector from './CalendarSelector';
+import EventsStore from './EventsStore';
 import Slider from './Slider';
 import Week from './Week';
 import addOverlapHints from './addOverlapHints';
@@ -51,11 +53,11 @@ function colorize(events, calendars = []) {
 
 /**
  * @param {Array<Object>} events
- * @param {Set<String>} visibleCalendars
+ * @param {Set<String>} selectedCalendars
  * @return {Array<Object>}
  */
-function filterVisible(events, visibleCalendars) {
-  return events.filter(({ calendarId }) => visibleCalendars.has(calendarId));
+function filterVisible(events, selectedCalendars) {
+  return events.filter(({ calendarId }) => selectedCalendars.has(calendarId));
 }
 
 export default class AvailableTimes extends Component {
@@ -65,16 +67,13 @@ export default class AvailableTimes extends Component {
     calendars = [],
   }) {
     super();
-    const visibleCalendars = new Set(
+    const selectedCalendars = new Set(
       calendars.filter(({ selected }) => selected).map(({ id }) => id));
 
     this.state = {
-      weeks: [
-        weekAt(start),
-        weekAt(oneWeekAhead(start)),
-      ],
+      weeks: [],
       currentWeekIndex: 0,
-      visibleCalendars,
+      selectedCalendars,
       overlappedEvents: [],
     };
     this.selections = {};
@@ -93,47 +92,37 @@ export default class AvailableTimes extends Component {
     this.setAvailableWidth = this.setAvailableWidth.bind(this);
     this.setRef = this.setRef.bind(this);
     this.handleWindowResize = this.handleWindowResize.bind(this);
-
-    this.timespansPerCalendar = {};
-    calendars.forEach((calendar) => {
-      this.timespansPerCalendar[calendar.id] = {
-        start: this.state.weeks[0].start,
-        end: this.state.weeks[0].start,
-        events: [],
-      };
-    })
   }
 
   componentWillMount() {
     window.addEventListener('resize', this.handleWindowResize);
-    this.triggerEventsRequested(this.state.weeks, this.state.visibleCalendars);
+    const { selectedCalendars } = this.state;
+    const { onEventsRequested, calendars } = this.props;
+    this.eventsStore = new EventsStore({
+      selectedCalendars,
+      onEventsRequested,
+      onChange: ({ start, end, events }) => {
+        const { weeks, currentWeekIndex } = this.state;
+        if (start <= weeks[currentWeekIndex].start &&
+          end > weeks[currentWeekIndex].start) {
+          this.setState({
+            overlappedEvents: colorize(
+              addOverlapHints(
+                filterVisible(events, selectedCalendars)
+              ),
+              calendars
+            ),
+          });
+        }
+      }
+    });
+    this.setState({
+      weeks: this.expandWeeks(this.state.weeks, 0),
+    });
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleWindowResize);
-  }
-
-  triggerEventsRequested(weeks, visibleCalendars) {
-    const { onEventsRequested } = this.props;
-    if (!onEventsRequested) {
-      return;
-    }
-    visibleCalendars.forEach((calendarId) => {
-      const timespan = this.timespansPerCalendar[calendarId];
-      const { end } = weeks[weeks.length - 1];
-      if (timespan.end < end) {
-        onEventsRequested({
-          calendarId,
-          start: timespan.end,
-          end,
-          callback: (events) => {
-            timespan.events = timespan.events.concat(events);
-            this.updateEvents(visibleCalendars);
-          },
-        });
-        timespan.end = end;
-      }
-    });
   }
 
   handleWindowResize() {
@@ -167,46 +156,64 @@ export default class AvailableTimes extends Component {
     onChange(flatten(this.selections));
   }
 
-  handleCalendarChange(visibleCalendars) {
-    this.setState({ visibleCalendars });
-    this.updateEvents(visibleCalendars);
-    this.triggerEventsRequested(this.state.weeks, visibleCalendars);
+  handleCalendarChange(selectedCalendars) {
+    this.setState({ selectedCalendars });
+    this.eventsStore.updateSelectedCalendars(selectedCalendars);
   }
 
-  updateEvents(visibleCalendars) {
-    const { calendars } = this.props;
-    const events = [];
-    Object.keys(this.timespansPerCalendar).forEach((calendarId) => {
-      events.push(...this.timespansPerCalendar[calendarId].events);
+  expandWeeks(weeks, weekIndex) {
+    if (weeks.length - weekIndex > WEEKS_PER_TIMESPAN) {
+      // no need to expand
+      return weeks;
+    }
+
+    let newWeeks = weeks;
+    let addedWeeks = 0;
+    while (addedWeeks < WEEKS_PER_TIMESPAN) {
+      const week = newWeeks.length ?
+        weekAt(oneWeekAhead(newWeeks[newWeeks.length - 1].days[3].date)) :
+          weekAt(this.props.start);
+      newWeeks = newWeeks.concat(week);
+      addedWeeks++;
+    }
+    setTimeout(() => {
+      this.eventsStore.addTimespan({
+        start: newWeeks[newWeeks.length - WEEKS_PER_TIMESPAN].start,
+        end: newWeeks[newWeeks.length - 1].end,
+      });
     });
-    this.setState({
-      overlappedEvents: colorize(
-        addOverlapHints(
-          filterVisible(events, visibleCalendars)
-        ),
-        calendars
-      ),
-    });
+    return newWeeks;
   }
 
   move(increment) {
-    this.setState(({ currentWeekIndex, weeks }) => {
+    this.setState(({
+      overlappedEvents,
+      selectedCalendars,
+      currentWeekIndex,
+      weeks,
+    }) => {
       const nextIndex = currentWeekIndex + increment;
       if (nextIndex < 0) {
         return;
       }
-
-      let nextWeeks = weeks;
-      if (increment > 0 && weeks.length - nextIndex < 2) {
-        const newWeek = weekAt(oneWeekAhead(weeks[weeks.length - 1].days[3].date));
-        nextWeeks = weeks.concat(newWeek);
-        this.triggerEventsRequested(nextWeeks, this.state.visibleCalendars);
+      let newEvents = overlappedEvents;
+      if (
+        increment > 0 && nextIndex % WEEKS_PER_TIMESPAN === 0 ||
+        increment < 0 && nextIndex % WEEKS_PER_TIMESPAN === WEEKS_PER_TIMESPAN - 1
+      ) {
+        console.log('updating overlapped events');
+        newEvents = colorize(
+          addOverlapHints(
+            filterVisible(this.eventsStore.get(weeks[nextIndex].start),
+              selectedCalendars)),
+          this.props.calendars
+        );
       }
-
       return {
-        weeks: nextWeeks,
+        weeks: this.expandWeeks(weeks, nextIndex),
         currentWeekIndex: nextIndex,
-      };
+        overlappedEvents: newEvents,
+      }
     });
   }
 
@@ -220,7 +227,7 @@ export default class AvailableTimes extends Component {
     const {
       availableWidth,
       currentWeekIndex,
-      visibleCalendars,
+      selectedCalendars,
       weeks,
     } = this.state;
 
@@ -269,7 +276,7 @@ export default class AvailableTimes extends Component {
             <div className={styles.calendarSelector}>
               <CalendarSelector
                 calendars={calendars}
-                visibleCalendars={visibleCalendars}
+                selectedCalendars={selectedCalendars}
                 onChange={this.handleCalendarChange}
               />
             </div>
@@ -279,18 +286,20 @@ export default class AvailableTimes extends Component {
               index={currentWeekIndex}
               onSlide={this.move}
             >
-              {weeks.map((week, i) => (
-                <Week
-                  availableWidth={availableWidth}
-                  calendars={calendars}
-                  key={week.days[0].date}
-                  week={week}
-                  events={this.state.overlappedEvents}
-                  initialSelections={initialSelections}
-                  onChange={this.handleWeekChange}
-                  height={height}
-                />
-              ))}
+              {weeks.map((week, i) => {
+                return (
+                  <Week
+                    availableWidth={availableWidth}
+                    calendars={calendars}
+                    key={week.days[0].date}
+                    week={week}
+                    events={this.state.overlappedEvents}
+                    initialSelections={initialSelections}
+                    onChange={this.handleWeekChange}
+                    height={height}
+                  />
+                );
+              })}
             </Slider>
           </div>
         </div>

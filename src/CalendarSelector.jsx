@@ -28,10 +28,10 @@ export default class CalendarSelector extends PureComponent {
 
   toggleCalendar(visible, event) {
     const {
-      visibleCalendars,
+      selectedCalendars,
       onChange,
     } = this.props;
-    const result = new Set(visibleCalendars);
+    const result = new Set(selectedCalendars);
     if (visible) {
       result.add(event.target.value);
     } else {
@@ -47,10 +47,10 @@ export default class CalendarSelector extends PureComponent {
     backgroundColor,
   }) {
     const {
-      visibleCalendars,
+      selectedCalendars,
     } = this.props;
 
-    const checked = visibleCalendars.has(id);
+    const checked = selectedCalendars.has(id);
 
     return (
       <label
@@ -76,7 +76,7 @@ export default class CalendarSelector extends PureComponent {
   render() {
     const {
       calendars,
-      visibleCalendars,
+      selectedCalendars,
       onChange,
     } = this.props;
 
