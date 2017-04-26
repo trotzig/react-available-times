@@ -2,7 +2,6 @@
   flex-shrink: 0;
 }
 :local(.hour) {
-  width: 30px;
   text-align: right;
   padding: 2px 5px;
 }

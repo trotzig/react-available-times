@@ -2,7 +2,7 @@ import weekAt from '../src/weekAt';
 
 it('returns a week', () => {
   const week = weekAt(new Date('Sun Mar 26 2017 01:22:53 GMT+0200'));
-  expect(week.interval).toEqual('March 26 – April 1')
+  expect(week.interval).toEqual('Mar 26 – Apr 1')
   expect(week.start).toEqual(new Date('Sun Mar 26 2017 00:00:00 GMT+0100'));
   expect(week.end).toEqual(new Date('Sun Apr 2 2017 00:00:00 GMT+0200'));
   expect(week.days).toEqual([

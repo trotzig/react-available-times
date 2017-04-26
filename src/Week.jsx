@@ -84,6 +84,7 @@ export default class Week extends PureComponent {
       start,
       week,
       availableWidth,
+      timeConvention,
     } = this.props;
 
     const { dayEvents, daySelections } = this.state;
@@ -121,10 +122,11 @@ export default class Week extends PureComponent {
           <div
             className={styles.days}
           >
-            <Ruler />
+            <Ruler timeConvention={timeConvention} />
             {week.days.map((day, i) => (
               <Day
                 availableWidth={(availableWidth - RULER_WIDTH_IN_PIXELS) / 7}
+                timeConvention={timeConvention}
                 key={day.date}
                 date={day.date}
                 events={dayEvents[i]}
@@ -141,6 +143,7 @@ export default class Week extends PureComponent {
 
 Week.propTypes = {
   availableWidth: PropTypes.number.isRequired,
+  timeConvention: PropTypes.oneOf(['12h', '24h']),
   events: PropTypes.arrayOf(PropTypes.shape({
     start: PropTypes.instanceOf(Date),
     end: PropTypes.instanceOf(Date),

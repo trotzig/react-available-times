@@ -4,7 +4,6 @@ import React, { PureComponent } from 'react';
 import { HOUR_IN_PIXELS, IS_TOUCH_DEVICE } from './Constants';
 import TimeSlot from './TimeSlot';
 import hasOverlap from './hasOverlap';
-import hours from './hours';
 import positionInDay from './positionInDay';
 import styles from './Day.css';
 import toDate from './toDate';
@@ -187,7 +186,7 @@ export default class Day extends PureComponent {
   }
 
   render() {
-    const { availableWidth, date, events } = this.props;
+    const { availableWidth, date, events, timeConvention } = this.props;
     const { selections, index } = this.state;
 
     const classes = [styles.component];
@@ -212,6 +211,7 @@ export default class Day extends PureComponent {
         }, i) => !allDay && (
           <TimeSlot
             key={i + title}
+            timeConvention={timeConvention}
             availableWidth={availableWidth}
             date={date}
             start={start}
@@ -239,6 +239,7 @@ export default class Day extends PureComponent {
           <TimeSlot
             key={i}
             availableWidth={availableWidth}
+            timeConvention={timeConvention}
             date={date}
             start={start}
             end={end}
@@ -255,6 +256,7 @@ export default class Day extends PureComponent {
 
 Day.propTypes = {
   availableWidth: PropTypes.number.isRequired,
+  timeConvention: PropTypes.oneOf(['12h', '24h']),
 
   date: PropTypes.instanceOf(Date).isRequired,
   initialSelections: PropTypes.arrayOf(PropTypes.shape({

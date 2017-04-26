@@ -180,6 +180,7 @@ export default class AvailableTimes extends PureComponent {
       calendars,
       height,
       initialSelections,
+      timeConvention,
     } = this.props;
 
     const {
@@ -248,6 +249,7 @@ export default class AvailableTimes extends PureComponent {
               {weeks.map((week, i) => {
                 return (
                   <Week
+                    timeConvention={timeConvention}
                     availableWidth={availableWidth}
                     calendars={calendars}
                     key={week.days[0].date}
@@ -275,6 +277,7 @@ export default class AvailableTimes extends PureComponent {
 
 AvailableTimes.propTypes = {
   start: PropTypes.instanceOf(Date),
+  timeConvention: PropTypes.oneOf(['12h', '24h']),
   initialSelections: PropTypes.arrayOf(PropTypes.shape({
     start: PropTypes.instanceOf(Date),
     end: PropTypes.instanceOf(Date),

@@ -123,6 +123,7 @@ class Test extends Component {
             </div>
           }
           <AvailableTimes
+            timeConvention="12h"
             height={fullscreen ? undefined : 600}
             calendars={calendars}
             start={new Date()}
