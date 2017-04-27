@@ -15,6 +15,7 @@ npm install --save react-available-times
 import AvailableTimes from 'react-available-times';
 
 <AvailableTimes
+  weekStartsOn="monday"
   calendars={[
     {
       id: 'work',
@@ -55,6 +56,8 @@ import AvailableTimes from 'react-available-times';
 
 None of the props are required.
 
+- `weekStartsOn`: a string (either `"monday"` or `"sunday"`) specifying what
+  day of the week should come first.
 - `calendars`: a list of calendars displayed in the dropdown at the top right.
 - `onChange`: a function called whenever a selection is made. Receives an array
   of objects, each with a `start` and an `end` date.

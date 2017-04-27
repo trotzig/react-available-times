@@ -126,6 +126,7 @@ class Test extends Component {
             timeConvention="12h"
             height={fullscreen ? undefined : 600}
             calendars={calendars}
+            weekStartsOn="monday"
             start={new Date()}
             onChange={this.handleChange}
             initialSelections={initialSelections}

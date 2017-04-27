@@ -1,55 +1,35 @@
+import moment from 'moment';
+
 import dateIntervalString from './dateIntervalString';
 
-const names = [
-  'Sunday',
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-];
-const abbreviatedNames = [
-  'Sun',
-  'Mon',
-  'Tue',
-  'Wed',
-  'Thu',
-  'Fri',
-  'Sat',
-];
-
-export default function weekAt(atDate) {
+export default function weekAt(weekStartsOn, atDate) {
   // Create a copy so that we're not mutating the original
-  const date = new Date(atDate.getTime());
+  const date = moment(atDate);
 
   // Set the clock to noon so that calculations to get following/previous days
   // work despite daylight savings time. We have to use local time (as opposed
   // to `setHoursUTC` so that we're not accidentally changing the date.
-  date.setHours(12, 0, 0, 0);
+  date.hour(12).minute(0).second(0).millisecond(0);
+  date.day(weekStartsOn === 'monday' ? 1 : 0);
 
-  // Go back to Sunday so we can start iterating from there.
-  while (date.getDay() > 0) {
-    date.setDate(date.getDate() - 1);
-  }
-  const start = new Date(date.getTime());
-  start.setHours(0, 0, 0, 0);
+  const start = moment(date);
+  start.hour(0);
 
   const days = [];
-  for (let i = 0; i < names.length; i++) {
+  for (let i = 0; i < 7; i++) {
     days.push({
-      date: new Date(date.getTime()),
-      name: names[date.getDay()],
-      abbreviated: abbreviatedNames[date.getDay()],
+      date: date.toDate(),
+      name: date.format('dddd'),
+      abbreviated: date.format('ddd'),
     });
-    date.setDate(date.getDate() + 1);
+    date.weekday(date.weekday() + 1);
   }
-  const end = new Date(date.getTime());
-  end.setHours(0, 0, 0, 0);
+  const end = moment(date);
+  end.hour(0);
   return {
     interval: dateIntervalString(days[0].date, days[days.length - 1].date),
     days,
-    start,
-    end,
+    start: start.toDate(),
+    end: end.toDate(),
   };
 }

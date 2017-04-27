@@ -1,35 +1,18 @@
-const monthNames = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-];
+import moment from 'moment';
 
-export default function dateIntervalString(from, to) {
-  const fromMonth = monthNames[from.getMonth()];
-  const toMonth = monthNames[to.getMonth()];
-
-  if (fromMonth === toMonth) {
+export default function dateIntervalString(fromDate, toDate) {
+  const from = moment(fromDate);
+  const to = moment(toDate);
+  if (from.month() === to.month()) {
     return [
-      fromMonth,
-      from.getDate(),
+      from.format('MMMM D'),
       '–', // en dash
-      to.getDate(),
+      to.format('D'),
     ].join(' ');
   }
   return [
-    fromMonth.substr(0, 3),
-    from.getDate(),
+    from.format('MMM D'),
     '–', // en dash
-    toMonth.substr(0, 3),
-    to.getDate(),
+    to.format('MMM D'),
   ].join(' ');
 }

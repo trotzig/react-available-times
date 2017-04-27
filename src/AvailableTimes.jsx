@@ -42,6 +42,7 @@ export default class AvailableTimes extends PureComponent {
     initialSelections = [],
     start = new Date(),
     calendars = [],
+    weekStartsOn,
   }) {
     super();
     const selectedCalendars = new Set(
@@ -55,10 +56,10 @@ export default class AvailableTimes extends PureComponent {
     };
     this.selections = {};
     initialSelections.forEach((selection) => {
-      const week = weekAt(selection.start);
-      const existing = this.selections[week.days[0].date] || [];
+      const week = weekAt(weekStartsOn, selection.start);
+      const existing = this.selections[week.start] || [];
       existing.push(selection);
-      this.selections[week.days[0].date] = existing;
+      this.selections[week.start] = existing;
     });
     this.handleWeekChange = this.handleWeekChange.bind(this);
     this.moveBack = this.move.bind(this, -1);
@@ -121,7 +122,7 @@ export default class AvailableTimes extends PureComponent {
 
   handleWeekChange(week, selections) {
     const { onChange } = this.props;
-    this.selections[week.days[0].date] = selections;
+    this.selections[week.start] = selections;
     if (!onChange) {
       return;
     }
@@ -139,12 +140,13 @@ export default class AvailableTimes extends PureComponent {
       return weeks;
     }
 
+    const { start, weekStartsOn } = this.props;
     let newWeeks = weeks;
     let addedWeeks = 0;
     while (addedWeeks < WEEKS_PER_TIMESPAN) {
       const week = newWeeks.length ?
-        weekAt(oneWeekAhead(newWeeks[newWeeks.length - 1].days[3].date)) :
-          weekAt(this.props.start);
+        weekAt(weekStartsOn, oneWeekAhead(newWeeks[newWeeks.length - 1].days[3].date)) :
+          weekAt(weekStartsOn, start);
       newWeeks = newWeeks.concat(week);
       addedWeeks++;
     }
@@ -288,6 +290,7 @@ AvailableTimes.propTypes = {
     color: PropTypes.string,
     selected: PropTypes.bool,
   })),
+  weekStartsOn: PropTypes.oneOf(['sunday', 'monday']),
   onChange: PropTypes.func,
   onEventsRequested: PropTypes.func,
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
