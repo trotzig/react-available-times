@@ -55,13 +55,13 @@ export default class Day extends PureComponent {
   }
 
   handleDelete({ start, end }) {
-    const { onChange } = this.props;
+    const { onChange, index } = this.props;
 
     this.setState(({ selections }) => {
       for (let i = 0; i < selections.length; i++) {
         if (selections[i].start === start && selections[i].end === end) {
           selections.splice(i, 1);
-          this.props.onChange(this.props.date, selections);
+          onChange(index, selections);
           return { selections: selections.slice(0) };
         }
       }
@@ -183,7 +183,7 @@ export default class Day extends PureComponent {
       index: undefined,
       lastKnownPosition: undefined,
     });
-    this.props.onChange(this.props.date, this.state.selections);
+    this.props.onChange(this.props.index, this.state.selections);
   }
 
   render() {
@@ -260,6 +260,7 @@ Day.propTypes = {
   timeConvention: PropTypes.oneOf(['12h', '24h']),
 
   date: PropTypes.instanceOf(Date).isRequired,
+  index: PropTypes.number.isRequired,
   initialSelections: PropTypes.arrayOf(PropTypes.shape({
     start: PropTypes.instanceOf(Date),
     end: PropTypes.instanceOf(Date),

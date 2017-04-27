@@ -49,13 +49,13 @@ export default class Week extends PureComponent {
     this.setState(constructStateFromProps(newProps));
   }
 
-  handleDayChange(day, selections) {
+  handleDayChange(dayIndex, selections) {
     this.setState(({ daySelections }) => {
       const { onChange } = this.props;
       if (!onChange) {
         return;
       }
-      daySelections[day.getDay()] = selections;
+      daySelections[dayIndex] = selections;
       onChange(this.props.week, flatten(daySelections));
       return { daySelections };
     });
@@ -127,6 +127,7 @@ export default class Week extends PureComponent {
               <Day
                 availableWidth={(availableWidth - RULER_WIDTH_IN_PIXELS) / 7}
                 timeConvention={timeConvention}
+                index={i}
                 key={day.date}
                 date={day.date}
                 events={dayEvents[i]}
