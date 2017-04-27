@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
+import moment from 'moment';
 
 import { HOUR_IN_PIXELS, IS_TOUCH_DEVICE } from './Constants';
 import TimeSlot from './TimeSlot';
@@ -190,7 +191,7 @@ export default class Day extends PureComponent {
     const { selections, index } = this.state;
 
     const classes = [styles.component];
-    if (date.toDateString() === new Date().toDateString()) {
+    if (moment(date).format('YYYYMMDD') === moment().format('YYYYMMDD')) {
       classes.push(styles.today);
     }
 

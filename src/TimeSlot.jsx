@@ -16,7 +16,7 @@ export default class TimeSlot extends PureComponent {
   }
 
   componentDidMount() {
-    this.creationTime = new Date();
+    this.creationTime = new Date().getTime();
   }
 
   handleDelete(event) {

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
+import moment from 'moment';
 
 import { WEEKS_PER_TIMESPAN } from './Constants';
 import CalendarSelector from './CalendarSelector';
@@ -24,9 +25,9 @@ const rightArrowSvg = (
 );
 
 function oneWeekAhead(date) {
-  const result = new Date(date.getTime());
-  result.setDate(date.getDate() + 7);
-  return result;
+  const m = moment(date);
+  m.week(m.week() + 1);
+  return m.toDate();
 }
 
 function flatten(selections) {

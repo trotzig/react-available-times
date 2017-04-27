@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
+import moment from 'moment';
 
 import { HOUR_IN_PIXELS, RULER_WIDTH_IN_PIXELS } from './Constants';
 import Day from './Day';
@@ -21,10 +22,9 @@ function constructStateFromProps({ week, initialSelections, events }) {
   const dayEvents = [];
 
   week.days.forEach(({ date }) => {
-    const start = new Date(date.getTime());
-    start.setHours(0, 0, 0, 0);
-    const end = new Date(start.getTime());
-    end.setDate(end.getDate() + 1);
+    const startMoment = moment(date).hour(0);
+    const end = moment(startMoment).date(startMoment.date() + 1).toDate();
+    const start = startMoment.toDate();
     daySelections.push(getIncludedEvents(initialSelections || [], start, end));
     dayEvents.push(getIncludedEvents(events || [], start, end));
   });

@@ -2,16 +2,16 @@ import moment from 'moment';
 
 function formatTime(date, timeConvention) {
   if (timeConvention === '12h') {
-    return moment(date).format('ha');
+    return date.format('ha');
   }
-  return moment(date).format('HH');
+  return date.format('HH');
 }
 
 export default function hours(timeConvention) {
   const result = [];
-  const date = new Date();
+  const date = moment().minutes(0).seconds(0).milliseconds(0);
   for (let i = 0; i < 24; i++) {
-    date.setHours(i, 0, 0, 0);
+    date.hour(i)
     result.push(formatTime(date, timeConvention));
   }
   return result;
