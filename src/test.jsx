@@ -1,10 +1,11 @@
+import './reset.css';
+
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import moment from 'moment';
 
 import AvailableTimes from './AvailableTimes.jsx';
 import styles from './test.css';
-
-import './reset.css';
 
 function dateAt(dayInWeek, hours, minutes) {
   const date = new Date();
@@ -64,32 +65,22 @@ class Test extends Component {
 
   handleEventsRequested({ start, end, calendarId, callback }) {
     console.log(calendarId, start, end);
-    callback([
-      {
-        start: new Date(start.getTime() + 12 * 60 * 60 * 1000),
-        end: new Date(start.getTime() + 14 * 60 * 60 * 1000),
-        title: 'Lunch with Lo',
-        calendarId,
-      },
-      {
-        start: new Date(start.getTime() + 36 * 60 * 60 * 1000),
-        end: new Date(start.getTime() + 38 * 60 * 60 * 1000),
-        title: 'Breakfast club',
-        calendarId,
-      },
-      {
-        start: new Date(start.getTime() + 77 * 60 * 60 * 1000),
-        end: new Date(start.getTime() + 78 * 60 * 60 * 1000),
-        title: 'Something different',
-        calendarId,
-      },
-      {
-        start: new Date(end.getTime() - 12 * 60 * 60 * 1000),
-        end: new Date(end.getTime() - 11 * 60 * 60 * 1000),
-        title: 'Weekend stuff',
-        calendarId,
-      },
-    ]);
+    const events = [];
+    const date = moment(start)
+
+    while (date.toDate() < end) {
+      const start = date.toDate();
+      const end = date.hour(date.hour() + 1).toDate();
+      if (Math.random() > 0.7) {
+        events.push({
+          start,
+          end,
+          title: 'Event',
+          calendarId,
+        });
+      }
+    }
+    callback(events);
   }
 
   render() {
