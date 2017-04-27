@@ -54,6 +54,7 @@ export default class AvailableTimes extends PureComponent {
       currentWeekIndex: 0,
       selectedCalendars,
       events: [],
+      selections: initialSelections,
     };
     this.selections = {};
     initialSelections.forEach((selection) => {
@@ -121,13 +122,18 @@ export default class AvailableTimes extends PureComponent {
     });
   }
 
-  handleWeekChange(week, selections) {
+  handleWeekChange(week, weekSelections) {
     const { onChange } = this.props;
-    this.selections[week.start] = selections;
-    if (!onChange) {
-      return;
-    }
-    onChange(flatten(this.selections));
+    this.setState(({ selections }) => {
+      this.selections[week.start] = weekSelections;
+      const newSelections = flatten(this.selections);
+      if (onChange) {
+        onChange(newSelections);
+      }
+      return {
+        selections: newSelections,
+      };
+    });
   }
 
   handleCalendarChange(selectedCalendars) {
@@ -182,7 +188,6 @@ export default class AvailableTimes extends PureComponent {
     const {
       calendars,
       height,
-      initialSelections,
       timeConvention,
     } = this.props;
 
@@ -190,6 +195,7 @@ export default class AvailableTimes extends PureComponent {
       availableWidth,
       currentWeekIndex,
       selectedCalendars,
+      selections,
       weeks,
       events,
     } = this.state;
@@ -250,15 +256,18 @@ export default class AvailableTimes extends PureComponent {
               onSlide={this.move}
             >
               {weeks.map((week, i) => {
+                if (Math.abs(i - currentWeekIndex) > 1 && i !== 0) {
+                  return <span key={week.start}/>;
+                }
                 return (
                   <Week
                     timeConvention={timeConvention}
                     availableWidth={availableWidth}
                     calendars={calendars}
-                    key={week.days[0].date}
+                    key={week.start}
                     week={week}
                     events={events}
-                    initialSelections={initialSelections}
+                    initialSelections={selections}
                     onChange={this.handleWeekChange}
                     height={height}
                   />

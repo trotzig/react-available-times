@@ -17,36 +17,35 @@ function flatten(selections) {
   return result;
 }
 
-function constructStateFromProps({ week, initialSelections, events }) {
-  const daySelections = [];
-  const dayEvents = [];
-
+function getIncludedItems(week, items) {
+  const result = [];
   week.days.forEach(({ date }) => {
     const startMoment = moment(date).hour(0);
     const end = moment(startMoment).date(startMoment.date() + 1).toDate();
     const start = startMoment.toDate();
-    daySelections.push(getIncludedEvents(initialSelections || [], start, end));
-    dayEvents.push(getIncludedEvents(events || [], start, end));
+    result.push(getIncludedEvents(items || [], start, end));
   });
-  return {
-    dayEvents,
-    daySelections,
-  };
+  return result
 }
 
 export default class Week extends PureComponent {
-  constructor(props) {
+  constructor({ week, events, initialSelections }) {
     super();
-    this.state = constructStateFromProps(props);
+    this.state = {
+      dayEvents: getIncludedItems(week, events),
+      daySelections: getIncludedItems(week, initialSelections),
+    }
     this.handleDayChange = this.handleDayChange.bind(this);
   }
 
-  componentWillReceiveProps(newProps) {
-    if (newProps.events === this.props.events) {
+  componentWillReceiveProps({ week, events }) {
+    if (events === this.props.events) {
       // nothing changed
       return;
     }
-    this.setState(constructStateFromProps(newProps));
+    this.setState({
+      dayEvents: getIncludedItems(week, events),
+    });
   }
 
   handleDayChange(dayIndex, selections) {
@@ -56,7 +55,8 @@ export default class Week extends PureComponent {
         return;
       }
       daySelections[dayIndex] = selections;
-      onChange(this.props.week, flatten(daySelections));
+      const flattened = flatten(daySelections);
+      onChange(this.props.week, flattened);
       return { daySelections };
     });
   }
