@@ -71,6 +71,15 @@ class Test extends Component {
     while (date.toDate() < end) {
       const start = date.toDate();
       const end = date.hour(date.hour() + 1).toDate();
+      if (Math.random() > 0.98) {
+        events.push({
+          start: moment(start).format('YYYY-MM-DD'),
+          end: moment(start).date(moment(start).date() + 1).format('YYYY-MM-DD'),
+          title: 'All day',
+          allDay: true,
+          calendarId,
+        });
+      }
       if (Math.random() > 0.7) {
         events.push({
           start: start.toISOString(),
