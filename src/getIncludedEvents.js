@@ -4,6 +4,6 @@ export default function getIncludedEvents(events, dayStart, dayEnd) {
       return dayStart >= start && dayStart < end;
     }
     return (dayStart <= start && start < dayEnd) ||
-      (dayStart <= end && end < dayEnd);
+      (dayStart < end && end < dayEnd);
   });
 }
