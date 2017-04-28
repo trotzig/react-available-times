@@ -1,7 +1,16 @@
-import addOverlapHints from '../src/addOverlapHints';
+import decorateEvents from '../src/decorateEvents';
+
+it('does not mutate the original event', () => {
+  const event =  {
+    start: new Date(0),
+    end: new Date(100),
+  };
+  const newEvent = decorateEvents([event])[0];
+  expect(newEvent).not.toBe(event);
+});
 
 it('does not add overlap hints when no overlap exists', () => {
-  const overlapped = addOverlapHints([
+  const overlapped = decorateEvents([
     {
       start: new Date(0),
       end: new Date(100),
@@ -27,7 +36,7 @@ it('does not add overlap hints when no overlap exists', () => {
 });
 
 it('adds overlap hints when overlaps exist', () => {
-  const overlapped = addOverlapHints([
+  const overlapped = decorateEvents([
     {
       start: new Date(0),
       end: new Date(300),

@@ -1,5 +1,4 @@
-import addOverlapHints from './addOverlapHints';
-
+import decorateEvents from './decorateEvents';
 
 export default class EventsStore {
   constructor({
@@ -22,14 +21,14 @@ export default class EventsStore {
     this.selectedCalendars = selectedCalendars;
     this.fetchEvents();
     for (const timespan of this.timespans) {
-      timespan.overlapped = null;
+      timespan.decoratedEvents = null;
     }
     this.onChange();
   }
 
   colorize(events) {
     // We're assuming that it's safe to mutate events here (they should have been
-    // duped by addOverlapHints already).
+    // duped by decorateEvents already).
     events.forEach((event) => {
       const { foregroundColor, backgroundColor } =
         this.calendarsById[event.calendarId];
@@ -44,14 +43,14 @@ export default class EventsStore {
 
   get(atTime) {
     for (const timespan of this.timespans) {
-      const { start, end, events, overlapped } = timespan;
+      const { start, end, events, decoratedEvents } = timespan;
       if (start.getTime() <= atTime.getTime() && end.getTime() > atTime.getTime()) {
-        if (overlapped) {
-          return overlapped;
+        if (decoratedEvents) {
+          return decoratedEvents;
         }
-        timespan.overlapped =
-          this.colorize(addOverlapHints(this.filterVisible(events)));
-        return timespan.overlapped;
+        timespan.decoratedEvents =
+          this.colorize(decorateEvents(this.filterVisible(events)));
+        return timespan.decoratedEvents;
       }
     }
     return [];
@@ -80,7 +79,7 @@ export default class EventsStore {
           end: timespan.end,
           callback: (events) => {
             timespan.events.push(...events);
-            timespan.overlapped = null; // clear cache
+            timespan.decoratedEvents = null; // clear cache
             this.onChange();
           },
         });

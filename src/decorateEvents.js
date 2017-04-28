@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 import hasOverlap from './hasOverlap';
 
 function compareDates(a, b) {
@@ -77,9 +79,16 @@ function flattenGroups(groups) {
   return result;
 }
 
-export default function addOverlapHints(events) {
+function normalize(events) {
+  return events.map((event) => Object.assign({}, event, {
+    start: moment(event.start).toDate(),
+    end: moment(event.end).toDate(),
+  }));
+}
+
+export default function decorateEvents(events) {
   // Make sure events are sorted by start time
-  const orderedByStartTime = [...events.sort(compareDates)];
+  const orderedByStartTime = normalize(events).sort(compareDates);
   const groups = groupEvents(orderedByStartTime);
   return flattenGroups(groups);
 }
