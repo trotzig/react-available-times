@@ -41,9 +41,9 @@ export default class DayHeader extends Component {
           {this.text()}
         </div>
         <div className={styles.events}>
-          {events.filter(({ allDay }) => allDay).map((event) => (
+          {events.filter(({ allDay }) => allDay).map((event, i) => (
             <div
-              key={event.title}
+              key={i + event.title}
               className={styles.event}
               style={{
                 color: event.foregroundColor,
