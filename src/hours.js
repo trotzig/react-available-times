@@ -1,3 +1,5 @@
+// We're only using moment here to construct strings from 0am to 12pm. There's
+// no need to use time zones.
 import moment from 'moment';
 
 function formatTime(date, timeConvention) {

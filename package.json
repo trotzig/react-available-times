@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "moment": "^2.18.1",
+    "moment-timezone": "^0.5.13",
     "prop-types": "^15.5.8"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-import moment from 'moment';
+import momentTimezone from 'moment-timezone';
 
 import { WEEKS_PER_TIMESPAN } from './Constants';
 import CalendarSelector from './CalendarSelector';
@@ -24,8 +24,8 @@ const rightArrowSvg = (
   </svg>
 );
 
-function oneWeekAhead(date) {
-  const m = moment(date);
+function oneWeekAhead(date, tz) {
+  const m = momentTimezone.tz(date, tz);
   m.week(m.week() + 1);
   return m.toDate();
 }
@@ -44,6 +44,7 @@ export default class AvailableTimes extends PureComponent {
     start = new Date(),
     calendars = [],
     weekStartsOn,
+    timeZone,
   }) {
     super();
     const selectedCalendars = new Set(
@@ -58,7 +59,7 @@ export default class AvailableTimes extends PureComponent {
     };
     this.selections = {};
     initialSelections.forEach((selection) => {
-      const week = weekAt(weekStartsOn, selection.start);
+      const week = weekAt(weekStartsOn, selection.start, timeZone);
       const existing = this.selections[week.start] || [];
       existing.push(selection);
       this.selections[week.start] = existing;
@@ -79,9 +80,10 @@ export default class AvailableTimes extends PureComponent {
 
   componentWillMount() {
     window.addEventListener('resize', this.handleWindowResize);
-    const { calendars, onEventsRequested } = this.props;
+    const { calendars, onEventsRequested, timeZone } = this.props;
     this.eventsStore = new EventsStore({
       calendars,
+      timeZone,
       onEventsRequested,
       onChange: () => {
         this.setState(({ weeks, currentWeekIndex }) => {
@@ -147,13 +149,14 @@ export default class AvailableTimes extends PureComponent {
       return weeks;
     }
 
-    const { start, weekStartsOn } = this.props;
+    const { start, weekStartsOn, timeZone } = this.props;
     let newWeeks = weeks;
     let addedWeeks = 0;
     while (addedWeeks < WEEKS_PER_TIMESPAN) {
       const week = newWeeks.length ?
-        weekAt(weekStartsOn, oneWeekAhead(newWeeks[newWeeks.length - 1].days[3].date)) :
-          weekAt(weekStartsOn, start);
+        weekAt(weekStartsOn,
+          oneWeekAhead(newWeeks[newWeeks.length - 1].days[3].date, timeZone), timeZone)
+        : weekAt(weekStartsOn, start, timeZone);
       newWeeks = newWeeks.concat(week);
       addedWeeks++;
     }
@@ -189,6 +192,7 @@ export default class AvailableTimes extends PureComponent {
       calendars,
       height,
       timeConvention,
+      timeZone,
     } = this.props;
 
     const {
@@ -262,6 +266,7 @@ export default class AvailableTimes extends PureComponent {
                 return (
                   <Week
                     timeConvention={timeConvention}
+                    timeZone={timeZone}
                     availableWidth={availableWidth}
                     calendars={calendars}
                     key={week.start}
@@ -290,6 +295,7 @@ export default class AvailableTimes extends PureComponent {
 AvailableTimes.propTypes = {
   start: PropTypes.instanceOf(Date),
   timeConvention: PropTypes.oneOf(['12h', '24h']),
+  timeZone: PropTypes.string.isRequired,
   initialSelections: PropTypes.arrayOf(PropTypes.shape({
     start: PropTypes.instanceOf(Date),
     end: PropTypes.instanceOf(Date),
@@ -304,4 +310,8 @@ AvailableTimes.propTypes = {
   onChange: PropTypes.func,
   onEventsRequested: PropTypes.func,
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+};
+
+AvailableTimes.defaultProps = {
+  timeZone: momentTimezone.tz.guess(),
 };

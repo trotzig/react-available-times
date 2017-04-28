@@ -3,11 +3,13 @@ import decorateEvents from './decorateEvents';
 export default class EventsStore {
   constructor({
     calendars,
+    timeZone,
     onEventsRequested,
     onChange,
   }) {
     this.selectedCalendars = new Set(
       calendars.filter(({ selected }) => selected).map(({ id }) => id));
+    this.timeZone = timeZone;
     this.calendarsById = {};
     calendars.forEach((calendar) => {
       this.calendarsById[calendar.id] = calendar;
@@ -49,7 +51,7 @@ export default class EventsStore {
           return decoratedEvents;
         }
         timespan.decoratedEvents =
-          this.colorize(decorateEvents(this.filterVisible(events)));
+          this.colorize(decorateEvents(this.filterVisible(events), this.timeZone));
         return timespan.decoratedEvents;
       }
     }

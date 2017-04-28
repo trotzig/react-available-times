@@ -1,8 +1,8 @@
-import moment from 'moment';
+import momentTimezone from 'moment-timezone';
 
-export default function dateIntervalString(fromDate, toDate) {
-  const from = moment(fromDate);
-  const to = moment(toDate);
+export default function dateIntervalString(fromDate, toDate, timeZone) {
+  const from = momentTimezone.tz(fromDate, timeZone);
+  const to = momentTimezone.tz(toDate, timeZone);
   if (from.month() === to.month()) {
     return [
       from.format('MMMM D'),

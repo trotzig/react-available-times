@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-import moment from 'moment';
+import momentTimezone from 'moment-timezone';
 
 import { HOUR_IN_PIXELS, RULER_WIDTH_IN_PIXELS } from './Constants';
 import Day from './Day';
@@ -17,11 +17,11 @@ function flatten(selections) {
   return result;
 }
 
-function getIncludedItems(week, items) {
+function weekEvents(week, items, timeZone) {
   const result = [];
   week.days.forEach(({ date }) => {
-    const startMoment = moment(date).hour(0);
-    const end = moment(startMoment).date(startMoment.date() + 1).toDate();
+    const startMoment = momentTimezone.tz(date, timeZone).hour(0);
+    const end = momentTimezone.tz(startMoment, timeZone).date(startMoment.date() + 1).toDate();
     const start = startMoment.toDate();
     result.push(getIncludedEvents(items || [], start, end));
   });
@@ -29,22 +29,22 @@ function getIncludedItems(week, items) {
 }
 
 export default class Week extends PureComponent {
-  constructor({ week, events, initialSelections }) {
+  constructor({ week, events, initialSelections, timeZone }) {
     super();
     this.state = {
-      dayEvents: getIncludedItems(week, events),
-      daySelections: getIncludedItems(week, initialSelections),
+      dayEvents: weekEvents(week, events, timeZone),
+      daySelections: weekEvents(week, initialSelections, timeZone),
     }
     this.handleDayChange = this.handleDayChange.bind(this);
   }
 
-  componentWillReceiveProps({ week, events }) {
+  componentWillReceiveProps({ week, events, timeZone }) {
     if (events === this.props.events) {
       // nothing changed
       return;
     }
     this.setState({
-      dayEvents: getIncludedItems(week, events),
+      dayEvents: weekEvents(week, events, timeZone),
     });
   }
 
@@ -85,6 +85,7 @@ export default class Week extends PureComponent {
       week,
       availableWidth,
       timeConvention,
+      timeZone,
     } = this.props;
 
     const { dayEvents, daySelections } = this.state;
@@ -99,6 +100,7 @@ export default class Week extends PureComponent {
         >
           {week.days.map((day, i) => (
             <DayHeader
+              timeZone={timeZone}
               availableWidth={(availableWidth - RULER_WIDTH_IN_PIXELS) / 7}
               day={day}
               key={day.date}
@@ -127,6 +129,7 @@ export default class Week extends PureComponent {
               <Day
                 availableWidth={(availableWidth - RULER_WIDTH_IN_PIXELS) / 7}
                 timeConvention={timeConvention}
+                timeZone={timeZone}
                 index={i}
                 key={day.date}
                 date={day.date}
@@ -145,6 +148,7 @@ export default class Week extends PureComponent {
 Week.propTypes = {
   availableWidth: PropTypes.number.isRequired,
   timeConvention: PropTypes.oneOf(['12h', '24h']),
+  timeZone: PropTypes.string.isRequired,
   events: PropTypes.arrayOf(PropTypes.shape({
     start: PropTypes.instanceOf(Date),
     end: PropTypes.instanceOf(Date),

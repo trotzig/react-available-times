@@ -1,4 +1,4 @@
-import moment from 'moment';
+import momentTimezone from 'moment-timezone';
 
 import hasOverlap from './hasOverlap';
 
@@ -79,14 +79,14 @@ function flattenGroups(groups) {
   return result;
 }
 
-function normalize(events) {
+function normalize(events, timeZone) {
   return events.map((event) => Object.assign({}, event, {
-    start: moment(event.start).toDate(),
-    end: moment(event.end).toDate(),
+    start: momentTimezone.tz(event.start, timeZone).toDate(),
+    end: momentTimezone.tz(event.end, timeZone).toDate(),
   }));
 }
 
-export default function decorateEvents(events) {
+export default function decorateEvents(events, timeZone) {
   // Make sure events are sorted by start time
   const orderedByStartTime = normalize(events).sort(compareDates);
   const groups = groupEvents(orderedByStartTime);

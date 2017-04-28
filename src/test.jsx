@@ -2,7 +2,7 @@ import './reset.css';
 
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import moment from 'moment';
+import momentTimezone from 'moment-timezone';
 
 import AvailableTimes from './AvailableTimes.jsx';
 import styles from './test.css';
@@ -19,6 +19,8 @@ function dateAt(dayInWeek, hours, minutes) {
   date.setHours(hours, minutes, 0, 0);
   return date;
 }
+
+const TIME_ZONE = 'America/Los_Angeles';
 
 const calendars = [
   {
@@ -66,15 +68,17 @@ class Test extends Component {
   handleEventsRequested({ start, end, calendarId, callback }) {
     console.log(calendarId, start, end);
     const events = [];
-    const date = moment(start)
+    const date = momentTimezone.tz(start, TIME_ZONE);
 
     while (date.toDate() < end) {
       const start = date.toDate();
-      const end = date.hour(date.hour() + 1).toDate();
+      const end = date.add(1, 'hour').toDate();
       if (Math.random() > 0.98) {
+        const startM = momentTimezone.tz(start, TIME_ZONE);
+        const startString = startM.format('YYYY-MM-DD');
         events.push({
-          start: moment(start).format('YYYY-MM-DD'),
-          end: moment(start).date(moment(start).date() + 1).format('YYYY-MM-DD'),
+          start: startString,
+          end: startM.date(startM.date() + 1).format('YYYY-MM-DD'),
           title: 'All day',
           allDay: true,
           calendarId,
@@ -124,6 +128,7 @@ class Test extends Component {
           }
           <AvailableTimes
             timeConvention="12h"
+            timeZone={TIME_ZONE}
             height={fullscreen ? undefined : 600}
             calendars={calendars}
             weekStartsOn="monday"

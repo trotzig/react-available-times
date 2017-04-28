@@ -1,10 +1,13 @@
-import moment from 'moment';
+import momentTimezone from 'moment-timezone';
 
 import dateIntervalString from './dateIntervalString';
 
-export default function weekAt(weekStartsOn, atDate) {
+export default function weekAt(weekStartsOn, atDate, timeZone) {
+  if (!timeZone) {
+    throw new Error('Missing timeZone');
+  }
   // Create a copy so that we're not mutating the original
-  const date = moment(atDate);
+  const date = momentTimezone.tz(atDate, timeZone);
 
   // Set the clock to noon so that calculations to get following/previous days
   // work despite daylight savings time. We have to use local time (as opposed
@@ -12,7 +15,7 @@ export default function weekAt(weekStartsOn, atDate) {
   date.hour(12).minute(0).second(0).millisecond(0);
   date.day(weekStartsOn === 'monday' ? 1 : 0);
 
-  const start = moment(date);
+  const start = momentTimezone.tz(date, timeZone);
   start.hour(0);
 
   const days = [];
@@ -24,10 +27,14 @@ export default function weekAt(weekStartsOn, atDate) {
     });
     date.weekday(date.weekday() + 1);
   }
-  const end = moment(date);
+  const end = momentTimezone.tz(date, timeZone);
   end.hour(0);
   return {
-    interval: dateIntervalString(days[0].date, days[days.length - 1].date),
+    interval: dateIntervalString(
+      days[0].date,
+      days[days.length - 1].date,
+      timeZone
+    ),
     days,
     start: start.toDate(),
     end: end.toDate(),

@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-import moment from 'moment';
 
 import { HOUR_IN_PIXELS, IS_TOUCH_DEVICE } from './Constants';
 import TimeSlot from './TimeSlot';
 import hasOverlap from './hasOverlap';
+import inSameDay from './inSameDay';
 import positionInDay from './positionInDay';
 import styles from './Day.css';
 import toDate from './toDate';
@@ -112,14 +112,15 @@ export default class Day extends PureComponent {
   }
 
   handleMouseDown(e) {
+    const { timeZone } = this.props;
     const position = relativeY(e, 60);
-    const dateAtPosition = toDate(this.props.date, position);
+    const dateAtPosition = toDate(this.props.date, position, timeZone);
 
     if (this.findSelectionAt(dateAtPosition)) {
       return;
     }
 
-    let end = toDate(this.props.date, position + HOUR_IN_PIXELS);
+    let end = toDate(this.props.date, position + HOUR_IN_PIXELS, timeZone);
     end = hasOverlap(this.state.selections, dateAtPosition, end) || end;
     if (end - dateAtPosition < 1800000) {
       // slot is less than 30 mins
@@ -142,14 +143,14 @@ export default class Day extends PureComponent {
     if (typeof this.state.index === 'undefined') {
       return;
     }
-    const { date } = this.props;
+    const { date, timeZone } = this.props;
     const position = relativeY(e);
     this.setState(({ selections, edge, index, lastKnownPosition }) => {
       const selection = selections[index];
       if (edge === 'both') {
         // move element
-        const diff = toDate(date, position).getTime() -
-          toDate(date, lastKnownPosition).getTime();
+        const diff = toDate(date, position, timeZone).getTime() -
+          toDate(date, lastKnownPosition, timeZone).getTime();
         const newStart = new Date(selection.start.getTime() + diff);
         const newEnd = new Date(selection.end.getTime() + diff);
         if (hasOverlap(selections, newStart, newEnd, index)) {
@@ -160,7 +161,7 @@ export default class Day extends PureComponent {
       } else {
         // stretch element
         const newEnd = toDate(date, Math.max(positionInDay(
-          date, selection.start) + HOUR_IN_PIXELS / 2, position));
+          date, selection.start, timeZone) + HOUR_IN_PIXELS / 2, position), timeZone);
         if (hasOverlap(selections, selection.start, newEnd, index)) {
           // Collision! Let
           return {};
@@ -187,11 +188,11 @@ export default class Day extends PureComponent {
   }
 
   render() {
-    const { availableWidth, date, events, timeConvention } = this.props;
+    const { availableWidth, date, events, timeConvention, timeZone } = this.props;
     const { selections, index } = this.state;
 
     const classes = [styles.component];
-    if (moment(date).format('YYYYMMDD') === moment().format('YYYYMMDD')) {
+    if (inSameDay(date, new Date(), timeZone)) {
       classes.push(styles.today);
     }
 
@@ -213,6 +214,7 @@ export default class Day extends PureComponent {
           <TimeSlot
             key={i + title}
             timeConvention={timeConvention}
+            timeZone={timeZone}
             availableWidth={availableWidth}
             date={date}
             start={start}
@@ -241,6 +243,7 @@ export default class Day extends PureComponent {
             key={i}
             availableWidth={availableWidth}
             timeConvention={timeConvention}
+            timeZone={timeZone}
             date={date}
             start={start}
             end={end}
@@ -258,6 +261,7 @@ export default class Day extends PureComponent {
 Day.propTypes = {
   availableWidth: PropTypes.number.isRequired,
   timeConvention: PropTypes.oneOf(['12h', '24h']),
+  timeZone: PropTypes.string.isRequired,
 
   date: PropTypes.instanceOf(Date).isRequired,
   index: PropTypes.number.isRequired,

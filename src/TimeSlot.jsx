@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-import moment from 'moment';
+import momentTimezone from 'moment-timezone';
 
 import { IS_TOUCH_DEVICE } from './Constants';
 import positionInDay from './positionInDay';
@@ -42,11 +42,11 @@ export default class TimeSlot extends PureComponent {
   }
 
   formatTime(date) {
-    const { timeConvention } = this.props;
+    const { timeConvention, timeZone } = this.props;
     if (timeConvention === '12h') {
-      return moment(date).format('hh:mma');
+      return momentTimezone.tz(date, timeZone).format('hh:mma');
     }
-    return moment(date).format('HH:mm');
+    return momentTimezone.tz(date, timeZone).format('HH:mm');
   }
 
   title() {
@@ -71,10 +71,11 @@ export default class TimeSlot extends PureComponent {
       backgroundColor,
       width,
       offset,
+      timeZone,
     } = this.props;
 
-    const top = positionInDay(date, start);
-    const bottom = positionInDay(date, end);
+    const top = positionInDay(date, start, timeZone);
+    const bottom = positionInDay(date, end, timeZone);
 
     const height = bottom - top;
 
@@ -147,6 +148,7 @@ TimeSlot.propTypes = {
   availableWidth: PropTypes.number.isRequired,
 
   timeConvention: PropTypes.oneOf(['12h', '24h']),
+  timeZone: PropTypes.string.isRequired,
 
   active: PropTypes.bool, // Whether the time slot is being changed
   date: PropTypes.instanceOf(Date).isRequired, // The day in which the slot is displayed
