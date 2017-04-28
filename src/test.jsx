@@ -73,8 +73,8 @@ class Test extends Component {
       const end = date.hour(date.hour() + 1).toDate();
       if (Math.random() > 0.7) {
         events.push({
-          start,
-          end,
+          start: start.toISOString(),
+          end: end.toISOString(),
           title: 'Event',
           calendarId,
         });

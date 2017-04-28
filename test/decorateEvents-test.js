@@ -6,7 +6,20 @@ it('does not mutate the original event', () => {
     end: new Date(100),
   };
   const newEvent = decorateEvents([event])[0];
-  expect(newEvent).not.toBe(event);
+  expect(newEvent).not.toBe(event)
+});
+
+it('can handle dates that are ISO strings', () => {
+  const events = [{
+    start: new Date(0).toISOString(),
+    end: new Date(100).toISOString(),
+  }];
+  expect(decorateEvents(events)).toEqual([{
+    start: new Date(0),
+    end: new Date(100),
+    offset: 0,
+    width: 1,
+  }]);
 });
 
 it('does not add overlap hints when no overlap exists', () => {
