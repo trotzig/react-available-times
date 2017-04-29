@@ -48,6 +48,7 @@ import AvailableTimes from 'react-available-times';
     { start: aDateObject, end: anotherDateObject, title: 'All day', allDay: true, calendarId: 'private' }
   ]}
   height={400}
+  recurring={false}
 />
 ```
 
@@ -72,6 +73,11 @@ None of the props are required.
 - `height`: a string or a number controlling the `height` of the component.
   E.g. `'100%'`, `350`, `'100vh'`. If left out, the full height of the screen
   will be used.
+- `recurring`: set to `true` to turn the view into a selector for recurring
+  availability. No dates are then shown, and the `onChange` callback is called
+  with events that have a start and end expressed in number of minutes since
+  the start of the week. The `weekStartsOn` prop is taken into account here, so
+  the `0` minute is either monday at 00:00 or sunday at 00:00.
 
 ## Contributing
 
