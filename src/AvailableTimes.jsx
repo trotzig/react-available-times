@@ -263,7 +263,7 @@ export default class AvailableTimes extends PureComponent {
                     calendars={calendars}
                     key={week.start}
                     week={week}
-                    events={events}
+                    events={recurring ? [] : events}
                     initialSelections={selections}
                     onChange={this.handleWeekChange}
                     height={height}
