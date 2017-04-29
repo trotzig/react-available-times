@@ -75,7 +75,7 @@ it('can display in a different timeZone', () => {
   const start = momentTimezone.tz(new Date(), 'Europe/Stockholm');
   const component = mount(
     <AvailableTimes
-      timeZone="America/Los_Angeles"
+      timeZone="Pacific/Samoa"
       initialSelections={[
         {
           start: start.hour(13).minutes(0).seconds(0).toDate(),
@@ -85,7 +85,9 @@ it('can display in a different timeZone', () => {
     />
   );
 
-  expect(component.text()).toMatch(/04:00-05:00/);
+  expect(component.text()).toMatch(/00:00-01:00/);
+  // Make sure that sunday is the first day
+  expect(component.find(DayHeader).first().text()).toMatch(/Sun/);
 });
 
 it('can be in recurring mode', () => {
