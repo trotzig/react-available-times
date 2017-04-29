@@ -1,34 +1,66 @@
 import { mount } from 'enzyme';
 import React from 'react';
+import moment from 'moment';
 
 import AvailableTimes from '../src/AvailableTimes';
 import CalendarSelector from '../src/CalendarSelector';
+import Ruler from '../src/Ruler';
 import Week from '../src/Week';
 
-describe('without props', () => {
-  it('works with no props', () => {
-    expect(() => mount(<AvailableTimes />)).not.toThrowError();
-  });
-
-  it('does not render a calendar selector', () => {
-    expect(mount(<AvailableTimes />).find(CalendarSelector).length).toBe(0);
-  });
-
-  it('has days from sunday-saturday', () => {
-    expect(mount(<AvailableTimes />).find(Week).first().text()).toMatch(/Sun.*Mon.*Tue/)
-    expect(mount(<AvailableTimes />).find(Week).first().text()).not.toMatch(/Sat.*Sun/)
-  });
+it('works with no props', () => {
+  expect(() => mount(<AvailableTimes />)).not.toThrowError();
 });
 
-describe('with weekStartsOn=monday', () => {
+it('does not render a calendar selector without props', () => {
+  expect(mount(<AvailableTimes />).find(CalendarSelector).length).toBe(0);
+});
+
+it('uses 24h time convention', () => {
+  const start = moment();
+  const component = mount(
+    <AvailableTimes
+      initialSelections={[
+        {
+          start: start.hour(13).minutes(0).seconds(0).toDate(),
+          end: start.add(1, 'hour').toDate(),
+        },
+      ]}
+    />
+  );
+  expect(component.find(Ruler).first().text()).toMatch(/12.*13.*14/);
+  expect(component.text()).toMatch(/13:00.*14:00/);
+});
+
+it('has days from sunday-saturday', () => {
+  const week = mount(<AvailableTimes />).find(Week).first();
+  expect(week.text()).toMatch(/Sun.*Mon.*Tue/)
+  expect(week.text()).not.toMatch(/Sat.*Sun/)
+});
+
+it('has days monday-sunday when weekStartsOn=monday', () => {
   const week = mount(<AvailableTimes weekStartsOn='monday' />).find(Week).first();
-    expect(week.text()).not.toMatch(/Sun.*Mon.*Tue/)
-    expect(week.text()).toMatch(/Sat.*Sun/)
+  expect(week.text()).not.toMatch(/Sun.*Mon.*Tue/)
+  expect(week.text()).toMatch(/Sat.*Sun/)
 });
 
-describe('with calendars', () => {
-  it('renders a calendar selector', () => {
-    expect(mount(<AvailableTimes calendars={[{ id: '1' }]} />)
-      .find(CalendarSelector).length).toBe(1);
-  });
+it('renders a calendar selector when calendars is present', () => {
+  expect(mount(<AvailableTimes calendars={[{ id: '1' }]} />)
+    .find(CalendarSelector).length).toBe(1);
+});
+
+it('uses 12h time convention when timeConvention=12h', () => {
+  const start = moment();
+  const component = mount(
+    <AvailableTimes
+      timeConvention="12h"
+      initialSelections={[
+        {
+          start: start.hour(13).minutes(0).seconds(0).toDate(),
+          end: start.add(1, 'hour').toDate(),
+        },
+      ]}
+    />
+  );
+  expect(component.find(Ruler).first().text()).toMatch(/12pm.*1pm.*2pm/);
+  expect(component.text()).toMatch(/01:00pm.*02:00pm/);
 });
