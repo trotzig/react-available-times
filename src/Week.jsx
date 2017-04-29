@@ -97,6 +97,7 @@ export default class Week extends PureComponent {
           className={styles.header}
           style={{
             paddingLeft: RULER_WIDTH_IN_PIXELS,
+            paddingRight: '15px',
           }}
         >
           {week.days.map((day, i) => (
