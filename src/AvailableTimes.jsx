@@ -56,6 +56,7 @@ export default class AvailableTimes extends PureComponent {
       selectedCalendars,
       events: [],
       selections: initialSelections,
+      availableWidth: window.innerWidth,
     };
     this.selections = {};
     initialSelections.forEach((selection) => {
@@ -73,7 +74,6 @@ export default class AvailableTimes extends PureComponent {
       events: this.eventsStore.get(weeks[0].start),
     }));
     this.handleCalendarChange = this.handleCalendarChange.bind(this);
-    this.setAvailableWidth = this.setAvailableWidth.bind(this);
     this.setRef = this.setRef.bind(this);
     this.handleWindowResize = this.handleWindowResize.bind(this);
   }
@@ -113,14 +113,8 @@ export default class AvailableTimes extends PureComponent {
       return;
     }
     this.ref = element;
-  }
-
-  setAvailableWidth(el) {
-    if (!el) {
-      return;
-    }
     this.setState({
-      availableWidth: el.offsetWidth,
+      availableWidth: element.offsetWidth,
     });
   }
 
@@ -204,13 +198,6 @@ export default class AvailableTimes extends PureComponent {
       events,
     } = this.state;
 
-    if (!availableWidth) {
-      // We need to measure things once first
-      return (
-        <div style={{ width: '100%' }} ref={this.setAvailableWidth} />
-      );
-    }
-
     const homeClasses = [styles.home];
     if (currentWeekIndex !== 0) {
       homeClasses.push(styles.homeActive);
@@ -246,13 +233,15 @@ export default class AvailableTimes extends PureComponent {
                 {rightArrowSvg}
               </button>
             </div>
-            <div className={styles.calendarSelector}>
-              <CalendarSelector
-                calendars={calendars}
-                selectedCalendars={selectedCalendars}
-                onChange={this.handleCalendarChange}
-              />
-            </div>
+            {calendars && calendars.length > 0 &&
+              <div className={styles.calendarSelector}>
+                <CalendarSelector
+                  calendars={calendars}
+                  selectedCalendars={selectedCalendars}
+                  onChange={this.handleCalendarChange}
+                />
+              </div>
+            }
           </div>
           <div className={styles.main}>
             <Slider
