@@ -47,7 +47,6 @@ import AvailableTimes from 'react-available-times';
     { start: aDateObject, end: anotherDateObject, title: 'Some other title', calendarId: 'private' }
     { start: aDateObject, end: anotherDateObject, title: 'All day', allDay: true, calendarId: 'private' }
   ]}
-  start={new Date()}
   height={400}
 />
 ```
@@ -70,8 +69,6 @@ None of the props are required.
   `title` property. Can have a `calendarId` property tying them to a calendar,
   inheriting the foreground and background color. Can also have a `allDay`
   property, in which case they are rendered at the top.
-- `start`: a date signalling the week you want to display to begin with. Can be
-  any day within the week.
 - `height`: a string or a number controlling the `height` of the component.
   E.g. `'100%'`, `350`, `'100vh'`. If left out, the full height of the screen
   will be used.

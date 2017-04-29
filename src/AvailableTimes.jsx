@@ -41,7 +41,6 @@ function flatten(selections) {
 export default class AvailableTimes extends PureComponent {
   constructor({
     initialSelections = [],
-    start = new Date(),
     calendars = [],
     weekStartsOn,
     timeZone,
@@ -143,14 +142,14 @@ export default class AvailableTimes extends PureComponent {
       return weeks;
     }
 
-    const { start, weekStartsOn, timeZone } = this.props;
+    const { weekStartsOn, timeZone } = this.props;
     let newWeeks = weeks;
     let addedWeeks = 0;
     while (addedWeeks < WEEKS_PER_TIMESPAN) {
       const week = newWeeks.length ?
         weekAt(weekStartsOn,
           oneWeekAhead(newWeeks[newWeeks.length - 1].days[3].date, timeZone), timeZone)
-        : weekAt(weekStartsOn, start, timeZone);
+        : weekAt(weekStartsOn, new Date(), timeZone);
       newWeeks = newWeeks.concat(week);
       addedWeeks++;
     }
@@ -282,7 +281,6 @@ export default class AvailableTimes extends PureComponent {
 }
 
 AvailableTimes.propTypes = {
-  start: PropTypes.instanceOf(Date),
   timeConvention: PropTypes.oneOf(['12h', '24h']),
   timeZone: PropTypes.string.isRequired,
   initialSelections: PropTypes.arrayOf(PropTypes.shape({
