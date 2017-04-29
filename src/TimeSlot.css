@@ -1,6 +1,6 @@
 :local(.component) {
-  background-color: #4477BD;
-  border-radius: 3px;
+  background-color: #0070E0;
+  border-radius: 1px;
   position: absolute;
   width: 100%;
   color: #fff;
@@ -34,9 +34,9 @@
 }
 
 :local(.frozen) {
-  background-color: #fff;
-  color: #333;
-  border: 1px solid #ccc;
+  background-color: #C5CCD0;
+  color: #3D464D;
+  border: 1px solid #7B8994;
   opacity: 1;
   cursor: default;
 }
@@ -52,7 +52,6 @@
 
 :local(.title) {
   padding: 5px;
-  text-align: center;
   font-size: 10px;
   font-weight: 100;
   overflow: hidden;

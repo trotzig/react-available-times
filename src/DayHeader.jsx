@@ -58,10 +58,6 @@ export default class DayHeader extends Component {
             <div
               key={i + event.title}
               className={styles.event}
-              style={{
-                color: event.foregroundColor,
-                backgroundColor: event.backgroundColor,
-              }}
               title={event.title}
             >
               {event.title}

@@ -100,8 +100,6 @@ export default class TimeSlot extends PureComponent {
     const style = {
       top,
       height: bottom - top,
-      backgroundColor,
-      color: foregroundColor,
     };
 
     if (typeof width !== 'undefined' && typeof offset !== 'undefined') {

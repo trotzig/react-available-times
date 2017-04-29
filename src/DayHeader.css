@@ -23,7 +23,8 @@
   flex-grow: 1;
   flex-shrink: 1;
   padding: 3px;
-  border-radius: 3px;
-  background-color: #666;
-  color: #fff;
+  border-radius: 2px;
+  background-color: #C5CCD0;
+  color: #3D464D;
+  margin: 1px;
 }
