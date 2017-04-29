@@ -52,7 +52,6 @@
 
 :local(.title) {
   padding: 5px;
-  text-align: center;
   font-size: 10px;
   font-weight: 100;
   overflow: hidden;
