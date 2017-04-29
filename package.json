@@ -17,12 +17,17 @@
     "test": "jest"
   },
   "jest": {
-    "testRegex": "test.*-test\\.jsx?$"
+    "testRegex": "test.*-test\\.jsx?$",
+    "moduleNameMapper": {
+      "\\.css$": "identity-obj-proxy"
+    }
   },
   "dependencies": {
+    "enzyme": "^2.8.2",
     "moment": "^2.18.1",
     "moment-timezone": "^0.5.13",
-    "prop-types": "^15.5.8"
+    "prop-types": "^15.5.8",
+    "react-test-renderer": "^15.5.4"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.7",
@@ -36,6 +41,7 @@
     "babel-preset-react": "^6.24.1",
     "css-loader": "^0.28.0",
     "express": "^4.15.2",
+    "identity-obj-proxy": "^3.0.0",
     "jest": "^19.0.2",
     "postcss-loader": "^1.3.3",
     "react": "^15.5.4",

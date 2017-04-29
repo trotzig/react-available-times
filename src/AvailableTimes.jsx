@@ -80,7 +80,7 @@ export default class AvailableTimes extends PureComponent {
 
   componentWillMount() {
     window.addEventListener('resize', this.handleWindowResize);
-    const { calendars, onEventsRequested, timeZone } = this.props;
+    const { calendars = [], onEventsRequested, timeZone } = this.props;
     this.eventsStore = new EventsStore({
       calendars,
       timeZone,
