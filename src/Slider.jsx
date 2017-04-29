@@ -22,12 +22,18 @@ export default class Slider extends PureComponent {
   }
 
   handleTouchStart(event) {
+    if (this.props.disabled) {
+      return;
+    }
     this.setState({
       startX: event.touches[0].pageX,
     });
   }
 
   handleTouchMove(event) {
+    if (this.props.disabled) {
+      return;
+    }
     const x = event.touches[0].pageX;
     this.setState(({ startX }) => ({
       offsetX: x - startX,
@@ -35,6 +41,9 @@ export default class Slider extends PureComponent {
   }
 
   handleTouchEnd() {
+    if (this.props.disabled) {
+      return;
+    }
     const percentage = this.percentage();
     if (Math.abs(percentage) > THRESHOLD_PERCENT) {
       this.props.onSlide(percentage < 0 ? 1 : -1);
@@ -108,4 +117,5 @@ Slider.propTypes = {
   index: PropTypes.number,
   children: PropTypes.node,
   onSlide: PropTypes.func,
+  disabled: PropTypes.bool,
 };

@@ -26,11 +26,23 @@ export default class DayHeader extends Component {
     return `${day.name} ${dateNumber}`;
   }
 
+  dateLessText() {
+    const { day, availableWidth } = this.props;
+    const dateNumber = day.date.getDate();
+
+    if (availableWidth < 55) {
+      return day.abbreviated;
+    }
+
+    return day.name;
+  }
+
   render() {
     const {
       day,
       availableWidth,
       events,
+      hideDates,
     } = this.props;
 
     return (
@@ -38,7 +50,8 @@ export default class DayHeader extends Component {
         className={styles.component}
       >
         <div className={styles.day}>
-          {this.text()}
+          {!hideDates && this.text()}
+          {hideDates && this.dateLessText()}
         </div>
         <div className={styles.events}>
           {events.filter(({ allDay }) => allDay).map((event, i) => (
@@ -64,4 +77,5 @@ DayHeader.propTypes = {
   day: PropTypes.object,
   availableWidth: PropTypes.number,
   events: PropTypes.arrayOf(PropTypes.object),
+  hideDates: PropTypes.bool,
 };

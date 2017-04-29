@@ -186,6 +186,7 @@ export default class AvailableTimes extends PureComponent {
       height,
       timeConvention,
       timeZone,
+      recurring,
     } = this.props;
 
     const {
@@ -213,42 +214,45 @@ export default class AvailableTimes extends PureComponent {
         <div
           className={styles.inner}
         >
-          <div className={styles.toolbar}>
-            <div className={styles.interval}>
-              {weeks[currentWeekIndex].interval}
-            </div>
-            <div className={styles.buttons}>
-              <button
-                className={styles.button}
-                onClick={this.moveBack}
-              >
-                {leftArrowSvg}
-              </button>
-              {' '}
-              <button
-                className={styles.button}
-                onClick={this.moveForward}
-              >
-                {rightArrowSvg}
-              </button>
-            </div>
-            {calendars && calendars.length > 0 &&
-              <div className={styles.calendarSelector}>
-                <CalendarSelector
-                  calendars={calendars}
-                  selectedCalendars={selectedCalendars}
-                  onChange={this.handleCalendarChange}
-                />
+          {!recurring &&
+            <div className={styles.toolbar}>
+              <div className={styles.interval}>
+                {weeks[currentWeekIndex].interval}
               </div>
-            }
-          </div>
+              <div className={styles.buttons}>
+                <button
+                  className={styles.button}
+                  onClick={this.moveBack}
+                >
+                  {leftArrowSvg}
+                </button>
+                {' '}
+                <button
+                  className={styles.button}
+                  onClick={this.moveForward}
+                >
+                  {rightArrowSvg}
+                </button>
+              </div>
+              {calendars && calendars.length > 0 &&
+                <div className={styles.calendarSelector}>
+                  <CalendarSelector
+                    calendars={calendars}
+                    selectedCalendars={selectedCalendars}
+                    onChange={this.handleCalendarChange}
+                  />
+                </div>
+              }
+            </div>
+          }
           <div className={styles.main}>
             <Slider
               index={currentWeekIndex}
               onSlide={this.move}
+              disabled={recurring}
             >
               {weeks.map((week, i) => {
-                if (Math.abs(i - currentWeekIndex) > 1 && i !== 0) {
+                if ((recurring || Math.abs(i - currentWeekIndex) > 1) && i !== 0) {
                   return <span key={week.start}/>;
                 }
                 return (
@@ -263,6 +267,7 @@ export default class AvailableTimes extends PureComponent {
                     initialSelections={selections}
                     onChange={this.handleWeekChange}
                     height={height}
+                    recurring={recurring}
                   />
                 );
               })}
@@ -297,6 +302,7 @@ AvailableTimes.propTypes = {
   onChange: PropTypes.func,
   onEventsRequested: PropTypes.func,
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  recurring: PropTypes.bool,
 };
 
 AvailableTimes.defaultProps = {

@@ -136,6 +136,7 @@ class Test extends Component {
             onChange={this.handleChange}
             initialSelections={initialSelections}
             onEventsRequested={this.handleEventsRequested}
+            recurring
           />
         </div>
       </div>

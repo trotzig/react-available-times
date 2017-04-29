@@ -86,6 +86,7 @@ export default class Week extends PureComponent {
       availableWidth,
       timeConvention,
       timeZone,
+      recurring,
     } = this.props;
 
     const { dayEvents, daySelections } = this.state;
@@ -105,6 +106,7 @@ export default class Week extends PureComponent {
               day={day}
               key={day.date}
               events={dayEvents[i]}
+              hideDates={recurring}
             />
           ))}
         </div>
@@ -164,4 +166,5 @@ Week.propTypes = {
   })),
   onChange: PropTypes.func,
   week: PropTypes.object.isRequired,
+  recurring: PropTypes.bool,
 };

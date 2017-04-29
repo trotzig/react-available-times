@@ -5,8 +5,11 @@ import momentTimezone from 'moment-timezone';
 
 import AvailableTimes from '../src/AvailableTimes';
 import CalendarSelector from '../src/CalendarSelector';
+import DayHeader from '../src/DayHeader';
 import Ruler from '../src/Ruler';
+import Slider from '../src/Slider';
 import Week from '../src/Week';
+import weekAt from '../src/weekAt';
 
 it('works with no props', () => {
   expect(() => mount(<AvailableTimes />)).not.toThrowError();
@@ -83,4 +86,17 @@ it('can display in a different timeZone', () => {
   );
 
   expect(component.text()).toMatch(/04:00-05:00/);
+});
+
+it('can be in recurring mode', () => {
+  const weekTitle = weekAt('sunday', new Date(), 'Europe/Stockholm').interval;
+  // First, just make sure that we're making the right assumption about the
+  // title:
+  expect(mount(<AvailableTimes/>).text()).toMatch(weekTitle);
+
+  const component = mount(<AvailableTimes recurring />);
+  expect(component.text()).not.toMatch(weekTitle);
+  expect(component.find(Week).length).toBe(1);
+  expect(component.find(Slider).props().disabled).toBe(true);
+  expect(component.find(DayHeader).first().props().hideDates).toBe(true);
 });
