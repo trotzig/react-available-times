@@ -11,17 +11,6 @@ import toDate from './toDate';
 
 const ROUND_TO_NEAREST_MINS = 15;
 
-function relativeY(e, rounding = ROUND_TO_NEAREST_MINS) {
-  return relativeYElement(e, e.target, rounding);
-}
-
-function relativeYElement(e, element, rounding = ROUND_TO_NEAREST_MINS) {
-  const { top } = element.getBoundingClientRect();
-  const realY = (e.pageY || e.touches[0].pageY) - top;
-  const snapTo = rounding / 60 * HOUR_IN_PIXELS;
-  return Math.floor(realY / snapTo) * snapTo;
-}
-
 export default class Day extends PureComponent {
   constructor({ initialSelections }) {
     super();
@@ -54,6 +43,14 @@ export default class Day extends PureComponent {
     }
   }
 
+  relativeY(pageY, rounding = ROUND_TO_NEAREST_MINS) {
+    const { top } = this.mouseTargetRef.getBoundingClientRect();
+    const realY = pageY - top;
+    const snapTo = rounding / 60 * HOUR_IN_PIXELS;
+    return Math.floor(realY / snapTo) * snapTo;
+  }
+
+
   handleDelete({ start, end }) {
     const { onChange, index } = this.props;
 
@@ -69,8 +66,8 @@ export default class Day extends PureComponent {
     });
   }
 
-  handleItemModification(edge, { start, end }, event) {
-    const position = relativeYElement(event, this.mouseTargetRef);
+  handleItemModification(edge, { start, end }, { pageY }) {
+    const position = this.relativeY(pageY);
     this.setState(({ selections }) => {
       for (let i = 0; i < selections.length; i++) {
         if (selections[i].start === start && selections[i].end === end) {
@@ -103,17 +100,15 @@ export default class Day extends PureComponent {
       Math.abs(startX - (currentX || startX)) < 20 &&
       Math.abs(startY - (currentY || startY)) < 20
     ) {
-      e.pageY = startY;
-      e.pageX = startX;
-      this.handleMouseDown(e);
-      this.handleMouseUp(e);
+      this.handleMouseDown({ pageY: startY });
+      this.handleMouseUp();
     }
     this.touch = undefined;
   }
 
   handleMouseDown(e) {
     const { timeZone } = this.props;
-    const position = relativeY(e, 60);
+    const position = this.relativeY(e.pageY, 60);
     const dateAtPosition = toDate(this.props.date, position, timeZone);
 
     if (this.findSelectionAt(dateAtPosition)) {
@@ -139,12 +134,12 @@ export default class Day extends PureComponent {
     });
   }
 
-  handleMouseMove(e) {
+  handleMouseMove({ pageY }) {
     if (typeof this.state.index === 'undefined') {
       return;
     }
     const { date, timeZone } = this.props;
-    const position = relativeY(e);
+    const position = this.relativeY(pageY);
     this.setState(({ selections, edge, index, lastKnownPosition }) => {
       const selection = selections[index];
       if (edge === 'both') {
@@ -175,7 +170,7 @@ export default class Day extends PureComponent {
     })
   }
 
-  handleMouseUp(e) {
+  handleMouseUp() {
     if (typeof this.state.index === 'undefined') {
       return;
     }

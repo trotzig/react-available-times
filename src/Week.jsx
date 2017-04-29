@@ -36,6 +36,18 @@ export default class Week extends PureComponent {
       daySelections: weekEvents(week, initialSelections, timeZone),
     }
     this.handleDayChange = this.handleDayChange.bind(this);
+    this.handleDaysRef = this.handleDaysRef.bind(this);
+    this.setDaysWidth = () => this.setState({
+      daysWidth: this.daysRef.offsetWidth,
+    });
+  }
+
+  componentWillMount() {
+    window.addEventListener('resize', this.setDaysWidth);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.setDaysWidth);
   }
 
   componentWillReceiveProps({ week, events, timeZone }) {
@@ -46,6 +58,14 @@ export default class Week extends PureComponent {
     this.setState({
       dayEvents: weekEvents(week, events, timeZone),
     });
+  }
+
+  handleDaysRef(element) {
+    if (!element) {
+      return;
+    }
+    this.daysRef = element;
+    this.setState({ daysWidth: element.offsetWidth });
   }
 
   handleDayChange(dayIndex, selections) {
@@ -89,7 +109,7 @@ export default class Week extends PureComponent {
       recurring,
     } = this.props;
 
-    const { dayEvents, daySelections } = this.state;
+    const { dayEvents, daySelections, daysWidth } = this.state;
 
     return (
       <div className={styles.component}>
@@ -97,7 +117,7 @@ export default class Week extends PureComponent {
           className={styles.header}
           style={{
             paddingLeft: RULER_WIDTH_IN_PIXELS,
-            paddingRight: '15px',
+            maxWidth: daysWidth,
           }}
         >
           {week.days.map((day, i) => (
@@ -126,6 +146,7 @@ export default class Week extends PureComponent {
           </div>
           <div
             className={styles.days}
+            ref={this.handleDaysRef}
           >
             <Ruler timeConvention={timeConvention} />
             {week.days.map((day, i) => (
