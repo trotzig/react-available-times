@@ -7,6 +7,7 @@ import CalendarSelector from './CalendarSelector';
 import EventsStore from './EventsStore';
 import Slider from './Slider';
 import Week from './Week';
+import makeRecurring from './makeRecurring';
 import styles from './AvailableTimes.css';
 import weekAt from './weekAt';
 
@@ -118,12 +119,17 @@ export default class AvailableTimes extends PureComponent {
   }
 
   handleWeekChange(week, weekSelections) {
-    const { onChange } = this.props;
+    const { onChange, recurring, timeZone, weekStartsOn } = this.props;
     this.setState(({ selections }) => {
       this.selections[week.start] = weekSelections;
       const newSelections = flatten(this.selections);
       if (onChange) {
-        onChange(newSelections);
+        if (recurring) {
+          onChange(newSelections.map((selection) =>
+            makeRecurring(selection, timeZone, weekStartsOn)));
+        } else {
+          onChange(newSelections);
+        }
       }
       return {
         selections: newSelections,
