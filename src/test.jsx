@@ -137,7 +137,7 @@ class Test extends Component {
             </div>
           }
           <AvailableTimes
-            timeConvention="12h"
+            timeConvention="24h"
             timeZone={TIME_ZONE}
             height={fullscreen ? undefined : 600}
             calendars={calendars}

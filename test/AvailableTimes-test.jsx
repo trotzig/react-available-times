@@ -66,7 +66,7 @@ it('uses 12h time convention when timeConvention=12h', () => {
     />
   );
   expect(component.find(Ruler).first().text()).toMatch(/12pm.*1pm.*2pm/);
-  expect(component.text()).toMatch(/01:00pm-02:00pm/);
+  expect(component.text()).toMatch(/1:00pm-2:00pm/);
 });
 
 it('can display in a different timeZone', () => {
@@ -85,7 +85,7 @@ it('can display in a different timeZone', () => {
     />
   );
 
-  expect(component.text()).toMatch(/00:00-01:00/);
+  expect(component.text()).toMatch(/0-1/);
   // Make sure that sunday is the first day
   expect(component.find(DayHeader).first().text()).toMatch(/Sun/);
 });
