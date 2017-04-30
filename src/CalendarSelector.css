@@ -30,12 +30,13 @@
   text-align: left;
   overflow: auto;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 5px 0px;
 }
 
 :local(.calendar) {
   cursor: pointer;
   display: block;
-  padding: 10px;
+  padding: 5px 10px;
   display: flex;
   align-items: center;
 }
@@ -69,4 +70,18 @@
 
 :local(.button):focus {
   outline: none;
+}
+
+:local(.box) {
+  flex-shrink: 0;
+  border-radius: 3px;
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+}
+
+:local(.calendarTitle) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

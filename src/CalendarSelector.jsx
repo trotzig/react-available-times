@@ -9,6 +9,12 @@ const downIconSvg = (
   </svg>
 );
 
+const checkmarkSvg = (
+  <svg height="24" viewBox="0 0 24 24" width="24">
+    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+  </svg>
+);
+
 export default class CalendarSelector extends PureComponent {
   constructor() {
     super();
@@ -57,8 +63,6 @@ export default class CalendarSelector extends PureComponent {
         key={id}
         className={styles.calendar}
         style={{
-          color: foregroundColor,
-          backgroundColor,
         }}
       >
         <input
@@ -67,8 +71,23 @@ export default class CalendarSelector extends PureComponent {
           checked={checked}
           value={id}
           onChange={checked ? this.uncheck : this.check}
+          style={{ display: 'none' }}
         />
-        {title}
+        <div
+          className={styles.box}
+          style={{
+            fill: foregroundColor,
+            backgroundColor,
+          }}
+        >
+          {checked && checkmarkSvg}
+        </div>
+        <div
+          title={title}
+          className={styles.calendarTitle}
+        >
+          {title}
+        </div>
       </label>
     );
   }

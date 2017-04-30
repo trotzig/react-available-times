@@ -25,7 +25,7 @@ const TIME_ZONE = 'America/Los_Angeles';
 const calendars = [
   {
     id: 'private',
-    title: 'Private',
+    title: 'My own private calendar with plenty of stuff in it',
     backgroundColor: '#666',
     foregroundColor: '#fff',
     selected: true,
