@@ -102,6 +102,20 @@ export default class AvailableTimes extends PureComponent {
     window.removeEventListener('resize', this.handleWindowResize);
   }
 
+  componentWillReceiveProps({ recurring }) {
+    if (recurring === this.props.recurring) {
+      return;
+    }
+    this.setState({ currentWeekIndex: 0 });
+  }
+
+  componentDidUpdate({ recurring }) {
+    if (recurring === this.props.recurring) {
+      return;
+    }
+    this.triggerOnChange();
+  }
+
   handleWindowResize() {
     this.setState({
       availableWidth: this.ref.offsetWidth,
@@ -118,19 +132,26 @@ export default class AvailableTimes extends PureComponent {
     });
   }
 
-  handleWeekChange(week, weekSelections) {
+  triggerOnChange() {
     const { onChange, recurring, timeZone, weekStartsOn } = this.props;
+    const newSelections = flatten(this.selections);
+    if (onChange) {
+      if (recurring) {
+        const startingFirstWeek = newSelections.filter(({ start }) =>
+          start < this.state.weeks[0].end);
+        onChange(startingFirstWeek.map((selection) =>
+          makeRecurring(selection, timeZone, weekStartsOn)));
+      } else {
+        onChange(newSelections);
+      }
+    }
+    return newSelections;
+  }
+
+  handleWeekChange(week, weekSelections) {
     this.setState(({ selections }) => {
       this.selections[week.start] = weekSelections;
-      const newSelections = flatten(this.selections);
-      if (onChange) {
-        if (recurring) {
-          onChange(newSelections.map((selection) =>
-            makeRecurring(selection, timeZone, weekStartsOn)));
-        } else {
-          onChange(newSelections);
-        }
-      }
+      const newSelections = this.triggerOnChange();
       return {
         selections: newSelections,
       };

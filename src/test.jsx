@@ -97,7 +97,7 @@ class Test extends Component {
   }
 
   render() {
-    const { selections } = this.state;
+    const { selections, recurring } = this.state;
 
     const fullscreen = window.location.search === '?fullscreen';
     return (
@@ -124,6 +124,16 @@ class Test extends Component {
               <a href="/?fullscreen">
                 Go full screen
               </a>
+              <br/>
+              <br/>
+              <button onClick={() => this.setState({ recurring: true })}>
+                Switch to recurring
+              </button>
+              <br/>
+              <br/>
+              <button onClick={() => this.setState({ recurring: false })}>
+                Switch to time specific
+              </button>
             </div>
           }
           <AvailableTimes
@@ -136,7 +146,7 @@ class Test extends Component {
             onChange={this.handleChange}
             initialSelections={initialSelections}
             onEventsRequested={this.handleEventsRequested}
-            recurring
+            recurring={recurring}
           />
         </div>
       </div>
