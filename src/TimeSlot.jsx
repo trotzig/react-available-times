@@ -2,9 +2,11 @@ import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import momentTimezone from 'moment-timezone';
 
-import { IS_TOUCH_DEVICE } from './Constants';
+import { IS_TOUCH_DEVICE, MINUTE_IN_PIXELS } from './Constants';
 import positionInDay from './positionInDay';
 import styles from './TimeSlot.css';
+
+const BOTTOM_GAP = MINUTE_IN_PIXELS * 10;
 
 export default class TimeSlot extends PureComponent {
   constructor() {
@@ -56,14 +58,9 @@ export default class TimeSlot extends PureComponent {
     return m.format('H:mm');
   }
 
-  title() {
-    const { start, end, title } = this.props;
-    const result = [this.formatTime(start), '-', this.formatTime(end)];
-    if (title) {
-      result.push(' ');
-      result.push(title);
-    }
-    return result.join('');
+  timespan() {
+    const { start, end } = this.props;
+    return [this.formatTime(start), '-', this.formatTime(end)].join('');
   }
 
   render() {
@@ -77,21 +74,24 @@ export default class TimeSlot extends PureComponent {
       width,
       offset,
       timeZone,
+      title,
     } = this.props;
 
     const top = positionInDay(date, start, timeZone);
     const bottom = positionInDay(date, end, timeZone);
 
-    const height = bottom - top;
+    const height = bottom - top - (frozen ? BOTTOM_GAP : 0);
 
     const titleClasses = [styles.title];
-    const titleStyle = {};
+    const titleStyle = {
+      lineHeight: `${(MINUTE_IN_PIXELS * 30) - (BOTTOM_GAP / 2)}px`, // two lines of text in an hour
+    };
     const realAvailableWidth = availableWidth * (width || 1);
     if (height > realAvailableWidth && realAvailableWidth < 60) {
       titleClasses.push(styles.flip);
       titleStyle.width = height;
-      titleStyle.marginLeft = -((height / 2) - 10);
-      titleStyle.marginTop = -10;
+      titleStyle.marginLeft = -((height / 2) - 15);
+      titleStyle.marginTop = -15;
     }
 
     const classes = [styles.component];
@@ -104,11 +104,11 @@ export default class TimeSlot extends PureComponent {
 
     const style = {
       top,
-      height: bottom - top,
+      height,
     };
 
     if (typeof width !== 'undefined' && typeof offset !== 'undefined') {
-      style.width = `${width * 100}%`;
+      style.width = `${width * 92}%`;
       style.left = `${offset * 100}%`;
     }
 
@@ -124,7 +124,13 @@ export default class TimeSlot extends PureComponent {
           className={titleClasses.join(' ')}
           style={titleStyle}
         >
-          {this.title()}
+          {title && (
+            <span>
+              {title}
+              <br />
+            </span>
+          )}
+          {this.timespan()}
         </div>
         {!frozen && !IS_TOUCH_DEVICE && (
           <div>

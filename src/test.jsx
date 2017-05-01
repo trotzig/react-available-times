@@ -74,7 +74,7 @@ class Test extends Component {
 
     while (date.toDate() < e) {
       const start = date.toDate();
-      const end = date.add(1, 'hour').toDate();
+      const end = date.add(Math.round(Math.random() * 4), 'hour').toDate();
       if (Math.random() > 0.98) {
         const startM = momentTimezone.tz(start, TIME_ZONE);
         const startString = startM.format('YYYY-MM-DD');
@@ -95,7 +95,7 @@ class Test extends Component {
         });
       }
     }
-    const latency = Math.random() * 5000;
+    const latency = Math.random() * 2000;
     // eslint-disable-next-line no-console
     console.log(`Simulated latency for ${calendarId}`, latency);
     setTimeout(() => {

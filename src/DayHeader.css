@@ -23,8 +23,9 @@
   flex-grow: 1;
   flex-shrink: 1;
   padding: 3px;
-  border-radius: 2px;
-  background-color: #C5CCD0;
-  color: #3D464D;
+  background-color: #d6dfe5;
+  border-left: 1px solid #acacac;
+  font-weight: 100;
+  color: #3d464d;
   margin: 1px;
 }
