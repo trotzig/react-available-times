@@ -87,7 +87,7 @@ function normalize(events, timeZone) {
 
 export default function decorateEvents(events, timeZone) {
   // Make sure events are sorted by start time
-  const orderedByStartTime = normalize(events).sort(compareDates);
+  const orderedByStartTime = normalize(events, timeZone).sort(compareDates);
   const groups = groupEvents(orderedByStartTime);
   return flattenGroups(groups);
 }
