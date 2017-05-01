@@ -1,6 +1,7 @@
 export default function hasOverlap(events, start, end, ignoreIndex) {
   for (let i = 0; i < events.length; i++) {
     if (i === ignoreIndex) {
+      // eslint-disable-next-line no-continue
       continue;
     }
     const selection = events[i];
@@ -17,4 +18,5 @@ export default function hasOverlap(events, start, end, ignoreIndex) {
       return selection.start;
     }
   }
+  return undefined;
 }

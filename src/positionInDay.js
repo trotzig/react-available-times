@@ -15,7 +15,7 @@ export default function positionInDay(withinDay, date, timeZone) {
   }
   const mom = momentTimezone.tz(date, timeZone);
   return (
-    mom.hours() * HOUR_IN_PIXELS +
-    mom.minutes() * MINUTE_IN_PIXELS
+    (mom.hours() * HOUR_IN_PIXELS) +
+    (mom.minutes() * MINUTE_IN_PIXELS)
   );
 }

@@ -1,6 +1,5 @@
 import momentTimezone from 'moment-timezone';
 
-const ONE_HOUR_MILLIS = 60000;
 const ONE_WEEK_MINUTES = 7 * 24 * 60;
 
 export default function makeRecurring({ start, end }, timeZone, weekStartsOn) {
@@ -10,8 +9,11 @@ export default function makeRecurring({ start, end }, timeZone, weekStartsOn) {
   if (!weekStartsOn) {
     throw new Error('Missing weekStartsOn');
   }
-  const weekStart = momentTimezone.tz(start, timeZone).hour(0).minute(0)
-    .seconds(0).milliseconds(0);
+  const weekStart = momentTimezone.tz(start, timeZone)
+    .hour(0)
+    .minute(0)
+    .seconds(0)
+    .milliseconds(0);
   weekStart.day(weekStartsOn === 'monday' ? 1 : 0);
   const weekStartMs = weekStart.toDate().getTime();
   let startMins = (start.getTime() - weekStartMs) / 60000;

@@ -17,5 +17,5 @@ it('works for dates within current day', () => {
   const withinDay = new Date('Mon Mar 27 2017 12:00:00 GMT+0200');
   const date = new Date('Mon Mar 27 2017 12:30:00 GMT+0200');
   expect(positionInDay(withinDay, date, 'Europe/Stockholm'))
-    .toEqual(12 * HOUR_IN_PIXELS + 30 * MINUTE_IN_PIXELS);
+    .toEqual((12 * HOUR_IN_PIXELS) + (30 * MINUTE_IN_PIXELS));
 });

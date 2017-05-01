@@ -21,4 +21,6 @@ app.get('/', (req, res) => {
 });
 
 app.listen(3333);
+
+// eslint-disable-next-line no-console
 console.log('http://localhost:3333');

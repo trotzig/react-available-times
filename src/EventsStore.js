@@ -22,9 +22,10 @@ export default class EventsStore {
   updateSelectedCalendars(selectedCalendars) {
     this.selectedCalendars = selectedCalendars;
     this.fetchEvents();
-    for (const timespan of this.timespans) {
+    this.timespans.forEach((timespan) => {
+      // eslint-disable-next-line no-param-reassign
       timespan.decoratedEvents = null;
-    }
+    });
     this.onChange();
   }
 
@@ -44,7 +45,8 @@ export default class EventsStore {
   }
 
   get(atTime) {
-    for (const timespan of this.timespans) {
+    for (let i = 0; i < this.timespans.length; i++) {
+      const timespan = this.timespans[i];
       const { start, end, events, decoratedEvents } = timespan;
       if (start.getTime() <= atTime.getTime() && end.getTime() > atTime.getTime()) {
         if (decoratedEvents) {
@@ -81,6 +83,7 @@ export default class EventsStore {
           end: timespan.end,
           callback: (events) => {
             timespan.events.push(...events);
+            // eslint-disable-next-line no-param-reassign
             timespan.decoratedEvents = null; // clear cache
             this.onChange();
           },
