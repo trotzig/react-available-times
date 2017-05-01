@@ -33,7 +33,7 @@ export default function weekAt(weekStartsOn, atDate, timeZone) {
     interval: dateIntervalString(
       days[0].date,
       days[days.length - 1].date,
-      timeZone
+      timeZone,
     ),
     days,
     start: start.toDate(),

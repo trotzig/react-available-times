@@ -1,12 +1,12 @@
 import decorateEvents from '../src/decorateEvents';
 
 it('does not mutate the original event', () => {
-  const event =  {
+  const event = {
     start: new Date(0),
     end: new Date(100),
   };
   const newEvent = decorateEvents([event])[0];
-  expect(newEvent).not.toBe(event)
+  expect(newEvent).not.toBe(event);
 });
 
 it('can handle dates that are ISO strings', () => {
@@ -84,26 +84,26 @@ it('adds overlap hints when overlaps exist', () => {
   expect(overlapped[0]).toEqual({
     start: new Date(0),
     end: new Date(300),
-    width: 1/3,
+    width: 1 / 3,
     offset: 0,
   });
   expect(overlapped[1]).toEqual({
     start: new Date(101),
     end: new Date(240),
-    width: 1/3,
-    offset: 1/3,
+    width: 1 / 3,
+    offset: 1 / 3,
   });
   expect(overlapped[2]).toEqual({
     start: new Date(150),
     end: new Date(220),
-    width: 1/3,
-    offset: 2/3,
+    width: 1 / 3,
+    offset: 2 / 3,
   });
   expect(overlapped[3]).toEqual({
     start: new Date(250),
     end: new Date(350),
-    width: 2/3,
-    offset: 1/3,
+    width: 2 / 3,
+    offset: 1 / 3,
   });
   expect(overlapped[4]).toEqual({
     start: new Date(400),

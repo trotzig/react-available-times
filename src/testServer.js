@@ -17,7 +17,7 @@ app.use(webpackMiddleware(webpack(webpackConfig), {
 
 // viewed at http://localhost:8080
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname + '/test.html'));
+  res.sendFile(path.join(`${__dirname}/test.html`));
 });
 
 app.listen(3333);

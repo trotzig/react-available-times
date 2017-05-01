@@ -2,7 +2,7 @@ import weekAt from '../src/weekAt';
 
 it('returns a week', () => {
   const week = weekAt('sunday', new Date('Sun Mar 26 2017 01:22:53 GMT+0200'), 'Europe/Stockholm');
-  expect(week.interval).toEqual('Mar 26 – Apr 1')
+  expect(week.interval).toEqual('Mar 26 – Apr 1');
   expect(week.start).toEqual(new Date('Sun Mar 26 2017 00:00:00 GMT+0100'));
   expect(week.end).toEqual(new Date('Sun Apr 2 2017 00:00:00 GMT+0200'));
   expect(week.days).toEqual([
@@ -46,7 +46,7 @@ it('returns a week', () => {
 
 it('can take a timezone a week', () => {
   const week = weekAt('sunday', new Date('Mon Mar 27 2017 01:22:53 GMT+0200'), 'America/Los_Angeles');
-  expect(week.interval).toEqual('Mar 26 – Apr 1')
+  expect(week.interval).toEqual('Mar 26 – Apr 1');
   expect(week.start).toEqual(new Date('Sun Mar 26 2017 08:00:00 GMT+0100'));
   expect(week.end).toEqual(new Date('Sun Apr 2 2017 09:00:00 GMT+0200'));
   expect(week.days).toEqual([
@@ -90,7 +90,7 @@ it('can take a timezone a week', () => {
 
 it('can start on a monday', () => {
   const week = weekAt('monday', new Date('Wed Mar 29 2017 01:22:53 GMT+0200'), 'Europe/Stockholm');
-  expect(week.interval).toEqual('Mar 27 – Apr 2')
+  expect(week.interval).toEqual('Mar 27 – Apr 2');
   expect(week.start).toEqual(new Date('Mon Mar 27 2017 00:00:00 GMT+0200'));
   expect(week.end).toEqual(new Date('Mon Apr 3 2017 00:00:00 GMT+0200'));
   expect(week.days).toEqual([

@@ -7,10 +7,10 @@ module.exports = {
   entry: path.join(__dirname, 'src/test.jsx'),
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'test.js'
+    filename: 'test.js',
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.json', '.css']
+    extensions: ['.js', '.jsx', '.json', '.css'],
   },
   devtool: 'source-map',
   module: {

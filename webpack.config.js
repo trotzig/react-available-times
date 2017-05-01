@@ -14,7 +14,7 @@ module.exports = {
   },
   externals: [nodeExternals()],
   resolve: {
-    extensions: ['.js', '.jsx', '.json', '.css']
+    extensions: ['.js', '.jsx', '.json', '.css'],
   },
   module: {
     rules,

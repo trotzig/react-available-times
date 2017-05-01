@@ -3,7 +3,7 @@ import momentTimezone from 'moment-timezone';
 import hasOverlap from './hasOverlap';
 
 function compareDates(a, b) {
- return a.start < b.start ? -1 : 1;
+  return a.start < b.start ? -1 : 1;
 }
 
 function groupEvents(events) {
@@ -18,7 +18,7 @@ function groupEvents(events) {
       end: event.end,
       columns: [[event]],
     });
-  })
+  });
 
   let currentGroup;
   events.forEach((event) => {
@@ -30,9 +30,7 @@ function groupEvents(events) {
       currentGroup = undefined;
     }
     if (currentGroup) {
-      const existingCol = currentGroup.columns.find((column) => {
-        return column.some(({ end }) => end <= event.start);
-      });
+      const existingCol = currentGroup.columns.find(column => column.some(({ end }) => end <= event.start));
       if (existingCol) {
         existingCol.push(event);
       } else {
@@ -44,7 +42,7 @@ function groupEvents(events) {
         start: event.start,
         end: event.end,
         columns: [[event]],
-      }
+      };
       groups.push(currentGroup);
     }
     currentGroup.end = Math.max(currentGroup.end, event.end);
@@ -72,7 +70,7 @@ function flattenGroups(groups) {
           width: colspan / columnsLength,
           offset: columnIndex / columnsLength,
         }, event));
-      })
+      });
     });
   });
   result.sort(compareDates);
@@ -80,7 +78,7 @@ function flattenGroups(groups) {
 }
 
 function normalize(events, timeZone) {
-  return events.map((event) => Object.assign({}, event, {
+  return events.map(event => Object.assign({}, event, {
     start: momentTimezone.tz(event.start, timeZone).toDate(),
     end: momentTimezone.tz(event.end, timeZone).toDate(),
   }));
