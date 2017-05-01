@@ -17,6 +17,34 @@ export default class Slider extends PureComponent {
     this.handleRef = this.handleRef.bind(this);
   }
 
+  getTranslateValue(i) {
+    const { index } = this.props;
+    const percentage = this.percentage();
+    if (i === index) {
+      return percentage;
+    }
+    if (i - index === 1) {
+      // next week
+      return 100 + percentage;
+    }
+    if (index - i === 1) {
+      // previous week
+      return -100 + percentage;
+    }
+    if (i - index > 0) {
+      return 100;
+    }
+    if (i - index < 0) {
+      return -100;
+    }
+    return undefined;
+  }
+
+  percentage() {
+    const { offsetX } = this.state;
+    return offsetX !== 0 ? (offsetX / this.width) * 100 : 0;
+  }
+
   handleRef(element) {
     this.width = element.offsetWidth;
   }
@@ -54,33 +82,6 @@ export default class Slider extends PureComponent {
     });
   }
 
-  percentage() {
-    const { offsetX } = this.state;
-    return offsetX != 0 ? offsetX / this.width * 100 : 0;
-  }
-
-  getTranslateValue(i) {
-    const { index } = this.props;
-    const percentage = this.percentage();
-    if (i === index) {
-      return percentage;
-    }
-    if (i - index === 1) {
-      // next week
-      return 100 + percentage;
-    }
-    if (index - i === 1) {
-      // previous week
-      return -100 + percentage;
-    }
-    if (i - index > 0) {
-      return 100;
-    }
-    if (i - index < 0) {
-      return -100;
-    }
-  }
-
   render() {
     const {
       children,
@@ -95,6 +96,7 @@ export default class Slider extends PureComponent {
           const translate = this.getTranslateValue(i);
           return (
             <div
+              // eslint-disable-next-line react/no-array-index-key
               key={i}
               className={styles.item}
               onTouchStart={this.handleTouchStart}

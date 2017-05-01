@@ -1,11 +1,11 @@
-import './reset.css';
-
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import momentTimezone from 'moment-timezone';
 
-import AvailableTimes from './AvailableTimes.jsx';
+import AvailableTimes from './AvailableTimes';
 import styles from './test.css';
+
+import './reset.css';
 
 function dateAt(dayInWeek, hours, minutes) {
   const date = new Date();
@@ -65,12 +65,14 @@ class Test extends Component {
     this.setState({ selections });
   }
 
-  handleEventsRequested({ start, end, calendarId, callback }) {
-    console.log(calendarId, start, end);
+  // eslint-disable-next-line class-methods-use-this
+  handleEventsRequested({ start: s, end: e, calendarId, callback }) {
+    // eslint-disable-next-line no-console
+    console.log(calendarId, s, e);
     const events = [];
-    const date = momentTimezone.tz(start, TIME_ZONE);
+    const date = momentTimezone.tz(s, TIME_ZONE);
 
-    while (date.toDate() < end) {
+    while (date.toDate() < e) {
       const start = date.toDate();
       const end = date.add(1, 'hour').toDate();
       if (Math.random() > 0.98) {
@@ -94,6 +96,7 @@ class Test extends Component {
       }
     }
     const latency = Math.random() * 5000;
+    // eslint-disable-next-line no-console
     console.log(`Simulated latency for ${calendarId}`, latency);
     setTimeout(() => {
       callback(events);
@@ -128,13 +131,13 @@ class Test extends Component {
               <a href="/?fullscreen">
                 Go full screen
               </a>
-              <br/>
-              <br/>
+              <br />
+              <br />
               <button onClick={() => this.setState({ recurring: true })}>
                 Switch to recurring
               </button>
-              <br/>
-              <br/>
+              <br />
+              <br />
               <button onClick={() => this.setState({ recurring: false })}>
                 Switch to time specific
               </button>
@@ -157,4 +160,4 @@ class Test extends Component {
     );
   }
 }
-ReactDOM.render(<Test/>, document.getElementById('root'));
+ReactDOM.render(<Test />, document.getElementById('root'));

@@ -25,7 +25,7 @@ function weekEvents(week, items, timeZone) {
     const start = startMoment.toDate();
     result.push(getIncludedEvents(items || [], start, end));
   });
-  return result
+  return result;
 }
 
 export default class Week extends PureComponent {
@@ -34,7 +34,7 @@ export default class Week extends PureComponent {
     this.state = {
       dayEvents: weekEvents(week, events, timeZone),
       daySelections: weekEvents(week, initialSelections, timeZone),
-    }
+    };
     this.handleDayChange = this.handleDayChange.bind(this);
     this.handleDaysRef = this.handleDaysRef.bind(this);
     this.setDaysWidth = () => this.setState({
@@ -46,10 +46,6 @@ export default class Week extends PureComponent {
     window.addEventListener('resize', this.setDaysWidth);
   }
 
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.setDaysWidth);
-  }
-
   componentWillReceiveProps({ week, events, timeZone }) {
     if (events === this.props.events) {
       // nothing changed
@@ -58,6 +54,10 @@ export default class Week extends PureComponent {
     this.setState({
       dayEvents: weekEvents(week, events, timeZone),
     });
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.setDaysWidth);
   }
 
   handleDaysRef(element) {
@@ -72,8 +72,9 @@ export default class Week extends PureComponent {
     this.setState(({ daySelections }) => {
       const { onChange } = this.props;
       if (!onChange) {
-        return;
+        return undefined;
       }
+      // eslint-disable-next-line no-param-reassign
       daySelections[dayIndex] = selections;
       const flattened = flatten(daySelections);
       onChange(this.props.week, flattened);
@@ -81,6 +82,7 @@ export default class Week extends PureComponent {
     });
   }
 
+  // eslint-disable-next-line class-methods-use-this
   renderLines() {
     const result = [];
     for (let i = 0; i < 24; i++) {
@@ -93,7 +95,7 @@ export default class Week extends PureComponent {
           }}
         >
           <div className={styles.halfHour} />
-        </div>
+        </div>,
       );
     }
     return result;
@@ -101,7 +103,6 @@ export default class Week extends PureComponent {
 
   render() {
     const {
-      start,
       week,
       availableWidth,
       timeConvention,
@@ -138,6 +139,7 @@ export default class Week extends PureComponent {
               return;
             }
             this.alreadyScrolled = true;
+            // eslint-disable-next-line no-param-reassign
             element.scrollTop = HOUR_IN_PIXELS * 6.5;
           }}
         >
@@ -187,6 +189,7 @@ Week.propTypes = {
     end: PropTypes.instanceOf(Date),
   })),
   onChange: PropTypes.func,
+  // eslint-disable-next-line react/forbid-prop-types
   week: PropTypes.object.isRequired,
   recurring: PropTypes.bool,
 };

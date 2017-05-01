@@ -13,15 +13,15 @@ import weekAt from './weekAt';
 
 const leftArrowSvg = (
   <svg height="24" viewBox="0 0 24 24" width="24">
-    <path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"/>
-    <path d="M0-.5h24v24H0z" fill="none"/>
+    <path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z" />
+    <path d="M0-.5h24v24H0z" fill="none" />
   </svg>
 );
 
 const rightArrowSvg = (
   <svg height="24" viewBox="0 0 24 24" width="24">
-    <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/>
-    <path d="M0-.25h24v24H0z" fill="none"/>
+    <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z" />
+    <path d="M0-.25h24v24H0z" fill="none" />
   </svg>
 );
 
@@ -86,20 +86,14 @@ export default class AvailableTimes extends PureComponent {
       timeZone,
       onEventsRequested,
       onChange: () => {
-        this.setState(({ weeks, currentWeekIndex }) => {
-          return {
-            events: this.eventsStore.get(weeks[currentWeekIndex].start),
-          };
-        });
-      }
+        this.setState(({ weeks, currentWeekIndex }) => ({
+          events: this.eventsStore.get(weeks[currentWeekIndex].start),
+        }));
+      },
     });
     this.setState({
       weeks: this.expandWeeks(this.state.weeks, 0),
     });
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.handleWindowResize);
   }
 
   componentWillReceiveProps({ recurring }) {
@@ -116,10 +110,8 @@ export default class AvailableTimes extends PureComponent {
     this.triggerOnChange();
   }
 
-  handleWindowResize() {
-    this.setState({
-      availableWidth: this.ref.offsetWidth,
-    });
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleWindowResize);
   }
 
   setRef(element) {
@@ -132,6 +124,12 @@ export default class AvailableTimes extends PureComponent {
     });
   }
 
+  handleWindowResize() {
+    this.setState({
+      availableWidth: this.ref.offsetWidth,
+    });
+  }
+
   triggerOnChange() {
     const { onChange, recurring, timeZone, weekStartsOn } = this.props;
     const newSelections = flatten(this.selections);
@@ -139,7 +137,7 @@ export default class AvailableTimes extends PureComponent {
       if (recurring) {
         const startingFirstWeek = newSelections.filter(({ start }) =>
           start < this.state.weeks[0].end);
-        onChange(startingFirstWeek.map((selection) =>
+        onChange(startingFirstWeek.map(selection =>
           makeRecurring(selection, timeZone, weekStartsOn)));
       } else {
         onChange(newSelections);
@@ -149,12 +147,10 @@ export default class AvailableTimes extends PureComponent {
   }
 
   handleWeekChange(week, weekSelections) {
-    this.setState(({ selections }) => {
-      this.selections[week.start] = weekSelections;
-      const newSelections = this.triggerOnChange();
-      return {
-        selections: newSelections,
-      };
+    this.selections[week.start] = weekSelections;
+    const newSelections = this.triggerOnChange();
+    this.setState({
+      selections: newSelections,
     });
   }
 
@@ -191,13 +187,12 @@ export default class AvailableTimes extends PureComponent {
 
   move(increment) {
     this.setState(({
-      selectedCalendars,
       currentWeekIndex,
       weeks,
     }) => {
       const nextIndex = currentWeekIndex + increment;
       if (nextIndex < 0) {
-        return;
+        return undefined;
       }
       return {
         weeks: this.expandWeeks(weeks, nextIndex),
@@ -280,7 +275,7 @@ export default class AvailableTimes extends PureComponent {
             >
               {weeks.map((week, i) => {
                 if ((recurring || Math.abs(i - currentWeekIndex) > 1) && i !== 0) {
-                  return <span key={week.start}/>;
+                  return <span key={week.start} />;
                 }
                 return (
                   <Week

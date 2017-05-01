@@ -27,7 +27,7 @@ export default class Day extends PureComponent {
     this.handleSizeChangeStart = this.handleItemModification.bind(this, 'end');
     this.handleMoveStart = this.handleItemModification.bind(this, 'both');
     this.handleDelete = this.handleDelete.bind(this);
-    this.handleMouseTargetRef = (element) => this.mouseTargetRef = element;
+    this.handleMouseTargetRef = element => (this.mouseTargetRef = element);
   }
 
   findSelectionAt(date) {
@@ -41,12 +41,13 @@ export default class Day extends PureComponent {
         return true;
       }
     }
+    return undefined;
   }
 
   relativeY(pageY, rounding = ROUND_TO_NEAREST_MINS) {
     const { top } = this.mouseTargetRef.getBoundingClientRect();
     const realY = pageY - top;
-    const snapTo = rounding / 60 * HOUR_IN_PIXELS;
+    const snapTo = rounding / (60 * HOUR_IN_PIXELS);
     return Math.floor(realY / snapTo) * snapTo;
   }
 
@@ -94,7 +95,7 @@ export default class Day extends PureComponent {
     this.touch.currentX = e.touches[0].pageX;
   }
 
-  handleTouchEnd(e) {
+  handleTouchEnd() {
     const { startY, currentY, startX, currentX } = this.touch;
     if (
       Math.abs(startX - (currentX || startX)) < 20 &&
@@ -121,17 +122,15 @@ export default class Day extends PureComponent {
       // slot is less than 30 mins
       return;
     }
-    this.setState(({ selections }) => {
-      return {
-        edge: 'end',
-        index: selections.length,
-        lastKnownPosition: position,
-        selections: selections.concat([{
-          start: dateAtPosition,
-          end,
-        }]),
-      };
-    });
+    this.setState(({ selections }) => ({
+      edge: 'end',
+      index: selections.length,
+      lastKnownPosition: position,
+      selections: selections.concat([{
+        start: dateAtPosition,
+        end,
+      }]),
+    }));
   }
 
   handleMouseMove({ pageY }) {
@@ -156,7 +155,7 @@ export default class Day extends PureComponent {
       } else {
         // stretch element
         const newEnd = toDate(date, Math.max(positionInDay(
-          date, selection.start, timeZone) + HOUR_IN_PIXELS / 2, position), timeZone);
+          date, selection.start, timeZone) + (HOUR_IN_PIXELS / 2), position), timeZone);
         if (hasOverlap(selections, selection.start, newEnd, index)) {
           // Collision! Let
           return {};
@@ -167,7 +166,7 @@ export default class Day extends PureComponent {
         lastKnownPosition: position,
         selections,
       };
-    })
+    });
   }
 
   handleMouseUp() {
@@ -198,8 +197,6 @@ export default class Day extends PureComponent {
       >
         {events.map(({
           allDay,
-          foregroundColor,
-          backgroundColor,
           start,
           end,
           title,
@@ -207,6 +204,7 @@ export default class Day extends PureComponent {
           offset,
         }, i) => !allDay && (
           <TimeSlot
+            // eslint-disable-next-line react/no-array-index-key
             key={i + title}
             timeConvention={timeConvention}
             timeZone={timeZone}
@@ -214,8 +212,6 @@ export default class Day extends PureComponent {
             date={date}
             start={start}
             end={end}
-            foregroundColor={foregroundColor}
-            backgroundColor={backgroundColor}
             title={title}
             width={width}
             offset={offset}
@@ -235,6 +231,7 @@ export default class Day extends PureComponent {
         />
         {selections.map(({ start, end }, i) => (
           <TimeSlot
+            // eslint-disable-next-line react/no-array-index-key
             key={i}
             availableWidth={availableWidth}
             timeConvention={timeConvention}
@@ -268,8 +265,6 @@ Day.propTypes = {
     start: PropTypes.instanceOf(Date),
     end: PropTypes.instanceOf(Date),
     title: PropTypes.string,
-    foregroundColor: PropTypes.string,
-    backgroundColor: PropTypes.string,
     width: PropTypes.number,
     offset: PropTypes.number,
   })),

@@ -12,7 +12,7 @@ export default class TimeSlot extends PureComponent {
     this.handleResizerMouseDown = this.handleResizerMouseDown.bind(this);
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
-    this.preventMove = (e) => e.stopPropagation();
+    this.preventMove = e => e.stopPropagation();
   }
 
   componentDidMount() {
@@ -74,8 +74,6 @@ export default class TimeSlot extends PureComponent {
       end,
       availableWidth,
       frozen,
-      foregroundColor,
-      backgroundColor,
       width,
       offset,
       timeZone,
@@ -115,6 +113,7 @@ export default class TimeSlot extends PureComponent {
     }
 
     return (
+      // eslint-disable-next-line jsx-a11y/no-static-element-interactions
       <div
         className={classes.join(' ')}
         style={style}
@@ -161,8 +160,6 @@ TimeSlot.propTypes = {
   end: PropTypes.instanceOf(Date).isRequired,
   title: PropTypes.string,
   frozen: PropTypes.bool,
-  foregroundColor: PropTypes.string,
-  backgroundColor: PropTypes.string,
 
   onSizeChangeStart: PropTypes.func,
   onMoveStart: PropTypes.func,
@@ -171,4 +168,4 @@ TimeSlot.propTypes = {
   // Props used to signal overlap
   width: PropTypes.number,
   offset: PropTypes.number,
-}
+};

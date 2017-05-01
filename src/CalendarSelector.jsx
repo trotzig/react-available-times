@@ -1,17 +1,19 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 
 import styles from './CalendarSelector.css';
 
 const downIconSvg = (
   <svg height="24" viewBox="0 0 24 24" width="24">
-    <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z"/>
-    <path d="M0-.75h24v24H0z" fill="none"/>
+    <path d="M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z" />
+    <path d="M0-.75h24v24H0z" fill="none" />
   </svg>
 );
 
 const checkmarkSvg = (
   <svg height="24" viewBox="0 0 24 24" width="24">
-    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
   </svg>
 );
 
@@ -24,7 +26,7 @@ export default class CalendarSelector extends PureComponent {
     this.toggleOpen = this.toggleOpen.bind(this);
     this.check = this.toggleCalendar.bind(this, true);
     this.uncheck = this.toggleCalendar.bind(this, false);
-    this.renderCalendar = this.renderCalendar.bind(this)
+    this.renderCalendar = this.renderCalendar.bind(this);
   }
 
   toggleOpen(event) {
@@ -59,6 +61,7 @@ export default class CalendarSelector extends PureComponent {
     const checked = selectedCalendars.has(id);
 
     return (
+      // eslint-disable-next-line jsx-a11y/label-has-for
       <label
         key={id}
         className={styles.calendar}
@@ -95,8 +98,6 @@ export default class CalendarSelector extends PureComponent {
   render() {
     const {
       calendars,
-      selectedCalendars,
-      onChange,
     } = this.props;
 
     return (
@@ -124,3 +125,9 @@ export default class CalendarSelector extends PureComponent {
     );
   }
 }
+
+CalendarSelector.propTypes = {
+  calendars: PropTypes.arrayOf(PropTypes.object).isRequired,
+  selectedCalendars: PropTypes.instanceOf(Set).isRequired,
+  onChange: PropTypes.func.isRequired,
+};

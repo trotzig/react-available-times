@@ -29,7 +29,7 @@ it('uses 24h time convention', () => {
           end: start.add(1, 'hour').toDate(),
         },
       ]}
-    />
+    />,
   );
   expect(component.find(Ruler).first().text()).toMatch(/12.*13.*14/);
   expect(component.text()).toMatch(/13:00-14:00/);
@@ -37,8 +37,8 @@ it('uses 24h time convention', () => {
 
 it('has days from sunday-saturday', () => {
   const week = mount(<AvailableTimes />).find(Week).first();
-  expect(week.text()).toMatch(/Sun.*Mon.*Tue/)
-  expect(week.text()).not.toMatch(/Sat.*Sun/)
+  expect(week.text()).toMatch(/Sun.*Mon.*Tue/);
+  expect(week.text()).not.toMatch(/Sat.*Sun/);
 });
 
 it('asks for events as part of mounting', (done) => {
@@ -51,7 +51,7 @@ it('asks for events as part of mounting', (done) => {
         { id: 'c', selected: false },
       ]}
       onEventsRequested={handleEventsRequested}
-    />
+    />,
   );
   setTimeout(() => {
     // fetching is deferred in the component so we need to do the same thing
@@ -70,9 +70,9 @@ it('asks for events as part of mounting', (done) => {
 });
 
 it('has days monday-sunday when weekStartsOn=monday', () => {
-  const week = mount(<AvailableTimes weekStartsOn='monday' />).find(Week).first();
-  expect(week.text()).not.toMatch(/Sun.*Mon.*Tue/)
-  expect(week.text()).toMatch(/Sat.*Sun/)
+  const week = mount(<AvailableTimes weekStartsOn="monday" />).find(Week).first();
+  expect(week.text()).not.toMatch(/Sun.*Mon.*Tue/);
+  expect(week.text()).toMatch(/Sat.*Sun/);
 });
 
 it('renders a calendar selector when calendars is present', () => {
@@ -91,7 +91,7 @@ it('uses 12h time convention when timeConvention=12h', () => {
           end: start.add(1, 'hour').toDate(),
         },
       ]}
-    />
+    />,
   );
   expect(component.find(Ruler).first().text()).toMatch(/12pm.*1pm.*2pm/);
   expect(component.text()).toMatch(/1:00pm-2:00pm/);
@@ -110,7 +110,7 @@ it('can display in a different timeZone', () => {
           end: start.add(1, 'hour').toDate(),
         },
       ]}
-    />
+    />,
   );
 
   expect(component.text()).toMatch(/0-1/);
@@ -122,7 +122,7 @@ it('can be in recurring mode', () => {
   const weekTitle = weekAt('sunday', new Date(), 'Europe/Stockholm').interval;
   // First, just make sure that we're making the right assumption about the
   // title:
-  expect(mount(<AvailableTimes/>).text()).toMatch(weekTitle);
+  expect(mount(<AvailableTimes />).text()).toMatch(weekTitle);
 
   const component = mount(<AvailableTimes recurring />);
   expect(component.text()).not.toMatch(weekTitle);

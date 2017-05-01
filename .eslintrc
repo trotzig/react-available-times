@@ -13,6 +13,7 @@
       "devDependencies": true,
       "optionalDependencies": true,
       "peerDependencies": true
-    }]
+    }],
+    "react/require-default-props": 0
   }
 }
