@@ -41,6 +41,34 @@ it('has days from sunday-saturday', () => {
   expect(week.text()).not.toMatch(/Sat.*Sun/)
 });
 
+it('asks for events as part of mounting', (done) => {
+  const handleEventsRequested = jest.fn();
+  mount(
+    <AvailableTimes
+      calendars={[
+        { id: 'a', selected: true },
+        { id: 'b', selected: true },
+        { id: 'c', selected: false },
+      ]}
+      onEventsRequested={handleEventsRequested}
+    />
+  );
+  setTimeout(() => {
+    // fetching is deferred in the component so we need to do the same thing
+    // here.
+    expect(handleEventsRequested).toHaveBeenCalledWith(expect.objectContaining({
+      calendarId: 'a',
+    }));
+    expect(handleEventsRequested).toHaveBeenCalledWith(expect.objectContaining({
+      calendarId: 'b',
+    }));
+    expect(handleEventsRequested).not.toHaveBeenCalledWith(expect.objectContaining({
+      calendarId: 'c',
+    }));
+    done();
+  });
+});
+
 it('has days monday-sunday when weekStartsOn=monday', () => {
   const week = mount(<AvailableTimes weekStartsOn='monday' />).find(Week).first();
   expect(week.text()).not.toMatch(/Sun.*Mon.*Tue/)
