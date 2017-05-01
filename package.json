@@ -12,6 +12,7 @@
   "scripts": {
     "clean": "rimraf dist",
     "build": "npm run clean && webpack",
+    "lint": "eslint .",
     "start-test": "node src/testServer.js",
     "prepublish": "npm run test && npm run build",
     "test": "jest"
@@ -40,6 +41,12 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "css-loader": "^0.28.0",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jest": "^19.0.1",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.10.3",
     "express": "^4.15.2",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^19.0.2",
