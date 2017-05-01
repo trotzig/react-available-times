@@ -79,7 +79,7 @@ class Test extends Component {
         events.push({
           start: startString,
           end: startM.date(startM.date() + 1).format('YYYY-MM-DD'),
-          title: 'All day',
+          title: `All day ${calendarId}`,
           allDay: true,
           calendarId,
         });
@@ -88,12 +88,16 @@ class Test extends Component {
         events.push({
           start: start.toISOString(),
           end: end.toISOString(),
-          title: 'Event',
+          title: `Event ${calendarId}`,
           calendarId,
         });
       }
     }
-    callback(events);
+    const latency = Math.random() * 5000;
+    console.log(`Simulated latency for ${calendarId}`, latency);
+    setTimeout(() => {
+      callback(events);
+    }, latency);
   }
 
   render() {
