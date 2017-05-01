@@ -30,7 +30,8 @@ function groupEvents(events) {
       currentGroup = undefined;
     }
     if (currentGroup) {
-      const existingCol = currentGroup.columns.find(column => column.some(({ end }) => end <= event.start));
+      const existingCol = currentGroup.columns.find(
+        column => column.some(({ end }) => end <= event.start));
       if (existingCol) {
         existingCol.push(event);
       } else {
