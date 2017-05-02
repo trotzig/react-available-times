@@ -41,7 +41,7 @@ const calendars = [
 
 const initialSelections = [
   {
-    start: dateAt(1, 12, 0),
+    start: dateAt(1, 12, 15),
     end: dateAt(1, 14, 0),
   },
   {
@@ -95,7 +95,7 @@ class Test extends Component {
         });
       }
     }
-    const latency = Math.random() * 2000;
+    const latency = Math.random() * 5000;
     // eslint-disable-next-line no-console
     console.log(`Simulated latency for ${calendarId}`, latency);
     setTimeout(() => {

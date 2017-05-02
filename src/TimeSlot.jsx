@@ -69,7 +69,6 @@ export default class TimeSlot extends PureComponent {
       date,
       start,
       end,
-      availableWidth,
       frozen,
       width,
       offset,
@@ -81,18 +80,6 @@ export default class TimeSlot extends PureComponent {
     const bottom = positionInDay(date, end, timeZone);
 
     const height = bottom - top - (frozen ? BOTTOM_GAP : 0);
-
-    const titleClasses = [styles.title];
-    const titleStyle = {
-      lineHeight: `${(MINUTE_IN_PIXELS * 30) - (BOTTOM_GAP / 2)}px`, // two lines of text in an hour
-    };
-    const realAvailableWidth = availableWidth * (width || 1);
-    if (height > realAvailableWidth && realAvailableWidth < 60) {
-      titleClasses.push(styles.flip);
-      titleStyle.width = height;
-      titleStyle.marginLeft = -((height / 2) - 15);
-      titleStyle.marginTop = -15;
-    }
 
     const classes = [styles.component];
     if (frozen) {
@@ -121,8 +108,11 @@ export default class TimeSlot extends PureComponent {
         onClick={frozen || !IS_TOUCH_DEVICE ? undefined : this.handleDelete}
       >
         <div
-          className={titleClasses.join(' ')}
-          style={titleStyle}
+          className={styles.title}
+          style={{
+            // two lines of text in an hour
+            lineHeight: `${(MINUTE_IN_PIXELS * 30) - (BOTTOM_GAP / 2)}px`,
+          }}
         >
           {title && (
             <span>
@@ -155,8 +145,6 @@ export default class TimeSlot extends PureComponent {
 }
 
 TimeSlot.propTypes = {
-  availableWidth: PropTypes.number.isRequired,
-
   timeConvention: PropTypes.oneOf(['12h', '24h']),
   timeZone: PropTypes.string.isRequired,
 

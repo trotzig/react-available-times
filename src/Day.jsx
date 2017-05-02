@@ -182,7 +182,7 @@ export default class Day extends PureComponent {
   }
 
   render() {
-    const { availableWidth, date, events, timeConvention, timeZone } = this.props;
+    const { date, events, timeConvention, timeZone } = this.props;
     const { selections, index } = this.state;
 
     const classes = [styles.component];
@@ -208,7 +208,6 @@ export default class Day extends PureComponent {
             key={i + title}
             timeConvention={timeConvention}
             timeZone={timeZone}
-            availableWidth={availableWidth}
             date={date}
             start={start}
             end={end}
@@ -233,7 +232,6 @@ export default class Day extends PureComponent {
           <TimeSlot
             // eslint-disable-next-line react/no-array-index-key
             key={i}
-            availableWidth={availableWidth}
             timeConvention={timeConvention}
             timeZone={timeZone}
             date={date}
@@ -251,7 +249,6 @@ export default class Day extends PureComponent {
 }
 
 Day.propTypes = {
-  availableWidth: PropTypes.number.isRequired,
   timeConvention: PropTypes.oneOf(['12h', '24h']),
   timeZone: PropTypes.string.isRequired,
 
