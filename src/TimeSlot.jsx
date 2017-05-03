@@ -95,7 +95,7 @@ export default class TimeSlot extends PureComponent {
     };
 
     if (typeof width !== 'undefined' && typeof offset !== 'undefined') {
-      style.width = `${width * 92}%`;
+      style.width = `calc(${width * 100}% - 5px)`;
       style.left = `${offset * 100}%`;
     }
 
