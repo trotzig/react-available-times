@@ -79,7 +79,10 @@ export default class TimeSlot extends PureComponent {
     const top = positionInDay(date, start, timeZone);
     const bottom = positionInDay(date, end, timeZone);
 
-    const height = bottom - top - (frozen ? BOTTOM_GAP : 0);
+    const height = Math.max(
+      bottom - top - (frozen ? BOTTOM_GAP : 0),
+      1,
+    );
 
     const classes = [styles.component];
     if (frozen) {
