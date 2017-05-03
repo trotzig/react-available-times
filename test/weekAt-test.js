@@ -131,3 +131,14 @@ it('can start on a monday', () => {
     },
   ]);
 });
+
+it('picks the right week when weekStartsOn=monday', () => {
+  const week = weekAt(
+    'monday',
+    new Date('Sun Apr 2 2017 12:00:00 GMT+0200'),
+    'Europe/Stockholm',
+  );
+  expect(week.interval).toEqual('Mar 27 – Apr 2');
+  expect(week.start).toEqual(new Date('Mon Mar 27 2017 00:00:00 GMT+0200'));
+  expect(week.end).toEqual(new Date('Mon Apr 3 2017 00:00:00 GMT+0200'));
+});

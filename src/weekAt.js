@@ -8,6 +8,11 @@ export default function weekAt(weekStartsOn, atDate, timeZone) {
   }
   // Create a copy so that we're not mutating the original
   const date = momentTimezone.tz(atDate, timeZone);
+  if (date.day() === 0 && weekStartsOn === 'monday') {
+    // We want sunday to be the last day here, so go back to saturday to make
+    // sure we end up with the right week interval.
+    date.add(-1, 'day');
+  }
 
   // Set the clock to noon so that calculations to get following/previous days
   // work despite daylight savings time. We have to use local time (as opposed
