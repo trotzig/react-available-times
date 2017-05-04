@@ -42,11 +42,6 @@ import AvailableTimes from 'react-available-times';
   initialSelections={[
     { start: aDateObject, end: anotherDateObject }
   ]}
-  events={[
-    { start: aDateObject, end: anotherDateObject, title: 'Some title', calendarId: 'work' },
-    { start: aDateObject, end: anotherDateObject, title: 'Some other title', calendarId: 'private' }
-    { start: aDateObject, end: anotherDateObject, title: 'All day', allDay: true, calendarId: 'private' }
-  ]}
   height={400}
   recurring={false}
 />
@@ -62,14 +57,15 @@ None of the props are required.
 - `onChange`: a function called whenever a selection is made. Receives an array
   of objects, each with a `start` and an `end` date.
 - `onEventsRequested`: a function called when new weeks are loaded. Hook in to
-  this function to continuously feed events to the calendar view.
+  this function to continuously feed events to the calendar view. The `callback`
+  provided should be called when you have fetched events for the particular
+  `calendarId`. Call the callback with an array of objects, where each object
+  has a `start` and an `end` date, plus a `title` property. Can have a
+  `calendarId` property tying them to a calendar, inheriting the foreground and
+  background color. Can also have a `allDay` property, in which case they are
+  rendered at the top.
 - `initialSelections`: an array of pre-filled selections. Each object in the
   array needs a `start` and an `end` date.
-- `events`: calendar events, usually pulled from a different source (e.g. a
-  Google Calendar). Each object needs a `start` and an `end` date, plus a
-  `title` property. Can have a `calendarId` property tying them to a calendar,
-  inheriting the foreground and background color. Can also have a `allDay`
-  property, in which case they are rendered at the top.
 - `height`: a string or a number controlling the `height` of the component.
   E.g. `'100%'`, `350`, `'100vh'`. If left out, the full height of the screen
   will be used.
