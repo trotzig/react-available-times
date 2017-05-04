@@ -14,10 +14,17 @@ export default function makeRecurring({ start, end }, timeZone, weekStartsOn) {
     .minute(0)
     .seconds(0)
     .milliseconds(0);
+
+  // To avoid DST issues, move to the first week of the year (which should be
+  // DST free).
+  weekStart.week(0);
+  const startM = momentTimezone.tz(start, timeZone).week(0);
+  const endM = momentTimezone.tz(end, timeZone).week(0);
+
   weekStart.day(weekStartsOn === 'monday' ? 1 : 0);
   const weekStartMs = weekStart.toDate().getTime();
-  let startMins = (start.getTime() - weekStartMs) / 60000;
-  let endMins = (end.getTime() - weekStartMs) / 60000;
+  let startMins = (startM.toDate().getTime() - weekStartMs) / 60000;
+  let endMins = (endM.toDate().getTime() - weekStartMs) / 60000;
 
   if (startMins < 0) {
     // This happens when the event starts on a sunday, but monday is set to
