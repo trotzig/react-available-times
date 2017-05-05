@@ -6,6 +6,15 @@ function compareDates(a, b) {
   return a.start < b.start ? -1 : 1;
 }
 
+function find(arr, func) {
+  for (let i = 0; i < arr.length; i++) {
+    if (func(arr[i])) {
+      return arr[i];
+    }
+  }
+  return undefined;
+}
+
 function groupEvents(events) {
   const groups = [];
   events.forEach((event) => {
@@ -30,8 +39,8 @@ function groupEvents(events) {
       currentGroup = undefined;
     }
     if (currentGroup) {
-      const existingCol = currentGroup.columns.find(
-        column => column.some(({ end }) => end <= event.start));
+      const existingCol = find(currentGroup.columns,
+        column => !!find(column, ({ end }) => end <= event.start));
       if (existingCol) {
         existingCol.push(event);
       } else {
