@@ -33,17 +33,6 @@ export default class EventsStore {
     this.onChange();
   }
 
-  colorize(events) {
-    // We're assuming that it's safe to mutate events here (they should have been
-    // duped by decorateEvents already).
-    events.forEach((event) => {
-      const { foregroundColor, backgroundColor } =
-        this.calendarsById[event.calendarId];
-      Object.assign(event, { foregroundColor, backgroundColor });
-    });
-    return events;
-  }
-
   filterVisible(events) {
     return events.filter(({ calendarId }) => this.selectedCalendars.has(calendarId));
   }
@@ -57,7 +46,7 @@ export default class EventsStore {
           return decoratedEvents;
         }
         timespan.decoratedEvents =
-          this.colorize(decorateEvents(this.filterVisible(events), this.timeZone));
+          decorateEvents(this.filterVisible(events), this.timeZone);
         return timespan.decoratedEvents;
       }
     }
