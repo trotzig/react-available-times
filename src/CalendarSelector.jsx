@@ -39,11 +39,11 @@ export default class CalendarSelector extends PureComponent {
       selectedCalendars,
       onChange,
     } = this.props;
-    const result = new Set(selectedCalendars);
+    const result = selectedCalendars.slice(0);
     if (visible) {
-      result.add(event.target.value);
+      result.push(event.target.value);
     } else {
-      result.delete(event.target.value);
+      result.splice(result.indexOf(event.target.value), 1);
     }
     onChange(result);
   }
@@ -58,7 +58,7 @@ export default class CalendarSelector extends PureComponent {
       selectedCalendars,
     } = this.props;
 
-    const checked = selectedCalendars.has(id);
+    const checked = selectedCalendars.indexOf(id) !== -1;
 
     return (
       // eslint-disable-next-line jsx-a11y/label-has-for
@@ -128,6 +128,6 @@ export default class CalendarSelector extends PureComponent {
 
 CalendarSelector.propTypes = {
   calendars: PropTypes.arrayOf(PropTypes.object).isRequired,
-  selectedCalendars: PropTypes.instanceOf(Set).isRequired,
+  selectedCalendars: PropTypes.arrayOf(PropTypes.string).isRequired,
   onChange: PropTypes.func.isRequired,
 };

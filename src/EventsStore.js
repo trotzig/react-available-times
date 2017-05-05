@@ -7,8 +7,8 @@ export default class EventsStore {
     onEventsRequested,
     onChange,
   }) {
-    this.selectedCalendars = new Set(
-      calendars.filter(({ selected }) => selected).map(({ id }) => id));
+    this.selectedCalendars =
+      calendars.filter(({ selected }) => selected).map(({ id }) => id);
     this.timeZone = timeZone;
     this.calendarsById = {};
     calendars.forEach((calendar) => {
@@ -34,7 +34,8 @@ export default class EventsStore {
   }
 
   filterVisible(events) {
-    return events.filter(({ calendarId }) => this.selectedCalendars.has(calendarId));
+    return events.filter(({ calendarId }) =>
+      this.selectedCalendars.indexOf(calendarId) !== -1);
   }
 
   get(atTime) {
@@ -58,7 +59,7 @@ export default class EventsStore {
       start,
       end,
       events: [],
-      calendarIds: new Set(),
+      calendarIds: [],
     });
     this.fetchEvents();
   }
@@ -66,7 +67,7 @@ export default class EventsStore {
   fetchEvents() {
     this.selectedCalendars.forEach((calendarId) => {
       this.timespans.forEach((timespan) => {
-        if (timespan.calendarIds.has(calendarId)) {
+        if (timespan.calendarIds.indexOf(calendarId) !== -1) {
           // already fetched for this calendar
           return;
         }
@@ -81,7 +82,7 @@ export default class EventsStore {
             this.onChange();
           },
         });
-        timespan.calendarIds.add(calendarId);
+        timespan.calendarIds.push(calendarId);
       });
     });
   }

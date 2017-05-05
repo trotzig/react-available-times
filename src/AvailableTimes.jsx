@@ -47,8 +47,8 @@ export default class AvailableTimes extends PureComponent {
     timeZone,
   }) {
     super();
-    const selectedCalendars = new Set(
-      calendars.filter(({ selected }) => selected).map(({ id }) => id));
+    const selectedCalendars =
+      calendars.filter(({ selected }) => selected).map(({ id }) => id);
 
     this.state = {
       weeks: [],
