@@ -112,6 +112,7 @@ export default class AvailableTimes extends PureComponent {
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleWindowResize);
+    this.eventsStore.cancel();
   }
 
   setRef(element) {

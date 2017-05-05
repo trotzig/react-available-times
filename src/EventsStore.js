@@ -19,6 +19,10 @@ export default class EventsStore {
     this.timespans = [];
   }
 
+  cancel() {
+    this.onChange = () => {};
+  }
+
   updateSelectedCalendars(selectedCalendars) {
     this.selectedCalendars = selectedCalendars;
     this.fetchEvents();
