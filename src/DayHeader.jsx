@@ -37,6 +37,7 @@ export default class DayHeader extends Component {
 
   render() {
     const {
+      availableWidth,
       events,
       hideDates,
     } = this.props;
@@ -44,6 +45,9 @@ export default class DayHeader extends Component {
     return (
       <div
         className={styles.component}
+        style={{
+          width: availableWidth,
+        }}
       >
         <div className={styles.day}>
           {!hideDates && this.text()}

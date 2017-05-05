@@ -182,7 +182,7 @@ export default class Day extends PureComponent {
   }
 
   render() {
-    const { date, events, timeConvention, timeZone } = this.props;
+    const { availableWidth, date, events, timeConvention, timeZone } = this.props;
     const { selections, index } = this.state;
 
     const classes = [styles.component];
@@ -193,7 +193,10 @@ export default class Day extends PureComponent {
     return (
       <div
         className={classes.join(' ')}
-        style={{ height: HOUR_IN_PIXELS * 24 }}
+        style={{
+          height: HOUR_IN_PIXELS * 24,
+          width: availableWidth,
+        }}
       >
         {events.map(({
           allDay,
@@ -249,6 +252,7 @@ export default class Day extends PureComponent {
 }
 
 Day.propTypes = {
+  availableWidth: PropTypes.number.isRequired,
   timeConvention: PropTypes.oneOf(['12h', '24h']),
   timeZone: PropTypes.string.isRequired,
 

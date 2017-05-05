@@ -153,6 +153,7 @@ export default class Week extends PureComponent {
             <Ruler timeConvention={timeConvention} />
             {week.days.map((day, i) => (
               <Day
+                availableWidth={(availableWidth - RULER_WIDTH_IN_PIXELS) / 7}
                 timeConvention={timeConvention}
                 timeZone={timeZone}
                 index={i}
