@@ -107,7 +107,7 @@ export default class Slider extends PureComponent {
               onTouchEnd={this.handleTouchEnd}
               style={{
                 transform: `translateX(${translate}%)`,
-                webkitTransform: `translateX(${translate}%)`,
+                WebkitTransform: `translateX(${translate}%)`,
               }}
             >
               {child}

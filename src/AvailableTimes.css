@@ -47,7 +47,7 @@
   padding: 2px 5px;
   cursor: pointer;
   fill: #666;
-  min-width: auto;
+  flex-shrink: 0;
 }
 
 :local(.button):focus {
@@ -64,14 +64,16 @@
 
 :local(.interval) {
   overflow: hidden;
-  width: 100%;
+  flex-grow: 1;
   text-overflow: ellipsis;
   white-space: nowrap;
+  flex-basis: 50%;
 }
 
 :local(.calendarSelector) {
-  width: 100%;
+  flex-grow: 1;
   text-align: right;
+  flex-basis: 50%;
 }
 
 :local(.home) {
