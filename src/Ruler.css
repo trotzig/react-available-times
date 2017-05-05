@@ -1,5 +1,7 @@
 :local(.component) {
   flex-shrink: 0;
+  position: relative;
+  background-color: #fff;
 }
 :local(.hour) {
   text-align: right;
