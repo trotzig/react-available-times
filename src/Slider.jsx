@@ -46,6 +46,9 @@ export default class Slider extends PureComponent {
   }
 
   handleRef(element) {
+    if (!element) {
+      return;
+    }
     this.width = element.offsetWidth;
   }
 
