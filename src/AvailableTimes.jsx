@@ -239,9 +239,6 @@ export default class AvailableTimes extends PureComponent {
         >
           {!recurring &&
             <div className={styles.toolbar}>
-              <div className={styles.interval}>
-                {weeks[currentWeekIndex].interval}
-              </div>
               <div className={styles.buttons}>
                 <button
                   className={styles.button}
@@ -256,6 +253,9 @@ export default class AvailableTimes extends PureComponent {
                 >
                   {rightArrowSvg}
                 </button>
+              </div>
+              <div className={styles.interval}>
+                {weeks[currentWeekIndex].interval}
               </div>
               {calendars && calendars.length > 0 &&
                 <div className={styles.calendarSelector}>
