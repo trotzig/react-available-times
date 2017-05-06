@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 
-import { HOUR_IN_PIXELS, IS_TOUCH_DEVICE } from './Constants';
+import { HOUR_IN_PIXELS, IS_TOUCH_DEVICE, MINUTE_IN_PIXELS } from './Constants';
 import TimeSlot from './TimeSlot';
 import hasOverlap from './hasOverlap';
 import inSameDay from './inSameDay';
@@ -76,6 +76,7 @@ export default class Day extends PureComponent {
             edge,
             index: i,
             lastKnownPosition: position,
+            minLengthInMinutes: 30,
           };
         }
       }
@@ -126,6 +127,7 @@ export default class Day extends PureComponent {
       edge: 'end',
       index: selections.length,
       lastKnownPosition: position,
+      minLengthInMinutes: 60,
       selections: selections.concat([{
         start: dateAtPosition,
         end,
@@ -139,8 +141,9 @@ export default class Day extends PureComponent {
     }
     const { date, timeZone } = this.props;
     const position = this.relativeY(pageY);
-    this.setState(({ selections, edge, index, lastKnownPosition }) => {
+    this.setState(({ minLengthInMinutes, selections, edge, index, lastKnownPosition }) => {
       const selection = selections[index];
+      let newMinLength = minLengthInMinutes;
       if (edge === 'both') {
         // move element
         const diff = toDate(date, position, timeZone).getTime() -
@@ -154,8 +157,13 @@ export default class Day extends PureComponent {
         selection.end = newEnd;
       } else {
         // stretch element
-        const newEnd = toDate(date, Math.max(positionInDay(
-          date, selection.start, timeZone) + (HOUR_IN_PIXELS / 2), position), timeZone);
+        const startPos = positionInDay(date, selection.start, timeZone);
+        const minPos = startPos + (minLengthInMinutes * MINUTE_IN_PIXELS);
+        if (minPos < position) {
+          // We've exceeded 60 mins now, allow smaller
+          newMinLength = 30;
+        }
+        const newEnd = toDate(date, Math.max(minPos, position), timeZone);
         if (hasOverlap(selections, selection.start, newEnd, index)) {
           // Collision! Let
           return {};
@@ -164,6 +172,7 @@ export default class Day extends PureComponent {
       }
       return {
         lastKnownPosition: position,
+        minLengthInMinutes: newMinLength,
         selections,
       };
     });
@@ -177,6 +186,7 @@ export default class Day extends PureComponent {
       edge: undefined,
       index: undefined,
       lastKnownPosition: undefined,
+      minLengthInMinutes: undefined,
     });
     this.props.onChange(this.props.index, this.state.selections);
   }
