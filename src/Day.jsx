@@ -46,7 +46,7 @@ export default class Day extends PureComponent {
 
   relativeY(pageY, rounding = ROUND_TO_NEAREST_MINS) {
     const { top } = this.mouseTargetRef.getBoundingClientRect();
-    const realY = pageY - top;
+    const realY = pageY - top - document.body.scrollTop;
     const snapTo = (rounding / 60) * HOUR_IN_PIXELS;
     return Math.floor(realY / snapTo) * snapTo;
   }
