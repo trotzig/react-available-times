@@ -72,6 +72,15 @@
   white-space: nowrap;
 }
 
+:local(.intervalTouch) {
+  flex-shrink: 1;
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-left: 10px;
+}
+
 :local(.calendarSelector) {
   flex-shrink: 0;
   margin-left: 15px;
