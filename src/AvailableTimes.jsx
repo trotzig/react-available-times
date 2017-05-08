@@ -56,7 +56,7 @@ export default class AvailableTimes extends PureComponent {
       selectedCalendars,
       events: [],
       selections: initialSelections,
-      availableWidth: window.innerWidth,
+      availableWidth: 10,
     };
     this.selections = {};
     initialSelections.forEach((selection) => {

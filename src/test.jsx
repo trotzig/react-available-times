@@ -143,18 +143,20 @@ class Test extends Component {
               </button>
             </div>
           }
-          <AvailableTimes
-            timeConvention="24h"
-            timeZone={TIME_ZONE}
-            height={fullscreen ? undefined : 600}
-            calendars={calendars}
-            weekStartsOn="monday"
-            start={new Date()}
-            onChange={this.handleChange}
-            initialSelections={initialSelections}
-            onEventsRequested={this.handleEventsRequested}
-            recurring={recurring}
-          />
+          <div className={styles.main}>
+            <AvailableTimes
+              timeConvention="24h"
+              timeZone={TIME_ZONE}
+              height={fullscreen ? undefined : 600}
+              calendars={calendars}
+              weekStartsOn="monday"
+              start={new Date()}
+              onChange={this.handleChange}
+              initialSelections={initialSelections}
+              onEventsRequested={this.handleEventsRequested}
+              recurring={recurring}
+            />
+          </div>
         </div>
       </div>
     );

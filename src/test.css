@@ -4,11 +4,16 @@
   font-family: helvetica, arial, sans-serif;
   font-size: 12px;
   line-height: 1.2;
+  max-width: 100%;
 }
 
 :local(.intro) {
   width: 220px;
   padding: 20px;
+}
+
+:local(.main) {
+  flex-grow: 1;
 }
 
 :local(.selected) {
