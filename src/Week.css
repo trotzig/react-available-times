@@ -16,6 +16,7 @@
   position: relative;
   border-top: 1px solid #ccc;
   overflow: auto;
+  flex: 1 1 auto;
   -webkit-overflow-scrolling: touch;
 }
 
