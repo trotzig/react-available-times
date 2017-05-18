@@ -8,6 +8,7 @@ import EventsStore from './EventsStore';
 import Slider from './Slider';
 import Week from './Week';
 import makeRecurring from './makeRecurring';
+import normalizeRecurringSelections from './normalizeRecurringSelections';
 import styles from './AvailableTimes.css';
 import weekAt from './weekAt';
 
@@ -41,25 +42,29 @@ function flatten(selections) {
 
 export default class AvailableTimes extends PureComponent {
   constructor({
-    initialSelections = [],
     calendars = [],
-    weekStartsOn,
+    initialSelections = [],
+    recurring,
     timeZone,
+    weekStartsOn,
   }) {
     super();
     const selectedCalendars =
       calendars.filter(({ selected }) => selected).map(({ id }) => id);
 
+    const normalizedSelections = recurring ?
+      normalizeRecurringSelections(initialSelections, timeZone, weekStartsOn) :
+      initialSelections;
     this.state = {
       weeks: [],
       currentWeekIndex: 0,
       selectedCalendars,
       events: [],
-      selections: initialSelections,
+      selections: normalizedSelections,
       availableWidth: 10,
     };
     this.selections = {};
-    initialSelections.forEach((selection) => {
+    normalizedSelections.forEach((selection) => {
       const week = weekAt(weekStartsOn, selection.start, timeZone);
       const existing = this.selections[week.start] || [];
       existing.push(selection);
@@ -314,8 +319,14 @@ AvailableTimes.propTypes = {
   timeConvention: PropTypes.oneOf(['12h', '24h']),
   timeZone: PropTypes.string.isRequired,
   initialSelections: PropTypes.arrayOf(PropTypes.shape({
-    start: PropTypes.instanceOf(Date),
-    end: PropTypes.instanceOf(Date),
+    start: PropTypes.oneOfType([
+      PropTypes.instanceOf(Date),
+      PropTypes.number,
+    ]),
+    end: PropTypes.oneOfType([
+      PropTypes.instanceOf(Date),
+      PropTypes.number,
+    ]),
   })),
   calendars: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string,
@@ -332,4 +343,5 @@ AvailableTimes.propTypes = {
 
 AvailableTimes.defaultProps = {
   timeZone: momentTimezone.tz.guess(),
+  weekStartsOn: 'sunday',
 };
