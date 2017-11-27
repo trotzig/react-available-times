@@ -113,7 +113,7 @@ it('can display in a different timeZone', () => {
     />,
   );
 
-  expect(component.text()).toMatch(/0-1/);
+  expect(component.text()).toMatch(/1:00-2:00/);
   // Make sure that sunday is the first day
   expect(component.find(DayHeader).first().text()).toMatch(/Sun/);
 });
