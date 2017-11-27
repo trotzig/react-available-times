@@ -103,7 +103,9 @@ export default class Day extends PureComponent {
       Math.abs(startY - (currentY || startY)) < 20
     ) {
       this.handleMouseDown({ pageY: startY });
-      this.handleMouseUp();
+      setTimeout(() => {
+        this.handleMouseUp();
+      });
     }
     this.touch = undefined;
   }
