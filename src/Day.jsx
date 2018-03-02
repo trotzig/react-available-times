@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 
-import { HOUR_IN_PIXELS, IS_TOUCH_DEVICE, MINUTE_IN_PIXELS } from './Constants';
+import { HOUR_IN_PIXELS, MINUTE_IN_PIXELS } from './Constants';
 import TimeSlot from './TimeSlot';
 import hasOverlap from './hasOverlap';
 import inSameDay from './inSameDay';
@@ -233,10 +233,10 @@ export default class Day extends PureComponent {
           />
         ))}
         <div
-          onMouseDown={IS_TOUCH_DEVICE ? undefined : this.handleMouseDown}
-          onMouseUp={IS_TOUCH_DEVICE ? undefined : this.handleMouseUp}
-          onMouseMove={IS_TOUCH_DEVICE ? undefined : this.handleMouseMove}
-          onMouseOut={IS_TOUCH_DEVICE ? undefined : this.handleMouseUp}
+          onMouseDown={this.handleMouseDown}
+          onMouseUp={this.handleMouseUp}
+          onMouseMove={this.handleMouseMove}
+          onMouseOut={this.handleMouseUp}
           onTouchStart={this.handleTouchStart}
           onTouchMove={this.handleTouchMove}
           onTouchEnd={this.handleTouchEnd}
