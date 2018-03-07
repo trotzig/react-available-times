@@ -1,10 +1,9 @@
 :local(.component) {
-  background-color: #0070E0;
+  background-color: rgba(40, 201, 111, 0.7);
   position: absolute;
   width: 100%;
   color: #fff;
   overflow: hidden;
-  opacity: 0.8;
   cursor: grab;
 }
 
@@ -18,7 +17,7 @@
   right: 0;
   padding: 0 5px;
   border: none;
-  background-color: #fff;;
+  background-color: #fff;
   display: none;
   font-size: 20px;
   line-height: 1;
