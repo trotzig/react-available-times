@@ -14,7 +14,7 @@
 
 :local(.daysWrapper) {
   position: relative;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid #d6d6d6;
   overflow: auto;
   flex: 1 1 auto;
   -webkit-overflow-scrolling: touch;
