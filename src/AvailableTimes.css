@@ -84,13 +84,14 @@
   left: 5px;
   border-radius: 50%;
   border: none;
-  background-color: #007aff;
+  background-color: #4285f4;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   opacity: 0;
   pointer-events: none;
   width: 40px;
   height: 40px;
   fill: #fff;
+  transition: all 0.2s;
 }
 
 :local(.homeActive) {
@@ -102,4 +103,8 @@
 
 :local(.home):focus {
   outline: none;
+}
+
+:local(.home):hover {
+  background-color: #0070e0;
 }
