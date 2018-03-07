@@ -116,10 +116,13 @@ export default class Week extends PureComponent {
         <div
           className={styles.header}
           style={{
-            paddingLeft: RULER_WIDTH_IN_PIXELS,
+            marginLeft: RULER_WIDTH_IN_PIXELS,
             maxWidth: daysWidth,
           }}
         >
+          <div className={styles.allDayLabel}>
+            All-day
+          </div>
           {week.days.map((day, i) => (
             <DayHeader
               timeZone={timeZone}
