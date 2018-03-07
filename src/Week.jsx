@@ -85,7 +85,7 @@ export default class Week extends PureComponent {
   // eslint-disable-next-line class-methods-use-this
   renderLines() {
     const result = [];
-    for (let i = 0; i < 24; i++) {
+    for (let i = 0; i < 23; i++) {
       result.push(
         <div
           key={i}
