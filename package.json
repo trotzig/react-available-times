@@ -1,6 +1,6 @@
 {
   "name": "react-available-times",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A calendar to pick available time slots",
   "main": "dist/main.js",
   "repository": "git@github.com:trotzig/react-available-times.git",
