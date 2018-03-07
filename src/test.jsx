@@ -155,7 +155,6 @@ class Test extends Component {
               initialSelections={initialSelections}
               onEventsRequested={this.handleEventsRequested}
               recurring={recurring}
-              touchToDeleteSelection={'ontouchstart' in window}
             />
           </div>
         </div>
