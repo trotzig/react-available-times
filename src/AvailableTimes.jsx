@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import momentTimezone from 'moment-timezone';
 
-import { IS_TOUCH_DEVICE, WEEKS_PER_TIMESPAN } from './Constants';
+import { WEEKS_PER_TIMESPAN } from './Constants';
 import CalendarSelector from './CalendarSelector';
 import EventsStore from './EventsStore';
 import Slider from './Slider';
@@ -244,24 +244,22 @@ export default class AvailableTimes extends PureComponent {
         >
           {!recurring &&
             <div className={styles.toolbar}>
-              {!IS_TOUCH_DEVICE &&
-                <div className={styles.buttons}>
-                  <button
-                    className={styles.button}
-                    onClick={this.moveBack}
-                  >
-                    {leftArrowSvg}
-                  </button>
-                  {' '}
-                  <button
-                    className={styles.button}
-                    onClick={this.moveForward}
-                  >
-                    {rightArrowSvg}
-                  </button>
-                </div>
-              }
-              <div className={IS_TOUCH_DEVICE ? styles.intervalTouch : styles.interval}>
+              <div className={styles.buttons}>
+                <button
+                  className={styles.button}
+                  onClick={this.moveBack}
+                >
+                  {leftArrowSvg}
+                </button>
+                {' '}
+                <button
+                  className={styles.button}
+                  onClick={this.moveForward}
+                >
+                  {rightArrowSvg}
+                </button>
+              </div>
+              <div className={styles.interval}>
                 {weeks[currentWeekIndex].interval}
               </div>
               {calendars && calendars.length > 0 &&
