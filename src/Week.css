@@ -34,13 +34,7 @@
 }
 
 :local(.hour) {
-  border-bottom: 1px solid #dadfea;
-  pointer-events: none;
-}
-
-:local(.halfHour) {
-  height: 50%;
-  border-bottom: 1px dashed #dadfea;
+  border-bottom: 1px solid #d6d6d6;
   pointer-events: none;
 }
 

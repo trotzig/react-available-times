@@ -93,9 +93,7 @@ export default class Week extends PureComponent {
           style={{
             height: HOUR_IN_PIXELS,
           }}
-        >
-          <div className={styles.halfHour} />
-        </div>,
+        />,
       );
     }
     return result;
