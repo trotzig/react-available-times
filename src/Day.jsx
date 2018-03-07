@@ -194,7 +194,15 @@ export default class Day extends PureComponent {
   }
 
   render() {
-    const { availableWidth, date, events, timeConvention, timeZone } = this.props;
+    const {
+      availableWidth,
+      date,
+      events,
+      timeConvention,
+      timeZone,
+      touchToDeleteSelection,
+    } = this.props;
+
     const { selections, index } = this.state;
 
     const classes = [styles.component];
@@ -256,6 +264,7 @@ export default class Day extends PureComponent {
             onSizeChangeStart={this.handleSizeChangeStart}
             onMoveStart={this.handleMoveStart}
             onDelete={this.handleDelete}
+            touchToDelete={touchToDeleteSelection}
           />
         ))}
       </div>
@@ -282,4 +291,6 @@ Day.propTypes = {
     offset: PropTypes.number,
   })),
   onChange: PropTypes.func.isRequired,
+  touchToDeleteSelection: PropTypes.bool,
 };
+

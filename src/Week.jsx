@@ -108,6 +108,7 @@ export default class Week extends PureComponent {
       timeConvention,
       timeZone,
       recurring,
+      touchToDeleteSelection,
     } = this.props;
 
     const { dayEvents, daySelections, daysWidth } = this.state;
@@ -162,6 +163,7 @@ export default class Week extends PureComponent {
                 events={dayEvents[i]}
                 initialSelections={daySelections[i]}
                 onChange={this.handleDayChange}
+                touchToDeleteSelection={touchToDeleteSelection}
               />
             ))}
           </div>
@@ -192,4 +194,5 @@ Week.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   week: PropTypes.object.isRequired,
   recurring: PropTypes.bool,
+  touchToDeleteSelection: PropTypes.bool,
 };

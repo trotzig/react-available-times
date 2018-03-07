@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import momentTimezone from 'moment-timezone';
 
-import { IS_TOUCH_DEVICE, MINUTE_IN_PIXELS } from './Constants';
+import { MINUTE_IN_PIXELS } from './Constants';
 import positionInDay from './positionInDay';
 import styles from './TimeSlot.css';
 
@@ -74,6 +74,7 @@ export default class TimeSlot extends PureComponent {
       offset,
       timeZone,
       title,
+      touchToDelete,
     } = this.props;
 
     const top = positionInDay(date, start, timeZone);
@@ -107,8 +108,8 @@ export default class TimeSlot extends PureComponent {
       <div
         className={classes.join(' ')}
         style={style}
-        onMouseDown={frozen || IS_TOUCH_DEVICE ? undefined : this.handleMouseDown}
-        onClick={frozen || !IS_TOUCH_DEVICE ? undefined : this.handleDelete}
+        onMouseDown={frozen || touchToDelete ? undefined : this.handleMouseDown}
+        onClick={frozen || !touchToDelete ? undefined : this.handleDelete}
       >
         <div
           className={styles.title}
@@ -125,7 +126,7 @@ export default class TimeSlot extends PureComponent {
           )}
           {this.timespan()}
         </div>
-        {!frozen && !IS_TOUCH_DEVICE && (
+        {!frozen && !touchToDelete && (
           <div>
             <div
               className={styles.handle}
@@ -148,6 +149,7 @@ export default class TimeSlot extends PureComponent {
 }
 
 TimeSlot.propTypes = {
+  touchToDelete: PropTypes.bool,
   timeConvention: PropTypes.oneOf(['12h', '24h']),
   timeZone: PropTypes.string.isRequired,
 
@@ -165,4 +167,8 @@ TimeSlot.propTypes = {
   // Props used to signal overlap
   width: PropTypes.number,
   offset: PropTypes.number,
+};
+
+TimeSlot.defaultProps = {
+  touchToDelete: false,
 };

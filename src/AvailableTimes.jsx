@@ -215,6 +215,7 @@ export default class AvailableTimes extends PureComponent {
       timeConvention,
       timeZone,
       recurring,
+      touchToDeleteSelection,
     } = this.props;
 
     const {
@@ -296,6 +297,7 @@ export default class AvailableTimes extends PureComponent {
                     onChange={this.handleWeekChange}
                     height={height}
                     recurring={recurring}
+                    touchToDeleteSelection={touchToDeleteSelection}
                   />
                 );
               })}
@@ -337,9 +339,11 @@ AvailableTimes.propTypes = {
   onEventsRequested: PropTypes.func,
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   recurring: PropTypes.bool,
+  touchToDeleteSelection: PropTypes.bool,
 };
 
 AvailableTimes.defaultProps = {
   timeZone: momentTimezone.tz.guess(),
   weekStartsOn: 'sunday',
+  touchToDeleteSelection: false,
 };
