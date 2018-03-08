@@ -28,6 +28,26 @@ function weekEvents(week, items, timeZone) {
   return result;
 }
 
+let cachedScrollbarWidth;
+function computeWidthOfAScrollbar() {
+  // based on https://davidwalsh.name/detect-scrollbar-width
+  if (cachedScrollbarWidth) {
+    return cachedScrollbarWidth;
+  }
+  const scrollDiv = document.createElement('div');
+  scrollDiv.style = `
+    width: 100px;
+    height: 100px;
+    overflow: scroll;
+    position: absolute;
+    top: -9999px;
+  `;
+  document.body.appendChild(scrollDiv);
+  cachedScrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+  document.body.removeChild(scrollDiv);
+  return cachedScrollbarWidth;
+}
+
 export default class Week extends PureComponent {
   constructor({ week, events, initialSelections, timeZone }) {
     super();
@@ -44,6 +64,10 @@ export default class Week extends PureComponent {
 
   componentWillMount() {
     window.addEventListener('resize', this.setDaysWidth);
+
+    this.setState({
+      widthOfAScrollbar: computeWidthOfAScrollbar(),
+    });
   }
 
   componentWillReceiveProps({ week, events, timeZone }) {
@@ -109,7 +133,7 @@ export default class Week extends PureComponent {
       touchToDeleteSelection,
     } = this.props;
 
-    const { dayEvents, daySelections, daysWidth } = this.state;
+    const { dayEvents, daySelections, daysWidth, widthOfAScrollbar } = this.state;
 
     return (
       <div className={styles.component}>
@@ -118,6 +142,7 @@ export default class Week extends PureComponent {
           style={{
             marginLeft: RULER_WIDTH_IN_PIXELS,
             maxWidth: daysWidth,
+            marginRight: widthOfAScrollbar,
           }}
         >
           <div className={styles.allDayLabel}>
