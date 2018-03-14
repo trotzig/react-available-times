@@ -357,5 +357,5 @@ AvailableTimes.defaultProps = {
   weekStartsOn: 'sunday',
   touchToDeleteSelection: 'ontouchstart' in window,
   availableDays: DAYS_IN_WEEK,
-  availableHourRange: { start: 0, end: 23 },
+  availableHourRange: { start: 0, end: 24 },
 };
