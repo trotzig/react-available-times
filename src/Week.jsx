@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react';
 import momentTimezone from 'moment-timezone';
 
 import { HOUR_IN_PIXELS, RULER_WIDTH_IN_PIXELS } from './Constants';
+import { validateDays } from './Validators';
 import Day from './Day';
 import DayHeader from './DayHeader';
 import Ruler from './Ruler';
@@ -131,6 +132,7 @@ export default class Week extends PureComponent {
       timeZone,
       recurring,
       touchToDeleteSelection,
+      availableDays,
     } = this.props;
 
     const { dayEvents, daySelections, daysWidth, widthOfAScrollbar } = this.state;
@@ -221,4 +223,5 @@ Week.propTypes = {
   week: PropTypes.object.isRequired,
   recurring: PropTypes.bool,
   touchToDeleteSelection: PropTypes.bool,
+  availableDays: PropTypes.arrayOf(validateDays),
 };
