@@ -11,10 +11,6 @@ import toDate from './toDate';
 
 const ROUND_TO_NEAREST_MINS = 15;
 
-function blockHeight(hours) {
-  return hours * HOUR_IN_PIXELS;
-}
-
 export default class Day extends PureComponent {
   constructor({ initialSelections }) {
     super();
@@ -33,7 +29,7 @@ export default class Day extends PureComponent {
     this.handleDelete = this.handleDelete.bind(this);
     this.handleMouseTargetRef = element => (this.mouseTargetRef = element);
 
-    this.EventTracking = ({ available, hourRange }) => {
+    this.EventTracking = ({ available, hourLimits }) => {
       if (available) {
         return (<div
           onMouseDown={this.handleMouseDown}
@@ -44,8 +40,8 @@ export default class Day extends PureComponent {
           onTouchMove={this.handleTouchMove}
           onTouchEnd={this.handleTouchEnd}
           className={styles.mouseTarget}
-          style={{ top: blockHeight(hourRange.start),
-            height: blockHeight(hourRange.end - hourRange.start) }}
+          style={{ top: hourLimits.top,
+            height: hourLimits.difference }}
           ref={this.handleMouseTargetRef}
         />);
       }
@@ -70,7 +66,7 @@ export default class Day extends PureComponent {
   relativeY(pageY, rounding = ROUND_TO_NEAREST_MINS) {
     const { top } = this.mouseTargetRef.getBoundingClientRect();
     let realY = pageY - top - document.body.scrollTop;
-    realY += blockHeight(this.props.availableHourRange.start);
+    realY += this.props.hourLimits.top;
     const snapTo = (rounding / 60) * HOUR_IN_PIXELS;
     return Math.floor(realY / snapTo) * snapTo;
   }
@@ -226,14 +222,11 @@ export default class Day extends PureComponent {
       timeConvention,
       timeZone,
       touchToDeleteSelection,
-      availableHourRange,
+      hourLimits,
     } = this.props;
 
     const { selections, index } = this.state;
     const classes = [styles.component];
-    const topLimit = blockHeight(availableHourRange.start);
-    const bottomLimit = blockHeight(23 - availableHourRange.end);
-    const gap = blockHeight(availableHourRange.end);
 
     if (!available) {
       classes.push(styles.grayed);
@@ -254,15 +247,15 @@ export default class Day extends PureComponent {
         <div
           className={`${styles.grayed} ${styles.block}`}
           style={{
-            height: topLimit,
+            height: hourLimits.top,
             top: 0,
           }}
         />
         <div
           className={`${styles.grayed} ${styles.block}`}
           style={{
-            height: bottomLimit,
-            top: gap,
+            height: hourLimits.bottomHeight,
+            top: hourLimits.bottom,
           }}
         />
         {events.map(({
@@ -287,7 +280,7 @@ export default class Day extends PureComponent {
             frozen
           />
         ))}
-        <this.EventTracking available={available} hourRange={availableHourRange} />
+        <this.EventTracking available={available} hourLimits={hourLimits} />
         {selections.map(({ start, end }, i) => (
           <TimeSlot
             // eslint-disable-next-line react/no-array-index-key
@@ -312,9 +305,11 @@ export default class Day extends PureComponent {
 Day.propTypes = {
   available: PropTypes.bool,
   availableWidth: PropTypes.number.isRequired,
-  availableHourRange: PropTypes.shape({
-    start: PropTypes.number,
-    end: PropTypes.number,
+  hourLimits: PropTypes.shape({
+    top: PropTypes.number,
+    bottom: PropTypes.number,
+    bottomHeight: PropTypes.number,
+    difference: PropTypes.number,
   }).isRequired,
   timeConvention: PropTypes.oneOf(['12h', '24h']),
   timeZone: PropTypes.string.isRequired,

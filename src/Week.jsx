@@ -107,6 +107,16 @@ export default class Week extends PureComponent {
     });
   }
 
+  // generate the props required for Day to block specific hours.
+  generateHourLimits() {
+    const { availableHourRange } = this.props;
+    return { top: availableHourRange.start * HOUR_IN_PIXELS, // top blocker
+      bottom: availableHourRange.end * HOUR_IN_PIXELS,
+      bottomHeight: (23 - availableHourRange.end) * HOUR_IN_PIXELS, // bottom height
+      difference: (availableHourRange.end - availableHourRange.start) * HOUR_IN_PIXELS,
+    };
+  }
+
   // eslint-disable-next-line class-methods-use-this
   renderLines() {
     const result = [];
@@ -133,7 +143,6 @@ export default class Week extends PureComponent {
       recurring,
       touchToDeleteSelection,
       availableDays,
-      availableHourRange,
     } = this.props;
     const { dayEvents, daySelections, daysWidth, widthOfAScrollbar } = this.state;
 
@@ -198,7 +207,7 @@ export default class Week extends PureComponent {
                 events={dayEvents[i]}
                 initialSelections={daySelections[i]}
                 onChange={this.handleDayChange}
-                availableHourRange={availableHourRange}
+                hourLimits={this.generateHourLimits()}
                 touchToDeleteSelection={touchToDeleteSelection}
               />
             ))}
