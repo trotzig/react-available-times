@@ -28,6 +28,23 @@ export default class Day extends PureComponent {
     this.handleMoveStart = this.handleItemModification.bind(this, 'both');
     this.handleDelete = this.handleDelete.bind(this);
     this.handleMouseTargetRef = element => (this.mouseTargetRef = element);
+
+    this.EventTracking = (available) => {
+      if (available) {
+        return (<div
+          onMouseDown={this.handleMouseDown}
+          onMouseUp={this.handleMouseUp}
+          onMouseMove={this.handleMouseMove}
+          onMouseOut={this.handleMouseUp}
+          onTouchStart={this.handleTouchStart}
+          onTouchMove={this.handleTouchMove}
+          onTouchEnd={this.handleTouchEnd}
+          className={styles.mouseTarget}
+          ref={this.handleMouseTargetRef}
+        />);
+      }
+      return null;
+    };
   }
 
   findSelectionAt(date) {
@@ -207,12 +224,13 @@ export default class Day extends PureComponent {
     const { selections, index } = this.state;
 
     const classes = [styles.component];
-    if (inSameDay(date, new Date(), timeZone)) {
-      classes.push(styles.today);
-    }
 
     if (!available) {
       classes.push(styles.grayed);
+    }
+
+    if (inSameDay(date, new Date(), timeZone)) {
+      classes.push(styles.today);
     }
 
     return (
@@ -245,17 +263,7 @@ export default class Day extends PureComponent {
             frozen
           />
         ))}
-        <div
-          onMouseDown={this.handleMouseDown}
-          onMouseUp={this.handleMouseUp}
-          onMouseMove={this.handleMouseMove}
-          onMouseOut={this.handleMouseUp}
-          onTouchStart={this.handleTouchStart}
-          onTouchMove={this.handleTouchMove}
-          onTouchEnd={this.handleTouchEnd}
-          className={styles.mouseTarget}
-          ref={this.handleMouseTargetRef}
-        />
+        <this.EventTracking available={available} />
         {selections.map(({ start, end }, i) => (
           <TimeSlot
             // eslint-disable-next-line react/no-array-index-key
