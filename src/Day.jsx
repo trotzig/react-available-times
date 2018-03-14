@@ -33,7 +33,7 @@ export default class Day extends PureComponent {
     this.handleDelete = this.handleDelete.bind(this);
     this.handleMouseTargetRef = element => (this.mouseTargetRef = element);
 
-    this.EventTracking = ({ available }) => {
+    this.EventTracking = ({ available, hourRange }) => {
       if (available) {
         return (<div
           onMouseDown={this.handleMouseDown}
@@ -44,6 +44,8 @@ export default class Day extends PureComponent {
           onTouchMove={this.handleTouchMove}
           onTouchEnd={this.handleTouchEnd}
           className={styles.mouseTarget}
+          style={{ top: blockHeight(hourRange.start),
+            height: blockHeight(hourRange.end - hourRange.start) }}
           ref={this.handleMouseTargetRef}
         />);
       }
@@ -67,7 +69,8 @@ export default class Day extends PureComponent {
 
   relativeY(pageY, rounding = ROUND_TO_NEAREST_MINS) {
     const { top } = this.mouseTargetRef.getBoundingClientRect();
-    const realY = pageY - top - document.body.scrollTop;
+    let realY = pageY - top - document.body.scrollTop;
+    realY += blockHeight(this.props.availableHourRange.start);
     const snapTo = (rounding / 60) * HOUR_IN_PIXELS;
     return Math.floor(realY / snapTo) * snapTo;
   }
@@ -284,7 +287,7 @@ export default class Day extends PureComponent {
             frozen
           />
         ))}
-        <this.EventTracking available={available} />
+        <this.EventTracking available={available} hourRange={availableHourRange} />
         {selections.map(({ start, end }, i) => (
           <TimeSlot
             // eslint-disable-next-line react/no-array-index-key
