@@ -13,6 +13,10 @@
   border-bottom: none;
 }
 
+:local(.block) {
+  position: absolute;
+  width: 100%;
+}
 
 :local(.mouseTarget) {
   top: 0;

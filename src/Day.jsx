@@ -11,6 +11,10 @@ import toDate from './toDate';
 
 const ROUND_TO_NEAREST_MINS = 15;
 
+function blockHeight(hours) {
+  return hours * HOUR_IN_PIXELS;
+}
+
 export default class Day extends PureComponent {
   constructor({ initialSelections }) {
     super();
@@ -219,11 +223,14 @@ export default class Day extends PureComponent {
       timeConvention,
       timeZone,
       touchToDeleteSelection,
+      availableHourRange,
     } = this.props;
 
     const { selections, index } = this.state;
-
     const classes = [styles.component];
+    const topLimit = blockHeight(availableHourRange.start);
+    const bottomLimit = blockHeight(23 - availableHourRange.end);
+    const gap = blockHeight(availableHourRange.end);
 
     if (!available) {
       classes.push(styles.grayed);
@@ -241,6 +248,20 @@ export default class Day extends PureComponent {
           width: availableWidth,
         }}
       >
+        <div
+          className={`${styles.grayed} ${styles.block}`}
+          style={{
+            height: topLimit,
+            top: 0,
+          }}
+        />
+        <div
+          className={`${styles.grayed} ${styles.block}`}
+          style={{
+            height: bottomLimit,
+            top: gap,
+          }}
+        />
         {events.map(({
           allDay,
           start,
@@ -288,6 +309,10 @@ export default class Day extends PureComponent {
 Day.propTypes = {
   available: PropTypes.bool,
   availableWidth: PropTypes.number.isRequired,
+  availableHourRange: PropTypes.shape({
+    start: PropTypes.number,
+    end: PropTypes.number,
+  }).isRequired,
   timeConvention: PropTypes.oneOf(['12h', '24h']),
   timeZone: PropTypes.string.isRequired,
 

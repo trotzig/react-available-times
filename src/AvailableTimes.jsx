@@ -218,6 +218,7 @@ export default class AvailableTimes extends PureComponent {
       recurring,
       touchToDeleteSelection,
       availableDays,
+      availableHourRange,
     } = this.props;
 
     const {
@@ -301,6 +302,7 @@ export default class AvailableTimes extends PureComponent {
                     recurring={recurring}
                     touchToDeleteSelection={touchToDeleteSelection}
                     availableDays={availableDays}
+                    availableHourRange={availableHourRange}
                   />
                 );
               })}
@@ -344,6 +346,10 @@ AvailableTimes.propTypes = {
   recurring: PropTypes.bool,
   touchToDeleteSelection: PropTypes.bool,
   availableDays: PropTypes.arrayOf(validateDays),
+  availableHourRange: PropTypes.shape({
+    start: PropTypes.number,
+    end: PropTypes.number,
+  }).isRequired,
 };
 
 AvailableTimes.defaultProps = {
@@ -351,4 +357,5 @@ AvailableTimes.defaultProps = {
   weekStartsOn: 'sunday',
   touchToDeleteSelection: 'ontouchstart' in window,
   availableDays: DAYS_IN_WEEK,
+  availableHourRange: { start: 8, end: 16 },
 };
