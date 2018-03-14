@@ -350,5 +350,5 @@ AvailableTimes.defaultProps = {
   timeZone: momentTimezone.tz.guess(),
   weekStartsOn: 'sunday',
   touchToDeleteSelection: 'ontouchstart' in window,
-  availableDays: DAYS_IN_WEEK,
+  availableDays: ['sunday'],
 };

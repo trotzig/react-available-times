@@ -29,7 +29,7 @@ export default class Day extends PureComponent {
     this.handleDelete = this.handleDelete.bind(this);
     this.handleMouseTargetRef = element => (this.mouseTargetRef = element);
 
-    this.EventTracking = (available) => {
+    this.EventTracking = ({ available }) => {
       if (available) {
         return (<div
           onMouseDown={this.handleMouseDown}
