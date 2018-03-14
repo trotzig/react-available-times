@@ -134,9 +134,13 @@ export default class Week extends PureComponent {
       touchToDeleteSelection,
       availableDays,
     } = this.props;
-
     const { dayEvents, daySelections, daysWidth, widthOfAScrollbar } = this.state;
 
+    const filteredDays = week.days.map((day) => {
+      const updatedDay = day;
+      updatedDay.available = availableDays.includes(day.name.toLowerCase());
+      return updatedDay;
+    });
     return (
       <div className={styles.component}>
         <div
@@ -150,7 +154,7 @@ export default class Week extends PureComponent {
           <div className={styles.allDayLabel}>
             All-day
           </div>
-          {week.days.map((day, i) => (
+          {filteredDays.map((day, i) => (
             <DayHeader
               timeZone={timeZone}
               availableWidth={(availableWidth - RULER_WIDTH_IN_PIXELS) / 7}
@@ -158,6 +162,7 @@ export default class Week extends PureComponent {
               key={day.date}
               events={dayEvents[i]}
               hideDates={recurring}
+              available={day.available}
             />
           ))}
         </div>

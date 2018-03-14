@@ -44,7 +44,7 @@ export default class DayHeader extends Component {
           width: availableWidth,
         }}
       >
-        <div className={styles.day}>
+        <div className={`${styles.day} ${this.props.available ? '' : styles.transparent}`}>
           {!hideDates && this.text()}
           {hideDates && this.dateLessText()}
         </div>
@@ -71,4 +71,5 @@ DayHeader.propTypes = {
   availableWidth: PropTypes.number,
   events: PropTypes.arrayOf(PropTypes.object),
   hideDates: PropTypes.bool,
+  available: PropTypes.bool,
 };
