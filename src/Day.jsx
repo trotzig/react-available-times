@@ -66,7 +66,7 @@ export default class Day extends PureComponent {
   relativeY(pageY, rounding = ROUND_TO_NEAREST_MINS) {
     const { top } = this.mouseTargetRef.getBoundingClientRect();
     let realY = pageY - top - document.body.scrollTop;
-    realY += this.props.hourLimits.top;
+    realY += this.props.hourLimits.top; // offset top blocker
     const snapTo = (rounding / 60) * HOUR_IN_PIXELS;
     return Math.floor(realY / snapTo) * snapTo;
   }
@@ -87,7 +87,7 @@ export default class Day extends PureComponent {
     });
   }
 
-  handleItemModification(edge, { start, end }, { pageY }) {
+  handleItemModification(edge, { start, end }, { pageY, currentTarget }) {
     const position = this.relativeY(pageY);
     this.setState(({ selections }) => {
       for (let i = 0; i < selections.length; i++) {
@@ -97,6 +97,7 @@ export default class Day extends PureComponent {
             index: i,
             lastKnownPosition: position,
             minLengthInMinutes: 30,
+            target: currentTarget,
           };
         }
       }
@@ -157,24 +158,44 @@ export default class Day extends PureComponent {
     }));
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  hasReachedTop({ offsetTop }) {
+    const { hourLimits } = this.props;
+    return offsetTop <= hourLimits.top;
+  }
+
+  hasReachedBottom({ offsetTop, offsetHeight }) {
+    const { hourLimits } = this.props;
+    return (offsetTop + offsetHeight) >= hourLimits.bottom;
+  }
   handleMouseMove({ pageY }) {
     if (typeof this.state.index === 'undefined') {
       return;
     }
     const { date, timeZone } = this.props;
     const position = this.relativeY(pageY);
-    this.setState(({ minLengthInMinutes, selections, edge, index, lastKnownPosition }) => {
+    this.setState(({ minLengthInMinutes, selections, edge, index, lastKnownPosition, target }) => {
       const selection = selections[index];
       let newMinLength = minLengthInMinutes;
       if (edge === 'both') {
         // move element
         const diff = toDate(date, position, timeZone).getTime() -
           toDate(date, lastKnownPosition, timeZone).getTime();
-        const newStart = new Date(selection.start.getTime() + diff);
-        const newEnd = new Date(selection.end.getTime() + diff);
+        let newStart = new Date(selection.start.getTime() + diff);
+        let newEnd = new Date(selection.end.getTime() + diff);
         if (hasOverlap(selections, newStart, newEnd, index)) {
           return {};
         }
+        if (this.hasReachedTop(target) && diff < 0) {
+          // if has reached top blocker and it is going upwards, fix the newStart.
+          newStart = selection.start;
+        }
+
+        if (this.hasReachedBottom(target) && diff > 0) {
+          // if has reached bottom blocker and it is going downwards, fix.
+          newEnd = selection.end;
+        }
+
         selection.start = newStart;
         selection.end = newEnd;
       } else {
