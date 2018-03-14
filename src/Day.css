@@ -4,6 +4,11 @@
   user-select: none;
 }
 
+:local(.grayed) {
+  background-color: rgba(156, 156, 156, 1);
+  border-bottom: none;
+}
+
 :local(.today) {
   background-color: rgba(218, 228, 242, 0.2);
 }

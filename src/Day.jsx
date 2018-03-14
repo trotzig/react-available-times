@@ -195,6 +195,7 @@ export default class Day extends PureComponent {
 
   render() {
     const {
+      available,
       availableWidth,
       date,
       events,
@@ -208,6 +209,10 @@ export default class Day extends PureComponent {
     const classes = [styles.component];
     if (inSameDay(date, new Date(), timeZone)) {
       classes.push(styles.today);
+    }
+
+    if (!available) {
+      classes.push(styles.grayed);
     }
 
     return (
@@ -273,6 +278,7 @@ export default class Day extends PureComponent {
 }
 
 Day.propTypes = {
+  available: PropTypes.bool,
   availableWidth: PropTypes.number.isRequired,
   timeConvention: PropTypes.oneOf(['12h', '24h']),
   timeZone: PropTypes.string.isRequired,

@@ -185,8 +185,9 @@ export default class Week extends PureComponent {
             ref={this.handleDaysRef}
           >
             <Ruler timeConvention={timeConvention} />
-            {week.days.map((day, i) => (
+            {filteredDays.map((day, i) => (
               <Day
+                available={day.available}
                 availableWidth={(availableWidth - RULER_WIDTH_IN_PIXELS) / 7}
                 timeConvention={timeConvention}
                 timeZone={timeZone}
