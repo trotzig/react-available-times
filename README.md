@@ -74,6 +74,8 @@ None of the props are required.
   with events that have a start and end expressed in number of minutes since
   the start of the week. The `weekStartsOn` prop is taken into account here, so
   the `0` minute is either monday at 00:00 or sunday at 00:00.
+- `availableDays`: an array of strings (`"monday"`, `"tuesday"` ...) specifying
+  what days of the week are available to be used. It is set to every day by default.
 
 ## Contributing
 
