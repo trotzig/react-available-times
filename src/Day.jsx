@@ -29,7 +29,7 @@ export default class Day extends PureComponent {
     this.handleDelete = this.handleDelete.bind(this);
     this.handleMouseTargetRef = element => (this.mouseTargetRef = element);
 
-    this.EventTracking = ({ available }) => {
+    this.EventTracking = ({ available, hourLimits }) => {
       if (available) {
         return (<div
           onMouseDown={this.handleMouseDown}
@@ -40,6 +40,8 @@ export default class Day extends PureComponent {
           onTouchMove={this.handleTouchMove}
           onTouchEnd={this.handleTouchEnd}
           className={styles.mouseTarget}
+          style={{ top: hourLimits.top,
+            height: hourLimits.difference }}
           ref={this.handleMouseTargetRef}
         />);
       }
@@ -63,7 +65,8 @@ export default class Day extends PureComponent {
 
   relativeY(pageY, rounding = ROUND_TO_NEAREST_MINS) {
     const { top } = this.mouseTargetRef.getBoundingClientRect();
-    const realY = pageY - top - document.body.scrollTop;
+    let realY = pageY - top - document.body.scrollTop;
+    realY += this.props.hourLimits.top; // offset top blocker
     const snapTo = (rounding / 60) * HOUR_IN_PIXELS;
     return Math.floor(realY / snapTo) * snapTo;
   }
@@ -84,7 +87,7 @@ export default class Day extends PureComponent {
     });
   }
 
-  handleItemModification(edge, { start, end }, { pageY }) {
+  handleItemModification(edge, { start, end }, { pageY, currentTarget }) {
     const position = this.relativeY(pageY);
     this.setState(({ selections }) => {
       for (let i = 0; i < selections.length; i++) {
@@ -94,6 +97,7 @@ export default class Day extends PureComponent {
             index: i,
             lastKnownPosition: position,
             minLengthInMinutes: 30,
+            target: currentTarget,
           };
         }
       }
@@ -154,24 +158,44 @@ export default class Day extends PureComponent {
     }));
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  hasReachedTop({ offsetTop }) {
+    const { hourLimits } = this.props;
+    return offsetTop <= hourLimits.top;
+  }
+
+  hasReachedBottom({ offsetTop, offsetHeight }) {
+    const { hourLimits } = this.props;
+    return (offsetTop + offsetHeight) >= hourLimits.bottom;
+  }
   handleMouseMove({ pageY }) {
     if (typeof this.state.index === 'undefined') {
       return;
     }
     const { date, timeZone } = this.props;
     const position = this.relativeY(pageY);
-    this.setState(({ minLengthInMinutes, selections, edge, index, lastKnownPosition }) => {
+    this.setState(({ minLengthInMinutes, selections, edge, index, lastKnownPosition, target }) => {
       const selection = selections[index];
       let newMinLength = minLengthInMinutes;
       if (edge === 'both') {
         // move element
         const diff = toDate(date, position, timeZone).getTime() -
           toDate(date, lastKnownPosition, timeZone).getTime();
-        const newStart = new Date(selection.start.getTime() + diff);
-        const newEnd = new Date(selection.end.getTime() + diff);
+        let newStart = new Date(selection.start.getTime() + diff);
+        let newEnd = new Date(selection.end.getTime() + diff);
         if (hasOverlap(selections, newStart, newEnd, index)) {
           return {};
         }
+        if (this.hasReachedTop(target) && diff < 0) {
+          // if has reached top blocker and it is going upwards, fix the newStart.
+          newStart = selection.start;
+        }
+
+        if (this.hasReachedBottom(target) && diff > 0) {
+          // if has reached bottom blocker and it is going downwards, fix.
+          newEnd = selection.end;
+        }
+
         selection.start = newStart;
         selection.end = newEnd;
       } else {
@@ -219,10 +243,10 @@ export default class Day extends PureComponent {
       timeConvention,
       timeZone,
       touchToDeleteSelection,
+      hourLimits,
     } = this.props;
 
     const { selections, index } = this.state;
-
     const classes = [styles.component];
 
     if (!available) {
@@ -241,6 +265,20 @@ export default class Day extends PureComponent {
           width: availableWidth,
         }}
       >
+        <div
+          className={`${styles.grayed} ${styles.block}`}
+          style={{
+            height: hourLimits.top,
+            top: 0,
+          }}
+        />
+        <div
+          className={`${styles.grayed} ${styles.block}`}
+          style={{
+            height: hourLimits.bottomHeight,
+            top: hourLimits.bottom,
+          }}
+        />
         {events.map(({
           allDay,
           start,
@@ -263,7 +301,7 @@ export default class Day extends PureComponent {
             frozen
           />
         ))}
-        <this.EventTracking available={available} />
+        <this.EventTracking available={available} hourLimits={hourLimits} />
         {selections.map(({ start, end }, i) => (
           <TimeSlot
             // eslint-disable-next-line react/no-array-index-key
@@ -288,6 +326,12 @@ export default class Day extends PureComponent {
 Day.propTypes = {
   available: PropTypes.bool,
   availableWidth: PropTypes.number.isRequired,
+  hourLimits: PropTypes.shape({
+    top: PropTypes.number,
+    bottom: PropTypes.number,
+    bottomHeight: PropTypes.number,
+    difference: PropTypes.number,
+  }).isRequired,
   timeConvention: PropTypes.oneOf(['12h', '24h']),
   timeZone: PropTypes.string.isRequired,
 
