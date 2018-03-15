@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import momentTimezone from 'moment-timezone';
 
-import { HOUR_IN_PIXELS, RULER_WIDTH_IN_PIXELS } from './Constants';
+import { HOUR_IN_PIXELS, RULER_WIDTH_IN_PIXELS, MINUTE_IN_PIXELS } from './Constants';
 import { validateDays } from './Validators';
 import Day from './Day';
 import DayHeader from './DayHeader';
@@ -113,7 +113,7 @@ export default class Week extends PureComponent {
     return { top: availableHourRange.start * HOUR_IN_PIXELS, // top blocker
       bottom: availableHourRange.end * HOUR_IN_PIXELS,
       bottomHeight: (24 - availableHourRange.end) * HOUR_IN_PIXELS, // bottom height
-      difference: (availableHourRange.end - availableHourRange.start) * HOUR_IN_PIXELS,
+      difference: ((availableHourRange.end - availableHourRange.start) * HOUR_IN_PIXELS) + (MINUTE_IN_PIXELS * 14),
     };
   }
 
