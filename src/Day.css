@@ -9,7 +9,8 @@
 }
 
 :local(.grayed) {
-  background-color: rgba(156, 156, 156, 1);
+  background-image: linear-gradient(-45deg, #f6f6f6 25%, transparent 25%, transparent 50%, #f6f6f6 50%, #f6f6f6 75%, transparent 75%, transparent);
+  background-size: 10px 10px;
   border-bottom: none;
 }
 
