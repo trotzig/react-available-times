@@ -28,25 +28,6 @@ export default class Day extends PureComponent {
     this.handleMoveStart = this.handleItemModification.bind(this, 'both');
     this.handleDelete = this.handleDelete.bind(this);
     this.handleMouseTargetRef = element => (this.mouseTargetRef = element);
-
-    this.EventTracking = ({ available, hourLimits }) => {
-      if (available) {
-        return (<div
-          onMouseDown={this.handleMouseDown}
-          onMouseUp={this.handleMouseUp}
-          onMouseMove={this.handleMouseMove}
-          onMouseOut={this.handleMouseUp}
-          onTouchStart={this.handleTouchStart}
-          onTouchMove={this.handleTouchMove}
-          onTouchEnd={this.handleTouchEnd}
-          className={styles.mouseTarget}
-          style={{ top: hourLimits.top,
-            height: hourLimits.difference }}
-          ref={this.handleMouseTargetRef}
-        />);
-      }
-      return null;
-    };
   }
 
   findSelectionAt(date) {
@@ -301,7 +282,23 @@ export default class Day extends PureComponent {
             frozen
           />
         ))}
-        <this.EventTracking available={available} hourLimits={hourLimits} />
+        { available && (
+          <div
+            onMouseDown={this.handleMouseDown}
+            onMouseUp={this.handleMouseUp}
+            onMouseMove={this.handleMouseMove}
+            onMouseOut={this.handleMouseUp}
+            onTouchStart={this.handleTouchStart}
+            onTouchMove={this.handleTouchMove}
+            onTouchEnd={this.handleTouchEnd}
+            className={styles.mouseTarget}
+            ref={this.handleMouseTargetRef}
+            style={{
+              top: hourLimits.top,
+              height: hourLimits.difference,
+            }}
+          />
+        )}
         {selections.map(({ start, end }, i) => (
           <TimeSlot
             // eslint-disable-next-line react/no-array-index-key
