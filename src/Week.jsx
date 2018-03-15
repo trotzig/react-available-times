@@ -2,7 +2,8 @@ import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import momentTimezone from 'moment-timezone';
 
-import { HOUR_IN_PIXELS, RULER_WIDTH_IN_PIXELS } from './Constants';
+import { HOUR_IN_PIXELS, RULER_WIDTH_IN_PIXELS, MINUTE_IN_PIXELS } from './Constants';
+import { validateDays } from './Validators';
 import Day from './Day';
 import DayHeader from './DayHeader';
 import Ruler from './Ruler';
@@ -106,6 +107,16 @@ export default class Week extends PureComponent {
     });
   }
 
+  // generate the props required for Day to block specific hours.
+  generateHourLimits() {
+    const { availableHourRange } = this.props;
+    return { top: availableHourRange.start * HOUR_IN_PIXELS, // top blocker
+      bottom: availableHourRange.end * HOUR_IN_PIXELS,
+      bottomHeight: (24 - availableHourRange.end) * HOUR_IN_PIXELS, // bottom height
+      difference: ((availableHourRange.end - availableHourRange.start) * HOUR_IN_PIXELS) + (MINUTE_IN_PIXELS * 14),
+    };
+  }
+
   // eslint-disable-next-line class-methods-use-this
   renderLines() {
     const result = [];
@@ -131,10 +142,15 @@ export default class Week extends PureComponent {
       timeZone,
       recurring,
       touchToDeleteSelection,
+      availableDays,
     } = this.props;
-
     const { dayEvents, daySelections, daysWidth, widthOfAScrollbar } = this.state;
 
+    const filteredDays = week.days.map((day) => {
+      const updatedDay = day;
+      updatedDay.available = availableDays.includes(day.name.toLowerCase());
+      return updatedDay;
+    });
     return (
       <div className={styles.component}>
         <div
@@ -148,7 +164,7 @@ export default class Week extends PureComponent {
           <div className={styles.allDayLabel}>
             All-day
           </div>
-          {week.days.map((day, i) => (
+          {filteredDays.map((day, i) => (
             <DayHeader
               timeZone={timeZone}
               availableWidth={(availableWidth - RULER_WIDTH_IN_PIXELS) / 7}
@@ -156,6 +172,7 @@ export default class Week extends PureComponent {
               key={day.date}
               events={dayEvents[i]}
               hideDates={recurring}
+              available={day.available}
             />
           ))}
         </div>
@@ -178,8 +195,9 @@ export default class Week extends PureComponent {
             ref={this.handleDaysRef}
           >
             <Ruler timeConvention={timeConvention} />
-            {week.days.map((day, i) => (
+            {filteredDays.map((day, i) => (
               <Day
+                available={day.available}
                 availableWidth={(availableWidth - RULER_WIDTH_IN_PIXELS) / 7}
                 timeConvention={timeConvention}
                 timeZone={timeZone}
@@ -189,6 +207,7 @@ export default class Week extends PureComponent {
                 events={dayEvents[i]}
                 initialSelections={daySelections[i]}
                 onChange={this.handleDayChange}
+                hourLimits={this.generateHourLimits()}
                 touchToDeleteSelection={touchToDeleteSelection}
               />
             ))}
@@ -221,4 +240,9 @@ Week.propTypes = {
   week: PropTypes.object.isRequired,
   recurring: PropTypes.bool,
   touchToDeleteSelection: PropTypes.bool,
+  availableDays: PropTypes.arrayOf(validateDays),
+  availableHourRange: PropTypes.shape({
+    start: PropTypes.number,
+    end: PropTypes.number,
+  }).isRequired,
 };

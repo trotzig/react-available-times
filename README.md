@@ -44,6 +44,8 @@ import AvailableTimes from 'react-available-times';
   ]}
   height={400}
   recurring={false}
+  availableDays={['monday', 'tuesday', 'wednesday', 'thursday', 'friday']}
+  availableHourRange={{ start: 9, end: 19 }}
 />
 ```
 
@@ -74,6 +76,10 @@ None of the props are required.
   with events that have a start and end expressed in number of minutes since
   the start of the week. The `weekStartsOn` prop is taken into account here, so
   the `0` minute is either monday at 00:00 or sunday at 00:00.
+- `availableDays`: an array of strings (`"monday"`, `"tuesday"` ...) specifying
+  what days of the week are available to be used. It is set to every day by default.
+- `availableHourRange`: an object with `start` and `end` numbers, ranging from 0 to 24
+  inclusive. Defaults to the entire day by default.
 
 ## Contributing
 

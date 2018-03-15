@@ -155,6 +155,8 @@ class Test extends Component {
               initialSelections={initialSelections}
               onEventsRequested={this.handleEventsRequested}
               recurring={recurring}
+              availableDays={['monday', 'tuesday', 'wednesday', 'thursday', 'friday']}
+              availableHourRange={{ start: 6, end: 20 }}
             />
           </div>
         </div>

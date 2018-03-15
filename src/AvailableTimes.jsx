@@ -2,7 +2,8 @@ import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import momentTimezone from 'moment-timezone';
 
-import { WEEKS_PER_TIMESPAN } from './Constants';
+import { WEEKS_PER_TIMESPAN, DAYS_IN_WEEK } from './Constants';
+import { validateDays } from './Validators';
 import CalendarSelector from './CalendarSelector';
 import EventsStore from './EventsStore';
 import Slider from './Slider';
@@ -216,6 +217,8 @@ export default class AvailableTimes extends PureComponent {
       timeZone,
       recurring,
       touchToDeleteSelection,
+      availableDays,
+      availableHourRange,
     } = this.props;
 
     const {
@@ -298,6 +301,8 @@ export default class AvailableTimes extends PureComponent {
                     height={height}
                     recurring={recurring}
                     touchToDeleteSelection={touchToDeleteSelection}
+                    availableDays={availableDays}
+                    availableHourRange={availableHourRange}
                   />
                 );
               })}
@@ -340,10 +345,17 @@ AvailableTimes.propTypes = {
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   recurring: PropTypes.bool,
   touchToDeleteSelection: PropTypes.bool,
+  availableDays: PropTypes.arrayOf(validateDays),
+  availableHourRange: PropTypes.shape({
+    start: PropTypes.number,
+    end: PropTypes.number,
+  }).isRequired,
 };
 
 AvailableTimes.defaultProps = {
   timeZone: momentTimezone.tz.guess(),
   weekStartsOn: 'sunday',
   touchToDeleteSelection: 'ontouchstart' in window,
+  availableDays: DAYS_IN_WEEK,
+  availableHourRange: { start: 0, end: 24 },
 };

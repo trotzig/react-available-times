@@ -8,8 +8,18 @@
   background-color: rgba(218, 228, 242, 0.2);
 }
 
+:local(.grayed) {
+  background-image: linear-gradient(-45deg, #f6f6f6 25%, transparent 25%, transparent 50%, #f6f6f6 50%, #f6f6f6 75%, transparent 75%, transparent);
+  background-size: 10px 10px;
+  border-bottom: none;
+}
+
+:local(.block) {
+  position: absolute;
+  width: 100%;
+}
+
 :local(.mouseTarget) {
-  top: 0;
   left: 0;
   bottom: 0;
   right: 0;

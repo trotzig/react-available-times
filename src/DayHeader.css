@@ -11,6 +11,10 @@
   text-align: center;
 }
 
+:local(.transparent) {
+  opacity: 0.25;
+}
+
 :local(.events) {
   flex-grow: 1;
   text-align: left;
