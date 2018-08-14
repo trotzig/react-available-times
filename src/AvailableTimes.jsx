@@ -212,6 +212,7 @@ export default class AvailableTimes extends PureComponent {
   render() {
     const {
       calendars,
+      width,
       height,
       timeConvention,
       timeZone,
@@ -240,6 +241,7 @@ export default class AvailableTimes extends PureComponent {
         className={styles.component}
         style={{
           height,
+          width,
         }}
         ref={this.setRef}
       >
@@ -343,6 +345,7 @@ AvailableTimes.propTypes = {
   onChange: PropTypes.func,
   onEventsRequested: PropTypes.func,
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   recurring: PropTypes.bool,
   touchToDeleteSelection: PropTypes.bool,
   availableDays: PropTypes.arrayOf(validateDays),
