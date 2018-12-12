@@ -34,10 +34,7 @@ export default class Day extends PureComponent {
     const { selections } = this.state;
     for (let i = 0; i < selections.length; i++) {
       const selection = selections[i];
-      if (
-        selection.start.getTime() <= date.getTime() &&
-        selection.end.getTime() > date.getTime()
-      ) {
+      if (selection.start.getTime() <= date.getTime() && selection.end.getTime() > date.getTime()) {
         return true;
       }
     }
@@ -46,12 +43,11 @@ export default class Day extends PureComponent {
 
   relativeY(pageY, rounding = ROUND_TO_NEAREST_MINS) {
     const { top } = this.mouseTargetRef.getBoundingClientRect();
-    let realY = pageY - top - document.body.scrollTop;
+    let realY = pageY - top - document.documentElement.scrollTop;
     realY += this.props.hourLimits.top; // offset top blocker
     const snapTo = (rounding / 60) * HOUR_IN_PIXELS;
     return Math.floor(realY / snapTo) * snapTo;
   }
-
 
   handleDelete({ start, end }) {
     const { onChange, index } = this.props;
@@ -132,10 +128,12 @@ export default class Day extends PureComponent {
       index: selections.length,
       lastKnownPosition: position,
       minLengthInMinutes: 60,
-      selections: selections.concat([{
-        start: dateAtPosition,
-        end,
-      }]),
+      selections: selections.concat([
+        {
+          start: dateAtPosition,
+          end,
+        },
+      ]),
     }));
   }
 
@@ -147,7 +145,7 @@ export default class Day extends PureComponent {
 
   hasReachedBottom({ offsetTop, offsetHeight }) {
     const { hourLimits } = this.props;
-    return (offsetTop + offsetHeight) >= hourLimits.bottom;
+    return offsetTop + offsetHeight >= hourLimits.bottom;
   }
   handleMouseMove({ pageY }) {
     if (typeof this.state.index === 'undefined') {
@@ -160,7 +158,8 @@ export default class Day extends PureComponent {
       let newMinLength = minLengthInMinutes;
       if (edge === 'both') {
         // move element
-        const diff = toDate(date, position, timeZone).getTime() -
+        const diff =
+          toDate(date, position, timeZone).getTime() -
           toDate(date, lastKnownPosition, timeZone).getTime();
         let newStart = new Date(selection.start.getTime() + diff);
         let newEnd = new Date(selection.end.getTime() + diff);
@@ -182,7 +181,7 @@ export default class Day extends PureComponent {
       } else {
         // stretch element
         const startPos = positionInDay(date, selection.start, timeZone);
-        const minPos = startPos + (minLengthInMinutes * MINUTE_IN_PIXELS);
+        const minPos = startPos + minLengthInMinutes * MINUTE_IN_PIXELS;
         if (minPos < position) {
           // We've exceeded 60 mins now, allow smaller
           newMinLength = 30;
@@ -260,29 +259,25 @@ export default class Day extends PureComponent {
             top: hourLimits.bottom,
           }}
         />
-        {events.map(({
-          allDay,
-          start,
-          end,
-          title,
-          width,
-          offset,
-        }, i) => !allDay && (
-          <TimeSlot
-            // eslint-disable-next-line react/no-array-index-key
-            key={i + title}
-            timeConvention={timeConvention}
-            timeZone={timeZone}
-            date={date}
-            start={start}
-            end={end}
-            title={title}
-            width={width}
-            offset={offset}
-            frozen
-          />
-        ))}
-        { available && (
+        {events.map(
+          ({ allDay, start, end, title, width, offset }, i) =>
+            !allDay && (
+              <TimeSlot
+                // eslint-disable-next-line react/no-array-index-key
+                key={i + title}
+                timeConvention={timeConvention}
+                timeZone={timeZone}
+                date={date}
+                start={start}
+                end={end}
+                title={title}
+                width={width}
+                offset={offset}
+                frozen
+              />
+            ),
+        )}
+        {available && (
           <div
             onMouseDown={this.handleMouseDown}
             onMouseUp={this.handleMouseUp}
@@ -334,18 +329,21 @@ Day.propTypes = {
 
   date: PropTypes.instanceOf(Date).isRequired,
   index: PropTypes.number.isRequired,
-  initialSelections: PropTypes.arrayOf(PropTypes.shape({
-    start: PropTypes.instanceOf(Date),
-    end: PropTypes.instanceOf(Date),
-  })),
-  events: PropTypes.arrayOf(PropTypes.shape({
-    start: PropTypes.instanceOf(Date),
-    end: PropTypes.instanceOf(Date),
-    title: PropTypes.string,
-    width: PropTypes.number,
-    offset: PropTypes.number,
-  })),
+  initialSelections: PropTypes.arrayOf(
+    PropTypes.shape({
+      start: PropTypes.instanceOf(Date),
+      end: PropTypes.instanceOf(Date),
+    }),
+  ),
+  events: PropTypes.arrayOf(
+    PropTypes.shape({
+      start: PropTypes.instanceOf(Date),
+      end: PropTypes.instanceOf(Date),
+      title: PropTypes.string,
+      width: PropTypes.number,
+      offset: PropTypes.number,
+    }),
+  ),
   onChange: PropTypes.func.isRequired,
   touchToDeleteSelection: PropTypes.bool,
 };
-
