@@ -27,7 +27,9 @@ export default class Day extends PureComponent {
     this.handleSizeChangeStart = this.handleItemModification.bind(this, 'end');
     this.handleMoveStart = this.handleItemModification.bind(this, 'both');
     this.handleDelete = this.handleDelete.bind(this);
-    this.handleMouseTargetRef = element => (this.mouseTargetRef = element);
+    this.handleMouseTargetRef = (element) => {
+      this.mouseTargetRef = element;
+    };
   }
 
   findSelectionAt(date) {
@@ -46,7 +48,8 @@ export default class Day extends PureComponent {
 
   relativeY(pageY, rounding = ROUND_TO_NEAREST_MINS) {
     const { top } = this.mouseTargetRef.getBoundingClientRect();
-    let realY = pageY - top - document.body.scrollTop;
+    let realY = pageY - top - (window.pageYOffset ||
+      document.documentElement.scrollTop || document.body.scrollTop || 0);
     realY += this.props.hourLimits.top; // offset top blocker
     const snapTo = (rounding / 60) * HOUR_IN_PIXELS;
     return Math.floor(realY / snapTo) * snapTo;
