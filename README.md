@@ -81,6 +81,17 @@ None of the props are required.
 - `availableHourRange`: an object with `start` and `end` numbers, ranging from 0 to 24
   inclusive. Defaults to the entire day by default.
 
+
+------
+
+### added some styling for react-custom-scrollbars on week component
+visit `https://github.com/malte-wessel/react-custom-scrollbars` for more details ...
+
+- `scrollbarProps_style`
+- `scrollbarProps_renderView`
+- `scrollbarProps_renderTrackVertical`
+- `scrollbarProps_renderThumbVertical`
+
 ## Contributing
 
 First, run `npm install` to install all dependencies. Then, to manually test
@@ -89,3 +100,4 @@ browser.
 
 Unit tests are run with [jest](https://facebook.github.io/jest/). Run `npm run
 test -- --watch` to run tests.
+

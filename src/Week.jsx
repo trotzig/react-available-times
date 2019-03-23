@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import momentTimezone from 'moment-timezone';
+import { Scrollbars } from 'react-custom-scrollbars';
 
 import { HOUR_IN_PIXELS, RULER_WIDTH_IN_PIXELS, MINUTE_IN_PIXELS } from './Constants';
 import { validateDays } from './Validators';
@@ -177,43 +178,50 @@ export default class Week extends PureComponent {
             />
           ))}
         </div>
-        <div
-          className={styles.daysWrapper}
-          ref={(element) => {
-            if (!element || this.alreadyScrolled) {
-              return;
-            }
-            this.alreadyScrolled = true;
-            // eslint-disable-next-line no-param-reassign
-            element.scrollTop = HOUR_IN_PIXELS * 6.5;
-          }}
+        <Scrollbars
+            style = {this.props.scrollbarProps_style}
+            renderView = {this.props.scrollbarProps_renderView}
+            renderTrackVertical = {this.props.scrollbarProps_renderTrackVertical}
+            renderThumbVertical = {this.props.scrollbarProps_renderThumbVertical}
         >
-          <div className={styles.lines}>
-            {this.renderLines()}
-          </div>
-          <div
-            className={styles.days}
-            ref={this.handleDaysRef}
-          >
-            <Ruler timeConvention={timeConvention} />
-            {filteredDays.map((day, i) => (
-              <Day
-                available={day.available}
-                availableWidth={(availableWidth - RULER_WIDTH_IN_PIXELS) / 7}
-                timeConvention={timeConvention}
-                timeZone={timeZone}
-                index={i}
-                key={day.date}
-                date={day.date}
-                events={dayEvents[i]}
-                initialSelections={daySelections[i]}
-                onChange={this.handleDayChange}
-                hourLimits={this.generateHourLimits()}
-                touchToDeleteSelection={touchToDeleteSelection}
-              />
-            ))}
-          </div>
-        </div>
+            <div
+                className={styles.daysWrapper}
+                ref={(element) => {
+                    if (!element || this.alreadyScrolled) {
+                    return;
+                    }
+                    this.alreadyScrolled = true;
+                    // eslint-disable-next-line no-param-reassign
+                    element.scrollTop = HOUR_IN_PIXELS * 6.5;
+                }}
+                >
+                <div className={styles.lines}>
+                    {this.renderLines()}
+                </div>
+                <div
+                    className={styles.days}
+                    ref={this.handleDaysRef}
+                >
+                    <Ruler timeConvention={timeConvention} />
+                    {filteredDays.map((day, i) => (
+                    <Day
+                        available={day.available}
+                        availableWidth={(availableWidth - RULER_WIDTH_IN_PIXELS) / 7}
+                        timeConvention={timeConvention}
+                        timeZone={timeZone}
+                        index={i}
+                        key={day.date}
+                        date={day.date}
+                        events={dayEvents[i]}
+                        initialSelections={daySelections[i]}
+                        onChange={this.handleDayChange}
+                        hourLimits={this.generateHourLimits()}
+                        touchToDeleteSelection={touchToDeleteSelection}
+                    />
+                    ))}
+                </div>
+            </div>
+        </Scrollbars>
       </div>
     );
   }

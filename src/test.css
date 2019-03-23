@@ -21,3 +21,26 @@
   overflow: auto;
   font-size: 10px;
 }
+
+
+.scroll-track-vertical{
+    position: absolute;
+    width: 10px;
+    right: 0;
+    bottom: 2px;
+    top: 2px;
+    border-radius: 3px;
+    width: 10px;
+    background-color: #D8D8D8;
+}
+
+.scroll-thumb-vertical{
+    position: relative;
+    display: block;
+    width: 100%;
+    cursor: pointer;
+    border-radius: inherit;
+    height: 262px;
+    transform: translateY(0px);
+    background-color: rgb(241, 124, 25);
+}

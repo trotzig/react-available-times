@@ -157,6 +157,11 @@ class Test extends Component {
               recurring={recurring}
               availableDays={['monday', 'tuesday', 'wednesday', 'thursday', 'friday']}
               availableHourRange={{ start: 6, end: 20 }}
+              scrollbarProps_style= {{ height: 700 }}
+              scrollbarProps_renderView={props => <div {...props} className="calendar-scrollbar"/>}
+              scrollbarProps_renderTrackVertical={props => <div {...props} className="scroll-track-vertical"/>}
+              scrollbarProps_renderThumbVertical={props => <div {...props} className="scroll-thumb-vertical"/>}
+              
             />
           </div>
         </div>

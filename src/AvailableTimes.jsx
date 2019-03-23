@@ -48,6 +48,10 @@ export default class AvailableTimes extends PureComponent {
     recurring,
     timeZone,
     weekStartsOn,
+    scrollbarProps_style,
+    scrollbarProps_renderView,
+    scrollbarProps_renderTrackVertical,
+    scrollbarProps_renderThumbVertical
   }) {
     super();
     const selectedCalendars =
@@ -220,6 +224,10 @@ export default class AvailableTimes extends PureComponent {
       touchToDeleteSelection,
       availableDays,
       availableHourRange,
+      scrollbarProps_style,
+      scrollbarProps_renderView,
+      scrollbarProps_renderTrackVertical,
+      scrollbarProps_renderThumbVertical
     } = this.props;
 
     const {
@@ -280,35 +288,40 @@ export default class AvailableTimes extends PureComponent {
             </div>
           }
           <div className={styles.main}>
-            <Slider
-              index={currentWeekIndex}
-              onSlide={this.move}
-              disabled={recurring}
-            >
-              {weeks.map((week, i) => {
-                if ((recurring || Math.abs(i - currentWeekIndex) > 1) && i !== 0) {
-                  return <span key={week.start} />;
-                }
-                return (
-                  <Week
-                    timeConvention={timeConvention}
-                    timeZone={timeZone}
-                    availableWidth={availableWidth}
-                    calendars={calendars}
-                    key={week.start}
-                    week={week}
-                    events={recurring ? [] : events}
-                    initialSelections={selections}
-                    onChange={this.handleWeekChange}
-                    height={height}
-                    recurring={recurring}
-                    touchToDeleteSelection={touchToDeleteSelection}
-                    availableDays={availableDays}
-                    availableHourRange={availableHourRange}
-                  />
-                );
-              })}
-            </Slider>
+
+                <Slider
+                index={currentWeekIndex}
+                onSlide={this.move}
+                disabled={recurring}
+                >
+                {weeks.map((week, i) => {
+                    if ((recurring || Math.abs(i - currentWeekIndex) > 1) && i !== 0) {
+                    return <span key={week.start} />;
+                    }
+                    return (
+                            <Week
+                                timeConvention={timeConvention}
+                                timeZone={timeZone}
+                                availableWidth={availableWidth}
+                                calendars={calendars}
+                                key={week.start}
+                                week={week}
+                                events={recurring ? [] : events}
+                                initialSelections={selections}
+                                onChange={this.handleWeekChange}
+                                height={height}
+                                recurring={recurring}
+                                touchToDeleteSelection={touchToDeleteSelection}
+                                availableDays={availableDays}
+                                availableHourRange={availableHourRange}
+                                scrollbarProps_style={scrollbarProps_style}
+                                scrollbarProps_renderView={scrollbarProps_renderView}
+                                scrollbarProps_renderTrackVertical={scrollbarProps_renderTrackVertical}
+                                scrollbarProps_renderThumbVertical={scrollbarProps_renderThumbVertical}
+                            />
+                    );
+                })}
+                </Slider>
           </div>
         </div>
         <button
