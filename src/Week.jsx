@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import momentTimezone from 'moment-timezone';
+import moment from 'moment';
 
 import { HOUR_IN_PIXELS, RULER_WIDTH_IN_PIXELS, MINUTE_IN_PIXELS } from './Constants';
 import { validateDays } from './Validators';
@@ -110,11 +111,12 @@ export default class Week extends PureComponent {
   // generate the props required for Day to block specific hours.
   generateHourLimits() {
     const { availableHourRange } = this.props;
-    return { top: availableHourRange.start * HOUR_IN_PIXELS, // top blocker
+    return {
+      top: availableHourRange.start * HOUR_IN_PIXELS, // top blocker
       bottom: availableHourRange.end * HOUR_IN_PIXELS,
       bottomHeight: (24 - availableHourRange.end) * HOUR_IN_PIXELS, // bottom height
       difference: ((availableHourRange.end - availableHourRange.start) * HOUR_IN_PIXELS)
-      + (MINUTE_IN_PIXELS * 14),
+        + (MINUTE_IN_PIXELS * 14),
     };
   }
 
@@ -149,7 +151,8 @@ export default class Week extends PureComponent {
 
     const filteredDays = week.days.map((day) => {
       const updatedDay = day;
-      updatedDay.available = availableDays.includes(day.name.toLowerCase());
+      const dayNameInEnglish = moment(day.date).locale('en').format('dddd').toLowerCase();
+      updatedDay.available = availableDays.includes(dayNameInEnglish);
       return updatedDay;
     });
     return (
