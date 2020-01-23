@@ -111,11 +111,6 @@ it('adds overlap hints when overlaps exist', () => {
     width: 1,
     offset: 0,
   });
-  expect(overlapped[5]).toEqual({
-    start: new Date(500),
-    end: new Date(600),
-    width: 1,
-    offset: 0,
-    allDay: true,
-  });
+  expect(overlapped[5].offset).toEqual(0);
+  expect(overlapped[5].width).toEqual(1);
 });
