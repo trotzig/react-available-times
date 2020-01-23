@@ -93,7 +93,7 @@ it('uses 12h time convention when timeConvention=12h', () => {
       ]}
     />,
   );
-  expect(component.find(Ruler).first().text()).toMatch(/12pm.*01pm.*02pm/);
+  expect(component.find(Ruler).first().text()).toMatch(/12pm.*1pm.*2pm/);
   expect(component.text()).toMatch(/01:00pm-02:00pm/);
 });
 
