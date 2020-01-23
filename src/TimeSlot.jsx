@@ -50,12 +50,12 @@ export default class TimeSlot extends PureComponent {
       if (frozen && m.minute() === 0) {
         return m.format('ha');
       }
-      return m.format('h:mma');
+      return m.format('hh:mma');
     }
     if (frozen && m.minute() === 0) {
-      return m.format('H');
+      return m.format('HH');
     }
-    return m.format('H:mm');
+    return m.format('HH:mm');
   }
 
   timespan() {
