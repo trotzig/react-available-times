@@ -116,5 +116,6 @@ it('adds overlap hints when overlaps exist', () => {
     end: new Date(600),
     width: 1,
     offset: 0,
+    allDay: true,
   });
 });
