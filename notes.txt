@@ -1,0 +1,7 @@
+Things To Note:
+
+- AvailableTimes is really the entry root component for the application
+- The week component is most likely the place that would be the root of the time signifier 
+  - the week component is where we can place the current line signifier for determining where to load the current hour
+  - week.css is where we put the actual CSS rules for the line (should probably make this configurable)
+

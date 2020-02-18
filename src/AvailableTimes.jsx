@@ -220,6 +220,7 @@ export default class AvailableTimes extends PureComponent {
       touchToDeleteSelection,
       availableDays,
       availableHourRange,
+      timeSignifier,
     } = this.props;
 
     const {
@@ -292,6 +293,7 @@ export default class AvailableTimes extends PureComponent {
                 return (
                   <Week
                     timeConvention={timeConvention}
+                    timeSignifier={timeSignifier}
                     timeZone={timeZone}
                     availableWidth={availableWidth}
                     calendars={calendars}
@@ -323,6 +325,7 @@ export default class AvailableTimes extends PureComponent {
 }
 
 AvailableTimes.propTypes = {
+  timeSignifier: PropTypes.bool,
   timeConvention: PropTypes.oneOf(['12h', '24h']),
   timeZone: PropTypes.string.isRequired,
   initialSelections: PropTypes.arrayOf(PropTypes.shape({
@@ -361,4 +364,5 @@ AvailableTimes.defaultProps = {
   touchToDeleteSelection: 'ontouchstart' in window,
   availableDays: DAYS_IN_WEEK,
   availableHourRange: { start: 0, end: 24 },
+  timeSignifier: false,
 };
