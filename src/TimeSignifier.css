@@ -1,6 +1,0 @@
-:local(.currTime) {
-  border-bottom: 2px solid red;
-  z-index:99999;
-  width: 100%;
-  position: absolute
-}
