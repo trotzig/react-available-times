@@ -137,6 +137,16 @@ export default class Week extends PureComponent {
     return result;
   }
 
+  renderCurrentTimeSignifier(timezone) {
+    const currentEpoch = moment().tz(timezone).format("hh:mm")
+    const decimalDuration = moment.duration(currentEpoch).asHours()
+    const dynamicMargin = decimalDuration * HOUR_IN_PIXELS
+
+    return (
+      <div className={styles.currTime} style={{marginTop: dynamicMargin}}/>
+    )
+  }
+
   render() {
     const {
       week,
@@ -146,8 +156,10 @@ export default class Week extends PureComponent {
       recurring,
       touchToDeleteSelection,
       availableDays,
+      timeSignifier
     } = this.props;
     const { dayEvents, daySelections, daysWidth, widthOfAScrollbar } = this.state;
+
 
     const filteredDays = week.days.map((day) => {
       const updatedDay = day;
@@ -194,26 +206,30 @@ export default class Week extends PureComponent {
           <div className={styles.lines}>
             {this.renderLines()}
           </div>
+
           <div
             className={styles.days}
             ref={this.handleDaysRef}
           >
             <Ruler timeConvention={timeConvention} />
             {filteredDays.map((day, i) => (
-              <Day
-                available={day.available}
-                availableWidth={(availableWidth - RULER_WIDTH_IN_PIXELS) / 7}
-                timeConvention={timeConvention}
-                timeZone={timeZone}
-                index={i}
-                key={day.date}
-                date={day.date}
-                events={dayEvents[i]}
-                initialSelections={daySelections[i]}
-                onChange={this.handleDayChange}
-                hourLimits={this.generateHourLimits()}
-                touchToDeleteSelection={touchToDeleteSelection}
-              />
+              <div>
+              {timeSignifier && this.renderCurrentTimeSignifier(timeZone)}
+                <Day
+                  available={day.available}
+                  availableWidth={(availableWidth - RULER_WIDTH_IN_PIXELS) / 7}
+                  timeConvention={timeConvention}
+                  timeZone={timeZone}
+                  index={i}
+                  key={day.date}
+                  date={day.date}
+                  events={dayEvents[i]}
+                  initialSelections={daySelections[i]}
+                  onChange={this.handleDayChange}
+                  hourLimits={this.generateHourLimits()}
+                  touchToDeleteSelection={touchToDeleteSelection}
+                />
+              </div>
             ))}
           </div>
         </div>
@@ -223,6 +239,7 @@ export default class Week extends PureComponent {
 }
 
 Week.propTypes = {
+  timeSignifier: PropTypes.bool,
   availableWidth: PropTypes.number.isRequired,
   timeConvention: PropTypes.oneOf(['12h', '24h']),
   timeZone: PropTypes.string.isRequired,

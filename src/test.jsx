@@ -145,6 +145,7 @@ class Test extends Component {
           }
           <div className={styles.main}>
             <AvailableTimes
+              timeSignifier={true}
               timeConvention="24h"
               timeZone={TIME_ZONE}
               height={fullscreen ? undefined : 600}
